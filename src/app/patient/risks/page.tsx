@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { AppShell } from "@/components/layout";
+import { PatientPortalShell } from "@/components/patient";
 import { RiskSignal } from "@/types";
 import { riskService } from "@/services";
 import { Card } from "@/components/ui/Card";
@@ -48,7 +48,7 @@ export default function PatientRisksPage() {
   const mediumRisks = risks.filter((r) => r.priority === "medium");
 
   return (
-    <AppShell activeRole="patient" showPatientHeader={true}>
+    <PatientPortalShell>
       <div className={styles.container}>
         {/* Page Header */}
         <div className={styles.header}>
@@ -174,6 +174,6 @@ export default function PatientRisksPage() {
           onClose={() => setIsEvidenceOpen(false)}
         />
       </div>
-    </AppShell>
+    </PatientPortalShell>
   );
 }

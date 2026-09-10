@@ -19,12 +19,34 @@ export interface NavItem {
   href: string;
 }
 
+export const PATIENT_NAV_ITEMS: NavItem[] = [
+  { label: "Home", href: "/patient" },
+  { label: "My Profile", href: "/patient/profile" },
+  { label: "Upload Records", href: "/patient/upload" },
+  { label: "Reports", href: "/patient/reports" },
+  { label: "Health Timeline", href: "/patient/timeline" },
+  { label: "Consent & Sharing", href: "/patient/consent" },
+  { label: "Notifications", href: "/patient/notifications" },
+];
+
 export const MAIN_NAV_ITEMS: NavItem[] = [
-  { label: "Dashboard", href: "/patient" },
-  { label: "Health Memory", href: "/patient/memory" },
-  { label: "Timeline", href: "/patient/timeline" },
-  { label: "Medications", href: "/patient/medications" },
-  { label: "Risks", href: "/patient/risks" },
+  { label: "Doctor Home", href: "/clinician" },
+  { label: "Overview", href: "/clinician/overview" },
+  { label: "Key Changes", href: "/clinician/changes" },
+  { label: "Patient State", href: "/clinician/state" },
+  { label: "Timeline", href: "/clinician/timeline" },
+  { label: "Uploads", href: "/clinician/upload" },
+  { label: "AI Assistant", href: "/clinician/assistant" },
+  { label: "Prescribe", href: "/clinician/prescribe" },
+  { label: "Audit", href: "/clinician/audit" },
+];
+
+export const CAREGIVER_NAV_ITEMS: NavItem[] = [
+  { label: "Dashboard", href: "/caregiver" },
+  { label: "Patient Details & Risks", href: "/caregiver/patient" },
+  { label: "Log Observation", href: "/caregiver/report" },
+  { label: "Health Timeline", href: "/caregiver/timeline" },
+  { label: "Patient State", href: "/caregiver/state" },
 ];
 
 export interface NavbarProps {
@@ -104,7 +126,12 @@ export function Navbar({
 
           {/* Desktop Navigation Links */}
           <nav className={styles.navLinks} aria-label="Primary Navigation">
-            {MAIN_NAV_ITEMS.map((item) => {
+            {(activeRole === "patient"
+              ? PATIENT_NAV_ITEMS
+              : activeRole === "caregiver"
+              ? CAREGIVER_NAV_ITEMS
+              : MAIN_NAV_ITEMS
+            ).map((item) => {
               const active = isLinkActive(item.href);
               return (
                 <Link

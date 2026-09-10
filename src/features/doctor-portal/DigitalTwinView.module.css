@@ -1,0 +1,276 @@
+.container {
+  padding: 24px;
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.headerCard {
+  background: #ffffff;
+  border: 1px solid var(--color-border, #dde2e1);
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  box-shadow: 0 4px 16px rgba(18, 37, 68, 0.04);
+}
+
+.titleArea {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.heading {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--color-primary, #122544);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.subheading {
+  margin: 0;
+  font-size: 13px;
+  color: var(--color-text-secondary, #68717c);
+}
+
+.snapshotControls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #fbfbf9;
+  border: 1px solid var(--color-border, #dde2e1);
+  border-radius: 10px;
+  padding: 4px;
+}
+
+.snapshotBtn {
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: none;
+  background: none;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-primary, #122544);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.snapshotBtn:hover {
+  background: #eef2f1;
+}
+
+.snapshotBtnActive {
+  background: var(--color-primary, #122544);
+  color: #ffffff;
+}
+
+/* Current State Banner */
+.stateBanner {
+  background: #fff8f8;
+  border: 2px solid #fed7d7;
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.stateLeft {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.stateIconWrapper {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: #fce8e6;
+  color: #c5221f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stateTextGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.stateBadgeTitle {
+  font-size: 20px;
+  font-weight: 800;
+  color: #c5221f;
+  margin: 0;
+}
+
+.stateDescription {
+  font-size: 13px;
+  color: #4b5563;
+  margin: 0;
+  max-width: 650px;
+}
+
+.confidenceBox {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.confScore {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--color-primary, #122544);
+}
+
+.confLabel {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-secondary, #68717c);
+  font-weight: 700;
+}
+
+/* Trends Section */
+.cardSection {
+  background: #ffffff;
+  border: 1px solid var(--color-border, #dde2e1);
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  box-shadow: 0 2px 8px rgba(18, 37, 68, 0.03);
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eef2f1;
+  padding-bottom: 12px;
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--color-primary, #122544);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.legendRow {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legendDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+/* Baseline vs Recent Comparison Table */
+.comparisonTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.comparisonTable th {
+  text-align: left;
+  padding: 10px 14px;
+  font-size: 11px;
+  text-transform: uppercase;
+  color: var(--color-text-secondary, #68717c);
+  border-bottom: 1px solid #eef2f1;
+  background: #fbfbf9;
+}
+
+.comparisonTable td {
+  padding: 14px;
+  border-bottom: 1px solid #f0f3f2;
+  vertical-align: top;
+}
+
+.statusAlert {
+  color: #c5221f;
+  font-weight: 700;
+}
+
+.statusWarning {
+  color: #b06000;
+  font-weight: 700;
+}
+
+/* Risk Model Container */
+.riskModelContainer {
+  background: #fbfbf9;
+  border: 1px solid var(--color-border, #dde2e1);
+  border-radius: 12px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.modelTagRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.modelBadgeGenerated {
+  background: #eaf5f4;
+  color: #122544;
+  border: 1px solid #c2e2e0;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+.modelBadgeClinical {
+  background: #def7ec;
+  color: #03543f;
+  border: 1px solid #bcf0da;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+.signalsList {
+  margin: 0;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  color: #374151;
+}

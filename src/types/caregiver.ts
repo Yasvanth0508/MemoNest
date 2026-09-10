@@ -6,6 +6,7 @@ export type ObservationCategory =
   | 'appetite'
   | 'behavior'
   | 'medication_adherence'
+  | 'physical_symptom'
   | 'general';
 
 export interface CaregiverObservation {

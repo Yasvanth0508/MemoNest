@@ -1,0 +1,315 @@
+.container {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.headerCard {
+  background: #ffffff;
+  border: 1px solid var(--color-border, #dde2e1);
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  box-shadow: 0 4px 16px rgba(18, 37, 68, 0.04);
+}
+
+.titleArea {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.heading {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--color-primary, #122544);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.subheading {
+  margin: 0;
+  font-size: 13px;
+  color: var(--color-text-secondary, #68717c);
+}
+
+.uploadPrimaryBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--color-primary, #122544);
+  color: #ffffff;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: 0 4px 12px rgba(18, 37, 68, 0.15);
+}
+
+.uploadPrimaryBtn:hover {
+  background: #1c365d;
+  transform: translateY(-1px);
+}
+
+/* Upload Dropzone Area */
+.uploadSection {
+  background: #ffffff;
+  border: 2px dashed var(--color-border, #dde2e1);
+  border-radius: 16px;
+  padding: 36px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  text-align: center;
+  transition: all 0.15s ease;
+  cursor: pointer;
+}
+
+.uploadSection:hover {
+  border-color: var(--color-secondary, #67b8ba);
+  background: #fbfdfc;
+}
+
+.uploadIconCircle {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: #eaf5f4;
+  color: var(--color-secondary, #67b8ba);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.uploadPromptText {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.uploadMainPrompt {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-primary, #122544);
+  margin: 0;
+}
+
+.uploadSubPrompt {
+  font-size: 13px;
+  color: var(--color-text-secondary, #68717c);
+  margin: 0;
+}
+
+.actionPillsRow {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.actionPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 8px;
+  background: #f4f7f6;
+  border: 1px solid var(--color-border, #dde2e1);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-primary, #122544);
+}
+
+/* Review & Edit Modal or Card */
+.reviewCard {
+  background: #ffffff;
+  border: 2px solid var(--color-secondary, #67b8ba);
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  box-shadow: 0 8px 24px rgba(103, 184, 186, 0.15);
+  animation: fadeIn 0.2s ease-out;
+}
+
+.reviewHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #eef2f1;
+  padding-bottom: 12px;
+}
+
+.reviewTitle {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--color-primary, #122544);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.processingBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #eaf5f4;
+  color: #122544;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.extractedGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  background: #fbfbf9;
+  border-radius: 12px;
+  padding: 16px;
+  border: 1px solid #f0f3f2;
+}
+
+.extractItem {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.extractLabel {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 700;
+  color: var(--color-text-secondary, #68717c);
+}
+
+.extractInput {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--color-border, #dde2e1);
+  font-size: 13px;
+  background: #ffffff;
+  color: var(--color-primary, #122544);
+  font-family: inherit;
+}
+
+.extractInput:focus {
+  outline: none;
+  border-color: var(--color-secondary, #67b8ba);
+  box-shadow: 0 0 0 2px rgba(103, 184, 186, 0.2);
+}
+
+.reviewActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  border-top: 1px solid #eef2f1;
+  padding-top: 14px;
+}
+
+.btnCancel {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--color-border, #dde2e1);
+  background: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+  color: #68717c;
+  cursor: pointer;
+}
+
+.btnConfirm {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 20px;
+  border-radius: 8px;
+  background: var(--color-success, #4e8b72);
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btnConfirm:hover {
+  background: #3e735d;
+}
+
+/* Upload History Table */
+.historySection {
+  background: #ffffff;
+  border: 1px solid var(--color-border, #dde2e1);
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: 0 2px 8px rgba(18, 37, 68, 0.03);
+}
+
+.historyTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.historyTable th {
+  text-align: left;
+  padding: 10px 14px;
+  font-size: 11px;
+  text-transform: uppercase;
+  color: var(--color-text-secondary, #68717c);
+  border-bottom: 1px solid #eef2f1;
+  background: #fbfbf9;
+}
+
+.historyTable td {
+  padding: 12px 14px;
+  border-bottom: 1px solid #f0f3f2;
+  vertical-align: middle;
+}
+
+.docTitleCell {
+  font-weight: 700;
+  color: var(--color-primary, #122544);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.statusConfirmed {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #e6f4ea;
+  color: #137333;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}

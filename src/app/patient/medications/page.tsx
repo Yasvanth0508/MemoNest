@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { AppShell } from "@/components/layout";
+import { PatientPortalShell } from "@/components/patient";
 import { Medication } from "@/types";
 import { medicationService } from "@/services";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
@@ -47,7 +47,7 @@ export default function PatientMedicationsPage() {
   const stoppedMeds = medications.filter((m) => m.status !== "active");
 
   return (
-    <AppShell activeRole="patient" showPatientHeader={true}>
+    <PatientPortalShell>
       <div className={styles.container}>
         {/* Page Header */}
         <div className={styles.header}>
@@ -199,6 +199,6 @@ export default function PatientMedicationsPage() {
           onClose={() => setIsEvidenceOpen(false)}
         />
       </div>
-    </AppShell>
+    </PatientPortalShell>
   );
 }

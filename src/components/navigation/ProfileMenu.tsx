@@ -204,7 +204,7 @@ export function ProfileMenu({
               </button>
             )}
 
-            {onOpenSettings && (
+            {activeRole !== "patient" && onOpenSettings && (
               <button
                 type="button"
                 role="menuitem"

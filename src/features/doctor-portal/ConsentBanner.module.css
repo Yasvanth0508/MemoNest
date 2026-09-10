@@ -1,0 +1,168 @@
+.bannerContainer {
+  background: #ffffff;
+  border-bottom: 1px solid var(--color-border, #dde2e1);
+  padding: 10px 24px;
+  font-size: 13px;
+  color: var(--color-primary, #122544);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: 0 1px 3px rgba(18, 37, 68, 0.03);
+}
+
+.bannerMainRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.leftGroup {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.scopeTitleGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  color: var(--color-primary, #122544);
+}
+
+.shieldIcon {
+  color: var(--color-success, #4e8b72);
+}
+
+.accessPills {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.pillAvailable {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #e6f4ea;
+  color: #137333;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.pillRestricted {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #fce8e6;
+  color: #c5221f;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.pillPending {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #fef7e0;
+  color: #b06000;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.pillExpired {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #f1f3f4;
+  color: #5f6368;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.rightGroup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.expiryText {
+  color: var(--color-text-secondary, #68717c);
+  font-size: 12px;
+}
+
+.expandToggle {
+  background: none;
+  border: 1px solid var(--color-border, #dde2e1);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-primary, #122544);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.15s ease;
+}
+
+.expandToggle:hover {
+  background: #f4f6f5;
+}
+
+.expandedDetails {
+  padding: 12px 16px;
+  background: #fbfbf9;
+  border: 1px solid #eef2f1;
+  border-radius: 8px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 12px;
+  margin-top: 4px;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.scopeCard {
+  background: #ffffff;
+  border: 1px solid #eef2f1;
+  border-radius: 6px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.scopeCardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.scopeCardName {
+  font-weight: 600;
+  font-size: 12px;
+  color: var(--color-primary, #122544);
+}
+
+.scopeCardDesc {
+  font-size: 11px;
+  color: var(--color-text-secondary, #68717c);
+  line-height: 1.4;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}

@@ -1,0 +1,79 @@
+.bottomNav {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 72px;
+  background: #FFFFFF;
+  border-top: 1.5px solid #DDE2E1;
+  box-shadow: 0 -4px 16px rgba(18, 37, 68, 0.08);
+  z-index: 100;
+  padding: 0 8px;
+}
+
+.navList {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.navItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  text-decoration: none;
+  color: #64748B;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 6px 8px;
+  border-radius: var(--radius-sm);
+  min-width: 48px;
+  min-height: 48px;
+  position: relative;
+  transition: all 0.15s ease;
+}
+
+.navItemActive {
+  color: #122544;
+  font-weight: 800;
+}
+
+.navItemActive .iconWrapper {
+  background: #EAF5F4;
+  color: #0D9488;
+}
+
+.iconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  transition: all 0.15s ease;
+}
+
+.badge {
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  background: #DC2626;
+  color: #FFFFFF;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 1px 5px;
+  border-radius: 10px;
+}
+
+@media (max-width: 900px) {
+  .bottomNav {
+    display: block;
+  }
+}

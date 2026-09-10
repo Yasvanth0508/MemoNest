@@ -1,0 +1,492 @@
+.container {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  max-width: 840px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.titleGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.mainTitle {
+  font-size: var(--font-size-2xl);
+  font-family: var(--font-display);
+  color: var(--color-primary);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.subtitle {
+  font-size: var(--font-size-md);
+  color: var(--color-text-secondary);
+  margin: 4px 0 0 0;
+}
+
+/* 1. Voice Record Section */
+.voiceSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-6) var(--space-4);
+  background: linear-gradient(180deg, #f7faf9 0%, #edf5f4 100%);
+  border: 2px dashed #bce0dd;
+  border-radius: var(--radius-lg);
+  gap: var(--space-3);
+  text-align: center;
+  position: relative;
+}
+
+.micButton {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(18, 37, 68, 0.2);
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.micButton:hover {
+  background: #1d355d;
+  transform: scale(1.05);
+}
+
+.micButtonListening {
+  background: #d9383a;
+  box-shadow: 0 0 0 0 rgba(217, 56, 58, 0.7);
+  animation: pulseRecording 1.5s infinite;
+}
+
+@keyframes pulseRecording {
+  0% {
+    box-shadow: 0 0 0 0 rgba(217, 56, 58, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 24px rgba(217, 56, 58, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(217, 56, 58, 0);
+  }
+}
+
+.micStatusLabel {
+  font-size: var(--font-size-md);
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.recordingTimer {
+  font-size: var(--font-size-sm);
+  color: #c81e1e;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.audioWave {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 24px;
+}
+
+.audioWaveBar {
+  width: 4px;
+  background: #d9383a;
+  border-radius: 2px;
+  animation: waveMotion 0.8s ease-in-out infinite alternate;
+}
+
+.audioWaveBar:nth-child(1) { height: 8px; animation-delay: 0.1s; }
+.audioWaveBar:nth-child(2) { height: 18px; animation-delay: 0.3s; }
+.audioWaveBar:nth-child(3) { height: 24px; animation-delay: 0.2s; }
+.audioWaveBar:nth-child(4) { height: 14px; animation-delay: 0.4s; }
+.audioWaveBar:nth-child(5) { height: 20px; animation-delay: 0.15s; }
+
+@keyframes waveMotion {
+  0% { height: 6px; }
+  100% { height: 26px; }
+}
+
+.presetVoicesRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.presetButton {
+  background: white;
+  border: 1px solid #c8dedc;
+  color: #1a6b6d;
+  border-radius: var(--radius-pill);
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.15s ease;
+}
+
+.presetButton:hover {
+  background: #e6f6f5;
+  border-color: #8ed0cc;
+}
+
+/* 2. Transcription Box */
+.transcriptionBox {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.transcriptionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.transcriptionLabel {
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.textarea {
+  width: 100%;
+  min-height: 110px;
+  padding: 14px 16px;
+  font-family: inherit;
+  font-size: var(--patient-font-base);
+  color: var(--color-primary);
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  resize: vertical;
+  line-height: 1.5;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.textarea:focus {
+  outline: none;
+  border-color: var(--color-secondary);
+  box-shadow: 0 0 0 3px rgba(103, 184, 186, 0.25);
+}
+
+/* Quick Tags */
+.quickTagsSection {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.quickTagsLabel {
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-secondary);
+}
+
+.quickTagsRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tagPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #f1f4f6;
+  border: 1px solid #d4dfe7;
+  color: var(--color-primary);
+  border-radius: var(--radius-pill);
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  min-height: 38px;
+}
+
+.tagPill:hover {
+  background: #e2ebf2;
+}
+
+.tagPillActive {
+  background: var(--color-primary);
+  color: white;
+  border-color: var(--color-primary);
+}
+
+/* 3. Structured Fields: Severity & Category */
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+}
+
+@media (max-width: 640px) {
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.fieldLabel {
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.severityGroup {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.severityButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--color-border);
+  background: var(--color-surface);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  min-height: var(--patient-touch-target);
+}
+
+.severity_mild {
+  color: #2b7054;
+}
+
+.severity_mild:hover {
+  background: #f0fbf6;
+}
+
+.severity_mild_active {
+  background: #e8f7f0;
+  border-color: #4e8b72;
+  color: #245e46;
+  box-shadow: 0 0 0 2px rgba(78, 139, 114, 0.2);
+}
+
+.severity_moderate {
+  color: #854d0e;
+}
+
+.severity_moderate:hover {
+  background: #fefce8;
+}
+
+.severity_moderate_active {
+  background: #fef9c3;
+  border-color: #ca8a04;
+  color: #713f12;
+  box-shadow: 0 0 0 2px rgba(202, 138, 4, 0.2);
+}
+
+.severity_urgent {
+  color: #b91c1c;
+}
+
+.severity_urgent:hover {
+  background: #fef2f2;
+}
+
+.severity_urgent_active {
+  background: #fee2e2;
+  border-color: #dc2626;
+  color: #991b1b;
+  box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.2);
+}
+
+.categorySelect {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--color-border);
+  background: var(--color-surface);
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-primary);
+  cursor: pointer;
+  min-height: var(--patient-touch-target);
+}
+
+.categorySelect:focus {
+  outline: none;
+  border-color: var(--color-secondary);
+}
+
+/* Photo Attachment */
+.photoSection {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dropzone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 16px;
+  border: 1.5px dashed #cbd5e1;
+  border-radius: var(--radius-md);
+  background: #f8fafc;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.dropzone:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+}
+
+.photoPreviewCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: #eef7f6;
+  border: 1px solid #bce0dd;
+  border-radius: var(--radius-md);
+}
+
+.photoPreviewLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.thumbnailImg {
+  width: 50px;
+  height: 50px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 1px solid #c0dedb;
+}
+
+/* Escalation & Routing Notice Preview */
+.routingPreviewCard {
+  padding: 14px 18px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.routingRoutine {
+  background: #f0f9f7;
+  border: 1px solid #c2e8e3;
+  color: #1d5f57;
+}
+
+.routingUrgent {
+  background: #fdf2f2;
+  border: 1.5px solid #f87171;
+  color: #991b1b;
+}
+
+/* Actions */
+.buttonRow {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-border);
+}
+
+.cancelButton {
+  padding: 10px 20px;
+  background: transparent;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+  border-radius: var(--radius-pill);
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  min-height: var(--patient-touch-target);
+}
+
+.submitButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 28px;
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-pill);
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(18, 37, 68, 0.2);
+  transition: all 0.2s ease;
+  min-height: var(--patient-touch-target);
+}
+
+.submitButton:hover {
+  background: #233e66;
+  transform: translateY(-1px);
+}
+
+.submitButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}

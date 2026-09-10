@@ -1,0 +1,146 @@
+.container {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: var(--radius-pill);
+  padding: 6px 14px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  transition: all 0.15s ease;
+  background: #FFFFFF;
+}
+
+.status_stable {
+  background: #E8F5E9;
+  border-color: #A5D6A7;
+  color: #1B5E20;
+}
+
+.status_mild_deviation {
+  background: #FFF8E1;
+  border-color: #FFE082;
+  color: #E65100;
+}
+
+.status_significant_deviation {
+  background: #FFEBEE;
+  border-color: #FFCDD2;
+  color: #B71C1C;
+}
+
+.pulseDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.status_stable .pulseDot {
+  background: #2E7D32;
+  box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.2);
+}
+
+.status_mild_deviation .pulseDot {
+  background: #EF6C00;
+  box-shadow: 0 0 0 3px rgba(239, 108, 0, 0.2);
+}
+
+.status_significant_deviation .pulseDot {
+  background: #C62828;
+  box-shadow: 0 0 0 3px rgba(198, 40, 40, 0.2);
+}
+
+/* Modal Explanation Dialog */
+.modalBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(18, 37, 68, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modalCard {
+  background: #FFFFFF;
+  border-radius: var(--radius-lg);
+  max-width: 520px;
+  width: 100%;
+  padding: 28px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  border: 1px solid #DDE2E1;
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.modalTitle {
+  font-size: 22px;
+  font-weight: 700;
+  color: #122544;
+  margin: 0;
+}
+
+.closeButton {
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #68717C;
+  line-height: 1;
+  padding: 4px;
+}
+
+.explanation {
+  font-size: 17px;
+  line-height: 1.6;
+  color: #334155;
+  margin-bottom: 20px;
+}
+
+.plainPointers {
+  background: #F8FAFC;
+  border-radius: var(--radius-md);
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.pointerItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 15px;
+  color: #475569;
+  margin-bottom: 10px;
+}
+
+.pointerItem:last-child {
+  margin-bottom: 0;
+}
+
+.checkIcon {
+  color: #2D6A4F;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.doneButton {
+  width: 100%;
+  background: #122544;
+  color: #FFFFFF;
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  min-height: 48px;
+}

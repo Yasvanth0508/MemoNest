@@ -1,44 +1,57 @@
 import { SidebarSection } from "@/components/layout/Sidebar";
 import {
-  Activity,
-  AlertTriangle,
+  Bell,
   Clock,
-  HeartHandshake,
-  LayoutDashboard,
-  Pill,
+  FileText,
+  Home,
   ShieldCheck,
-  Users,
+  UploadCloud,
+  User,
 } from "lucide-react";
 
 export const PATIENT_SIDEBAR_SECTIONS: SidebarSection[] = [
   {
-    title: "Patient Experience",
+    title: "Health Navigation",
     items: [
-      { label: "Patient Home", href: "/patient", icon: LayoutDashboard },
-      { label: "Health Memory", href: "/patient/memory", icon: Activity },
-      { label: "Timeline", href: "/patient/timeline", icon: Clock },
       {
-        label: "Medications",
-        href: "/patient/medications",
-        icon: Pill,
-        badge: "Warning",
-        badgeVariant: "danger",
+        label: "Home",
+        href: "/patient",
+        icon: Home,
       },
       {
-        label: "Risks & Insights",
-        href: "/patient/risks",
-        icon: AlertTriangle,
-        badge: "High",
-        badgeVariant: "danger",
+        label: "My Profile",
+        href: "/patient/profile",
+        icon: User,
       },
-    ],
-  },
-  {
-    title: "Care & Support",
-    items: [
-      { label: "Care Team", href: "/patient#care-team", icon: Users },
-      { label: "Consent Center", href: "/consent", icon: ShieldCheck, badge: "Active", badgeVariant: "success" },
-      { label: "Daily Observations", href: "/caregiver/observations", icon: HeartHandshake },
+      {
+        label: "Upload Records",
+        href: "/patient/upload",
+        icon: UploadCloud,
+      },
+      {
+        label: "Reports",
+        href: "/patient/reports",
+        icon: FileText,
+      },
+      {
+        label: "Health Timeline",
+        href: "/patient/timeline",
+        icon: Clock,
+      },
+      {
+        label: "Consent & Sharing",
+        href: "/patient/consent",
+        icon: ShieldCheck,
+      },
+      {
+        label: "Notifications",
+        href: "/patient/notifications",
+        icon: Bell,
+        badge: "3",
+        badgeVariant: "warning",
+      },
     ],
   },
 ];
+
+export const PATIENT_NAV_ITEMS = PATIENT_SIDEBAR_SECTIONS[0].items;

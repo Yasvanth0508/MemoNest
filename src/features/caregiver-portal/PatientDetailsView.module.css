@@ -1,0 +1,504 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-2);
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.sectionTitle {
+  font-size: var(--font-size-xl);
+  font-family: var(--font-display);
+  color: var(--color-primary);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sectionSubtitle {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin: 4px 0 0 0;
+}
+
+/* 1. What to Watch For Highlight Section */
+.watchForSection {
+  background: linear-gradient(135deg, #fdfbf7 0%, #f6f3eb 100%);
+  border: 2px solid #e5dac1;
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-card);
+}
+
+.watchForHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-5);
+  flex-wrap: wrap;
+}
+
+.watchBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #f8eccf;
+  color: #8c5b05;
+  border: 1px solid #e5c986;
+  border-radius: var(--radius-pill);
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.watchGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--space-4);
+}
+
+.watchCard {
+  background: var(--color-surface);
+  border: 1px solid #e8dfcc;
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  box-shadow: 0 4px 12px rgba(18, 37, 68, 0.04);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--space-3);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.watchCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(18, 37, 68, 0.08);
+}
+
+.watchCardHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.watchIconCircle {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.iconUrgent {
+  background: #fde8e8;
+  color: #c81e1e;
+}
+
+.iconModerate {
+  background: #fef08a;
+  color: #854d0e;
+}
+
+.iconMild {
+  background: #e1effe;
+  color: #1e429f;
+}
+
+.watchCardTitle {
+  font-size: var(--font-size-md);
+  font-weight: 700;
+  color: var(--color-primary);
+  margin: 0 0 4px 0;
+}
+
+.watchDescription {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.doctorNoteBox {
+  background: #f8fafb;
+  border-left: 3px solid var(--color-secondary);
+  padding: 8px 12px;
+  border-radius: 0 8px 8px 0;
+  font-size: 13px;
+  color: #2c444e;
+}
+
+.doctorNoteLabel {
+  font-weight: 700;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #1a6b6d;
+  margin-bottom: 2px;
+  display: block;
+}
+
+.signalsRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.signalTag {
+  background: #edf3f7;
+  color: #2b455b;
+  border-radius: var(--radius-pill);
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.logThisButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: var(--color-surface-accent);
+  color: #124e50;
+  border: 1px solid #bce2e0;
+  border-radius: var(--radius-pill);
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  transition: all 0.15s ease;
+  min-height: 38px;
+}
+
+.logThisButton:hover {
+  background: #cfeedc;
+  border-color: #79cbaf;
+}
+
+/* 2. Demographics & Conditions Grid */
+.twoColGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-5);
+}
+
+@media (max-width: 900px) {
+  .twoColGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.infoCard {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  box-shadow: var(--shadow-card);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: var(--space-3);
+}
+
+.cardTitle {
+  font-size: var(--font-size-lg);
+  font-family: var(--font-display);
+  color: var(--color-primary);
+  margin: 0;
+}
+
+.demographicsList {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+
+.demoItem {
+  display: flex;
+  flex-direction: column;
+}
+
+.demoLabel {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.demoValue {
+  font-size: var(--font-size-md);
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.conditionChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.conditionChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #edf2f7;
+  color: var(--color-primary);
+  border: 1px solid #d3dfe9;
+  border-radius: var(--radius-pill);
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* 3. Allergies & Escalation Protocol */
+.allergyGrid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.allergyItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  gap: 12px;
+}
+
+.allergyItemWarning {
+  background: #fffbeb;
+  border-color: #fde68a;
+}
+
+.allergyTitle {
+  font-weight: 700;
+  color: #991b1b;
+  font-size: var(--font-size-md);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.allergyReaction {
+  font-size: var(--font-size-sm);
+  color: #7f1d1d;
+  margin-top: 2px;
+}
+
+/* Escalation Protocol Card */
+.escalationCard {
+  background: #fafcfe;
+  border: 1.5px solid #bee3f8;
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  box-shadow: var(--shadow-card);
+}
+
+.protocolSteps {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.stepRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.stepNumber {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.stepText {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+  line-height: 1.5;
+}
+
+.quickActionRow {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  padding-top: var(--space-3);
+  border-top: 1px solid #dbeafe;
+}
+
+.callButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-primary);
+  color: var(--color-primary);
+  border-radius: var(--radius-pill);
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-decoration: none;
+}
+
+.callButton:hover {
+  background: var(--color-primary);
+  color: white;
+}
+
+/* Medications List */
+.medList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.medItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fbfbfc;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.medItemLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.medIconWrapper {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #e6f6f5;
+  color: #1a6b6d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.medName {
+  font-weight: 700;
+  color: var(--color-primary);
+  font-size: var(--font-size-md);
+}
+
+.medPurpose {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+}
+
+.medScheduleBadge {
+  background: #eef2f6;
+  border: 1px solid #d0dbe5;
+  border-radius: var(--radius-pill);
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+/* 4. Consent-Aware Restricted Information */
+.restrictedSection {
+  background: #faf8f5;
+  border: 1.5px dashed #d1c7bd;
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+}
+
+.restrictedHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: var(--space-3);
+}
+
+.restrictedTitle {
+  font-size: var(--font-size-md);
+  font-weight: 700;
+  color: #6b5847;
+  margin: 0;
+}
+
+.restrictedBannerNote {
+  font-size: var(--font-size-sm);
+  color: #7d6b5b;
+  margin-bottom: var(--space-4);
+  line-height: 1.5;
+}
+
+.restrictedGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-3);
+}
+
+.restrictedCard {
+  background: var(--color-surface);
+  border: 1px solid #e8e2da;
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.restrictedCardTitle {
+  font-weight: 700;
+  color: #4a3e35;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.restrictedReason {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  line-height: 1.4;
+}
+
+.restrictedPolicy {
+  font-size: 11px;
+  font-weight: 600;
+  color: #8c735d;
+  margin-top: 4px;
+}

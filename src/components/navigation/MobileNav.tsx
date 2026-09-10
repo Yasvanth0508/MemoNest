@@ -8,13 +8,17 @@ import { User, UserRole } from "@/types";
 import {
   Activity,
   AlertTriangle,
+  Bell,
   Clock,
   FileText,
   HeartHandshake,
+  Home as HomeIcon,
   LayoutDashboard,
   LogOut,
   Pill,
+  ShieldCheck,
   Stethoscope,
+  UploadCloud,
   User as UserIcon,
   X,
 } from "lucide-react";
@@ -37,10 +41,19 @@ interface NavLinkItem {
   icon: React.ComponentType<{ size?: number; className?: string }>;
 }
 
+const PATIENT_NAV_ITEMS: NavLinkItem[] = [
+  { label: "Home", href: "/patient", icon: HomeIcon },
+  { label: "My Profile", href: "/patient/profile", icon: UserIcon },
+  { label: "Upload Records", href: "/patient/upload", icon: UploadCloud },
+  { label: "Reports", href: "/patient/reports", icon: FileText },
+  { label: "Health Timeline", href: "/patient/timeline", icon: Clock },
+  { label: "Consent & Sharing", href: "/patient/consent", icon: ShieldCheck },
+  { label: "Notifications", href: "/patient/notifications", icon: Bell },
+];
+
 const NAV_ITEMS: NavLinkItem[] = [
-  { label: "Dashboard", href: "/patient", icon: LayoutDashboard },
-  { label: "Health Memory", href: "/patient/memory", icon: Activity },
-  { label: "Timeline", href: "/patient/timeline", icon: Clock },
+  { label: "AI Clinical Brief", href: "/clinician/brief", icon: Activity },
+  { label: "Patient Timeline", href: "/patient/timeline", icon: Clock },
   { label: "Medications", href: "/patient/medications", icon: Pill },
   { label: "Risks", href: "/patient/risks", icon: AlertTriangle },
 ];
@@ -142,7 +155,7 @@ export function MobileNav({
             <div>
               <p className={styles.sectionTitle}>Navigation</p>
               <nav className={styles.navList} aria-label="Mobile Navigation Links">
-                {NAV_ITEMS.map((item) => {
+                {(activeRole === "patient" ? PATIENT_NAV_ITEMS : NAV_ITEMS).map((item) => {
                   const active = isLinkActive(item.href);
                   const Icon = item.icon;
                   return (

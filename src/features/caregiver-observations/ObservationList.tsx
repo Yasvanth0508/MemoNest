@@ -47,6 +47,7 @@ const CATEGORY_MAP: Record<
   medication_adherence: { label: "Medication Intake", icon: Pill, variant: "secondary" },
   behavior: { label: "Mood & Behavior", icon: Smile, variant: "default" },
   appetite: { label: "Meal & Hydration", icon: Utensils, variant: "success" },
+  physical_symptom: { label: "Physical Symptom", icon: Activity, variant: "warning" },
   general: { label: "General Check", icon: ClipboardList, variant: "default" },
 };
 

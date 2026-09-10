@@ -1,0 +1,292 @@
+.overviewContainer {
+  padding: 24px;
+  max-width: 1360px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.patientSummaryBanner {
+  background: #ffffff;
+  border: 1px solid var(--color-border, #dde2e1);
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  box-shadow: 0 4px 16px rgba(18, 37, 68, 0.04);
+}
+
+.profileMain {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.profileAvatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--color-primary, #122544);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.profileMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.patientNameTitle {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--color-primary, #122544);
+}
+
+.demographicDetails {
+  font-size: 13px;
+  color: var(--color-text-secondary, #68717c);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.demoDot {
+  color: #c4c4c4;
+}
+
+.quickActionsGroup {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.quickActionBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--color-border, #dde2e1);
+  background: #fbfbf9;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-primary, #122544);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.quickActionBtn:hover {
+  background: #eaf5f4;
+  border-color: var(--color-secondary, #67b8ba);
+}
+
+/* Two-column layout */
+.overviewGrid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+}
+
+@media (max-width: 1024px) {
+  .overviewGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.cardSection {
+  background: #ffffff;
+  border: 1px solid var(--color-border, #dde2e1);
+  border-radius: 14px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: 0 2px 8px rgba(18, 37, 68, 0.03);
+}
+
+.sectionHeading {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-primary, #122544);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.headingLeft {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Allergies styling */
+.allergiesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px;
+}
+
+.allergyItem {
+  background: #fff5f5;
+  border: 1px solid #fed7d7;
+  border-radius: 10px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.allergyAllergen {
+  font-size: 14px;
+  font-weight: 700;
+  color: #c5221f;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.allergyReaction {
+  font-size: 12px;
+  color: #4b5563;
+}
+
+.allergyDate {
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+/* Medications List */
+.medsTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.medsTable th {
+  text-align: left;
+  padding: 8px 12px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-secondary, #68717c);
+  border-bottom: 1px solid #eef2f1;
+  background: #fbfbf9;
+}
+
+.medsTable td {
+  padding: 12px;
+  border-bottom: 1px solid #f0f3f2;
+  vertical-align: top;
+}
+
+.medNameCell {
+  font-weight: 700;
+  color: var(--color-primary, #122544);
+}
+
+.recentBadge {
+  display: inline-block;
+  font-size: 10px;
+  background: #fef7e0;
+  color: #b06000;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-top: 4px;
+}
+
+/* Diagnoses Pills */
+.diagnosesContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.diagnosisPill {
+  background: #f4f7f6;
+  border: 1px solid var(--color-border, #dde2e1);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-primary, #122544);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Care Team Cards */
+.careTeamList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.careMemberCard {
+  background: #fbfbf9;
+  border: 1px solid #eef2f1;
+  border-radius: 10px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.memberRole {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 700;
+  color: var(--color-secondary, #67b8ba);
+}
+
+.memberName {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-primary, #122544);
+}
+
+.memberOrg {
+  font-size: 12px;
+  color: var(--color-text-secondary, #68717c);
+}
+
+.memberContact {
+  font-size: 12px;
+  color: var(--color-primary, #122544);
+  font-weight: 600;
+}
+
+/* Consent Scope Table */
+.consentTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.consentTable th {
+  text-align: left;
+  padding: 8px 10px;
+  font-size: 11px;
+  text-transform: uppercase;
+  color: var(--color-text-secondary, #68717c);
+  border-bottom: 1px solid #eef2f1;
+  background: #fbfbf9;
+}
+
+.consentTable td {
+  padding: 10px;
+  border-bottom: 1px solid #f0f3f2;
+  font-size: 12px;
+}

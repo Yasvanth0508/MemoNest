@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { AppShell } from "@/components/layout";
+import { PatientPortalShell } from "@/components/patient";
 import { PATIENT_SIDEBAR_SECTIONS } from "@/features/patient-nav";
 import { patientService } from "@/services";
 import { Patient } from "@/types";
@@ -313,14 +313,7 @@ export default function HealthMemoryPage() {
   ];
 
   return (
-    <AppShell
-      activeRole="patient"
-      customSidebarSections={PATIENT_SIDEBAR_SECTIONS}
-      showPatientHeader={true}
-      patient={patient || undefined}
-      breadcrumbs={breadcrumbs}
-      onViewEvidence={() => handleOpenEvidence("ev-stroke-discharge-01")}
-    >
+    <PatientPortalShell>
       <div className={styles.container}>
         {/* Longitudinal Memory Representation */}
         <LongitudinalSummary />
@@ -377,6 +370,6 @@ export default function HealthMemoryPage() {
         onClose={() => setIsEvidenceOpen(false)}
         evidenceId={selectedEvidenceId}
       />
-    </AppShell>
+    </PatientPortalShell>
   );
 }

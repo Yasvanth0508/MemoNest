@@ -1,0 +1,320 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+/* 1. Hero Primary Action: Log an Observation */
+.heroActionCard {
+  background: linear-gradient(135deg, #122544 0%, #1e3a66 100%);
+  color: white;
+  border-radius: var(--radius-lg);
+  padding: var(--space-6) var(--space-8);
+  box-shadow: 0 10px 30px rgba(18, 37, 68, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-6);
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .heroActionCard {
+    padding: var(--space-6) var(--space-4);
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+.heroLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: 520px;
+}
+
+.heroBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(103, 184, 186, 0.25);
+  color: #a6e7e8;
+  border: 1px solid rgba(103, 184, 186, 0.4);
+  border-radius: var(--radius-pill);
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  width: fit-content;
+}
+
+.heroTitle {
+  font-size: var(--font-size-3xl);
+  font-family: var(--font-display);
+  color: white;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.heroSubtitle {
+  font-size: var(--font-size-md);
+  color: #c9d8e6;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.heroActions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-end;
+}
+
+@media (max-width: 768px) {
+  .heroActions {
+    align-items: stretch;
+  }
+}
+
+.giantVoiceButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: var(--color-secondary);
+  color: #0b3536;
+  border: none;
+  border-radius: var(--radius-pill);
+  padding: 16px 32px;
+  font-family: inherit;
+  font-size: var(--patient-font-base);
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(103, 184, 186, 0.45);
+  transition: all 0.2s ease;
+  min-height: 56px;
+}
+
+.giantVoiceButton:hover {
+  background: #7bd4d6;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 26px rgba(103, 184, 186, 0.6);
+}
+
+.quickActionPills {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.quickPill {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  border-radius: var(--radius-pill);
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.15s ease;
+}
+
+.quickPill:hover {
+  background: rgba(255, 255, 255, 0.22);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.quickPillFall {
+  background: rgba(217, 56, 58, 0.4);
+  border-color: rgba(217, 56, 58, 0.6);
+}
+
+.quickPillFall:hover {
+  background: rgba(217, 56, 58, 0.6);
+}
+
+/* 2. Grid for Digital Twin Snapshot & "What to Watch For" preview */
+.middleGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-5);
+}
+
+@media (max-width: 900px) {
+  .middleGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.twinCard {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  border: 1.5px solid var(--color-border);
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.twinCardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.twinCardTitle {
+  font-size: var(--font-size-lg);
+  font-family: var(--font-display);
+  color: var(--color-primary);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.twinStatusIndicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.factorsList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.factorItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--color-primary);
+  background: #f8fafb;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid #edf2f7;
+}
+
+.cardFooterBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-primary);
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.cardFooterBtn:hover {
+  color: var(--color-secondary);
+}
+
+/* 3. Watch For Preview Card */
+.watchPreviewCard {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  border: 1.5px solid var(--color-border);
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.watchItemsPreviewList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.watchPreviewRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  background: #fdfbf7;
+  border: 1px solid #ebd9bf;
+  gap: 12px;
+}
+
+.watchRowLeft {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.watchRowTitle {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.watchRowDesc {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.logThisSmallBtn {
+  background: var(--color-surface-accent);
+  border: 1px solid #bce2e0;
+  color: #1a6b6d;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: var(--radius-pill);
+  padding: 6px 12px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.logThisSmallBtn:hover {
+  background: #d4edea;
+}
+
+/* 4. Recent Feed Section */
+.recentSection {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.recentSectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.recentSectionTitle {
+  font-size: var(--font-size-xl);
+  font-family: var(--font-display);
+  color: var(--color-primary);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}

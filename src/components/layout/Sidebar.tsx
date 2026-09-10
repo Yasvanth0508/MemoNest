@@ -7,15 +7,20 @@ import { UserRole } from "@/types";
 import {
   Activity,
   AlertTriangle,
+  Bell,
   ChevronLeft,
   ChevronRight,
   Clock,
+  FileText,
   HeartHandshake,
+  Home as HomeIcon,
   LayoutDashboard,
   Pill,
+  ShieldCheck,
   Sparkles,
   Stethoscope,
   TrendingUp,
+  UploadCloud,
   User as UserIcon,
   Users,
 } from "lucide-react";
@@ -61,19 +66,22 @@ export function getRoleSidebarSections(role: UserRole): SidebarSection[] {
     case "doctor":
       return [
         {
-          title: "Clinical Workspace",
+          title: "Doctor Workspace",
           items: [
-            { label: "AI Clinical Brief", href: "/clinician/brief", icon: Sparkles, badge: "AI" },
-            { label: "Health Memory", href: "/patient/memory", icon: Activity },
-            { label: "Patient Timeline", href: "/patient/timeline", icon: Clock },
+            { label: "Doctor Home", href: "/clinician", icon: HomeIcon },
+            { label: "Patient Overview", href: "/clinician/overview", icon: UserIcon },
+            { label: "Key Changes", href: "/clinician/changes", icon: AlertTriangle, badge: "New", badgeVariant: "danger" },
+            { label: "Patient State (Twin)", href: "/clinician/state", icon: TrendingUp, badge: "Deviation", badgeVariant: "warning" },
           ],
         },
         {
-          title: "Intelligence & Safety",
+          title: "Clinical Actions",
           items: [
-            { label: "Medication Intelligence", href: "/patient/medications", icon: Pill, badge: "Review", badgeVariant: "warning" },
-            { label: "Risk Intelligence", href: "/patient/risks", icon: AlertTriangle, badge: "High", badgeVariant: "danger" },
-            { label: "Patient Roster", href: "/clinician", icon: Users },
+            { label: "Health Timeline", href: "/clinician/timeline", icon: Clock },
+            { label: "Upload Documents", href: "/clinician/upload", icon: UploadCloud },
+            { label: "AI Clinical Assistant", href: "/clinician/assistant", icon: Sparkles, badge: "AI" },
+            { label: "Prescription / Notes", href: "/clinician/prescribe", icon: Pill },
+            { label: "Access Log / Audit", href: "/clinician/audit", icon: ShieldCheck },
           ],
         },
       ];
@@ -83,17 +91,17 @@ export function getRoleSidebarSections(role: UserRole): SidebarSection[] {
         {
           title: "Caregiver Hub",
           items: [
-            { label: "Caregiver Dashboard", href: "/caregiver", icon: LayoutDashboard },
-            { label: "Daily Observations", href: "/caregiver/observations", icon: HeartHandshake, badge: "Log", badgeVariant: "warning" },
-            { label: "Patient Trends", href: "/caregiver/trends", icon: TrendingUp },
+            { label: "Dashboard", href: "/caregiver", icon: LayoutDashboard },
+            { label: "Patient Details & Risks", href: "/caregiver/patient", icon: Users },
+            { label: "Log Observation", href: "/caregiver/report", icon: HeartHandshake, badge: "Voice", badgeVariant: "warning" },
+            { label: "Health Timeline", href: "/caregiver/timeline", icon: Clock },
+            { label: "Patient State (Twin)", href: "/caregiver/state", icon: TrendingUp },
           ],
         },
         {
-          title: "Memory & Care",
+          title: "Care Access",
           items: [
-            { label: "Health Memory", href: "/patient/memory", icon: Activity },
-            { label: "Medications", href: "/patient/medications", icon: Pill },
-            { label: "Care Timeline", href: "/patient/timeline", icon: Clock },
+            { label: "Caregiver Sign In", href: "/caregiver/login", icon: ShieldCheck },
           ],
         },
       ];
@@ -102,13 +110,21 @@ export function getRoleSidebarSections(role: UserRole): SidebarSection[] {
     default:
       return [
         {
-          title: "My Health",
+          title: "Health Navigation",
           items: [
-            { label: "Dashboard", href: "/patient", icon: LayoutDashboard },
-            { label: "Health Memory", href: "/patient/memory", icon: Activity },
-            { label: "Timeline", href: "/patient/timeline", icon: Clock },
-            { label: "Medications", href: "/patient/medications", icon: Pill },
-            { label: "Risks", href: "/patient/risks", icon: AlertTriangle },
+            { label: "Home", href: "/patient", icon: HomeIcon },
+            { label: "My Profile", href: "/patient/profile", icon: UserIcon },
+            { label: "Upload Records", href: "/patient/upload", icon: UploadCloud },
+            { label: "Reports", href: "/patient/reports", icon: FileText },
+            { label: "Health Timeline", href: "/patient/timeline", icon: Clock },
+            { label: "Consent & Sharing", href: "/patient/consent", icon: ShieldCheck },
+            {
+              label: "Notifications",
+              href: "/patient/notifications",
+              icon: Bell,
+              badge: "3",
+              badgeVariant: "warning",
+            },
           ],
         },
       ];

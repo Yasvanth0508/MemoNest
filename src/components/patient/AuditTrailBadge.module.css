@@ -1,0 +1,22 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #F4F6F8;
+  border: 1px solid #D5DCE3;
+  border-radius: var(--radius-pill);
+  padding: 6px 14px;
+  font-size: 14px;
+  color: #4A5568;
+  font-weight: 500;
+}
+
+.icon {
+  color: #3182CE;
+  flex-shrink: 0;
+}
+
+.strong {
+  color: #1A202C;
+  font-weight: 600;
+}
