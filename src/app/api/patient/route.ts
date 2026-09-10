@@ -5,32 +5,50 @@ import { getAuthUserFromRequest } from '@/lib/auth/jwt';
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
+    const idParam = searchParams.get('id') || searchParams.get('patientId');
     const emailParam = searchParams.get('email');
 
-    let patientEmail = emailParam;
+    let patient = null;
 
-    if (!patientEmail) {
-      const user = await getAuthUserFromRequest(req);
-      if (user && user.role === 'patient') {
-        patientEmail = user.email;
-      }
-    }
-
-    // Default to seeded demo patient if none specified
-    if (!patientEmail) {
-      patientEmail = 'ravi@healthmemory.demo';
-    }
-
-    const patient = await prisma.patient.findFirst({
-      where: { email: patientEmail },
-      include: {
-        conditions: true,
-        allergies: true,
-        medications: {
-          where: { status: 'active' },
+    if (idParam) {
+      patient = await prisma.patient.findUnique({
+        where: { id: idParam },
+        include: {
+          conditions: true,
+          allergies: true,
+          medications: {
+            where: { status: 'active' },
+          },
         },
-      },
-    });
+      });
+    }
+
+    if (!patient) {
+      let patientEmail = emailParam;
+
+      if (!patientEmail) {
+        const user = await getAuthUserFromRequest(req);
+        if (user && user.role === 'patient') {
+          patientEmail = user.email;
+        }
+      }
+
+      // Default to seeded demo patient if none specified
+      if (!patientEmail) {
+        patientEmail = 'ravi@healthmemory.demo';
+      }
+
+      patient = await prisma.patient.findFirst({
+        where: { email: patientEmail },
+        include: {
+          conditions: true,
+          allergies: true,
+          medications: {
+            where: { status: 'active' },
+          },
+        },
+      });
+    }
 
     if (!patient) {
       // Fallback to first patient in database

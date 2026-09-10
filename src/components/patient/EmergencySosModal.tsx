@@ -20,7 +20,29 @@ export interface EmergencySosModalProps {
 }
 
 export function EmergencySosModal({ isOpen, onClose }: EmergencySosModalProps) {
-  const patient = patientPortalStore.getPatient();
+  const storePatient = patientPortalStore.getPatient();
+  const [sosData, setSosData] = React.useState<any | null>(null);
+
+  // Fetch live SOS emergency record
+  React.useEffect(() => {
+    if (!isOpen) return;
+    let isMounted = true;
+    async function loadSos() {
+      try {
+        const res = await fetch("/api/patient/emergency-sos");
+        if (res.ok && isMounted) {
+          const data = await res.json();
+          setSosData(data);
+        }
+      } catch {
+        // Fallback to store
+      }
+    }
+    loadSos();
+    return () => {
+      isMounted = false;
+    };
+  }, [isOpen]);
 
   // Close on Escape
   React.useEffect(() => {
@@ -34,6 +56,30 @@ export function EmergencySosModal({ isOpen, onClose }: EmergencySosModalProps) {
   }, [isOpen, onClose]);
 
   if (!isOpen) return null;
+
+  const patient = {
+    name: sosData?.name || storePatient.name || "Ravi Kumar",
+    age: sosData?.age ?? storePatient.age ?? 74,
+    dateOfBirth: sosData?.dateOfBirth || storePatient.dateOfBirth || "1952-04-12",
+    gender: sosData?.gender || storePatient.gender || "Male",
+    bloodType: sosData?.bloodType || storePatient.bloodType || "B+",
+    mobilityStatus: sosData?.mobilityStatus || storePatient.mobilityStatus || "Walker required",
+    emergencyContact: sosData?.emergencyContact || storePatient.emergencyContact || {
+      name: "Meera Kumar",
+      relationship: "Daughter / Legal Healthcare Proxy",
+      phone: "+1-555-0199",
+    },
+    allergies: sosData?.allergies || storePatient.allergies || [],
+    activeMedications: sosData?.activeMedications || [
+      { name: "Amlodipine", dosage: "5mg", frequency: "Daily morning", indication: "Blood pressure" },
+      { name: "Metformin", dosage: "500mg", frequency: "Twice daily", indication: "Blood glucose" },
+      { name: "Aspirin", dosage: "81mg", frequency: "Daily", indication: "Stroke prevention" },
+      { name: "Donepezil", dosage: "5mg", frequency: "Nightly bedtime", indication: "Cognitive support" },
+      { name: "Zolpidem", dosage: "5mg", frequency: "PRN bedtime", fallRiskWarning: true, sedationRisk: true, indication: "Insomnia (Fall caution)" },
+    ],
+    primaryDoctor: sosData?.primaryDoctor || storePatient.primaryDoctor || "Dr. Rajesh Sharma, MD",
+    dnrStatus: sosData?.dnrStatus || "DNR Order on Official Record #DNR-2024-8841",
+  };
 
   return (
     <div className={styles.backdrop} onClick={onClose} role="dialog" aria-modal="true" aria-labelledby="sos-title">
@@ -64,12 +110,12 @@ export function EmergencySosModal({ isOpen, onClose }: EmergencySosModalProps) {
           </a>
 
           <a
-            href={`tel:${patient.emergencyContact?.phone || "+1-555-0192"}`}
+            href={`tel:${patient.emergencyContact?.phone || "+1-555-0199"}`}
             className={styles.callContactButton}
-            aria-label={`Call Emergency Contact ${patient.emergencyContact?.name || "Priya Kumar"}`}
+            aria-label={`Call Emergency Contact ${patient.emergencyContact?.name || "Healthcare Proxy"}`}
           >
             <UserCheck size={26} />
-            <span>Call {patient.emergencyContact?.name || "Priya (Daughter)"}</span>
+            <span>Call {patient.emergencyContact?.name || "Healthcare Proxy"}</span>
           </a>
         </div>
 
@@ -91,19 +137,19 @@ export function EmergencySosModal({ isOpen, onClose }: EmergencySosModalProps) {
             <p style={{ margin: "0 0 8px 0" }}>
               <strong>Blood Type:</strong>{" "}
               <span style={{ fontSize: "20px", color: "#DC2626", fontWeight: 800 }}>
-                {patient.bloodType || "B+"}
+                {patient.bloodType}
               </span>
             </p>
             <p style={{ margin: 0 }}>
               <strong>Severe Allergies:</strong>{" "}
               {patient.allergies && patient.allergies.length > 0 ? (
-                patient.allergies.map((a, i) => (
+                patient.allergies.map((a: any, i: number) => (
                   <span key={a.id || i} className={styles.allergyItem}>
-                    {a.allergen} ({a.reaction}){i < patient.allergies.length - 1 ? ", " : ""}
+                    {a.allergen} ({a.reaction || a.severity}){i < patient.allergies.length - 1 ? ", " : ""}
                   </span>
                 ))
               ) : (
-                <span className={styles.allergyItem}>Penicillin (Severe Hives/Anaphylaxis), Sulfa drugs</span>
+                <span className={styles.allergyItem}>None documented</span>
               )}
             </p>
           </div>
@@ -113,15 +159,26 @@ export function EmergencySosModal({ isOpen, onClose }: EmergencySosModalProps) {
         <div className={styles.critSection}>
           <h3 className={styles.critTitle}>
             <Pill size={18} color="#2563EB" />
-            <span>Current Critical Medications</span>
+            <span>Current Critical Medications ({patient.activeMedications.length})</span>
           </h3>
           <div className={styles.critCard}>
             <ul style={{ margin: 0, paddingLeft: "20px" }}>
-              <li><strong>Amlodipine 5mg</strong> (Daily morning for blood pressure)</li>
-              <li><strong>Metformin 500mg</strong> (Twice daily with meals)</li>
-              <li><strong>Aspirin 81mg</strong> (Daily stroke prevention)</li>
-              <li><strong>Donepezil 5mg</strong> (Nightly at bedtime)</li>
-              <li><strong>Zolpidem 5mg PRN</strong> (Bedtime as needed — fall caution)</li>
+              {patient.activeMedications.map((m: any, idx: number) => (
+                <li key={idx} style={{ marginBottom: "6px" }}>
+                  <strong>{m.name} {m.dosage}</strong> ({m.frequency})
+                  {m.fallRiskWarning && (
+                    <span style={{ marginLeft: "8px", color: "#DC2626", fontWeight: 700, fontSize: "12px" }}>
+                      ⚠️ Fall Risk Warning
+                    </span>
+                  )}
+                  {m.sedationRisk && (
+                    <span style={{ marginLeft: "8px", color: "#D97706", fontWeight: 700, fontSize: "12px" }}>
+                      ⚠️ Sedation Caution
+                    </span>
+                  )}
+                  {m.indication && <span style={{ color: "#68717C", fontSize: "12px" }}> — {m.indication}</span>}
+                </li>
+              ))}
             </ul>
           </div>
         </div>
@@ -135,8 +192,8 @@ export function EmergencySosModal({ isOpen, onClose }: EmergencySosModalProps) {
           <div className={styles.dnrAlert}>
             <AlertTriangle size={24} style={{ flexShrink: 0, marginTop: "2px" }} />
             <div>
-              <div style={{ fontSize: "17px", fontWeight: 800 }}>DNR Order on Official Record</div>
-              <div>MetroHealth Hospital Registry ID #DNR-2024-8841. Healthcare proxy and medical power of attorney: Priya Kumar (+1-555-0192).</div>
+              <div style={{ fontSize: "17px", fontWeight: 800 }}>{patient.dnrStatus}</div>
+              <div>Healthcare proxy and medical power of attorney: {patient.emergencyContact?.name} ({patient.emergencyContact?.phone}).</div>
             </div>
           </div>
         </div>
@@ -144,7 +201,7 @@ export function EmergencySosModal({ isOpen, onClose }: EmergencySosModalProps) {
         {/* Primary Physician */}
         <div className={styles.critSection}>
           <div className={styles.critCard}>
-            <strong>Primary Physician:</strong> {patient.primaryDoctor || "Dr. Rajesh Sharma, MD"} • MetroHealth Senior Specialty Clinic
+            <strong>Primary Physician:</strong> {patient.primaryDoctor} • MetroHealth Senior Specialty Clinic
           </div>
         </div>
 

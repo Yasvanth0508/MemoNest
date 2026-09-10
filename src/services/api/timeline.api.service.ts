@@ -1,5 +1,4 @@
 import { TimelineEvent } from '@/types';
-import { mockTimelineEvents } from '@/data/mock/timeline';
 
 export const timelineApiService = {
   async getTimelineEvents(
@@ -8,20 +7,23 @@ export const timelineApiService = {
     search?: string
   ): Promise<TimelineEvent[]> {
     try {
-      let savedEmail = 'ravi@healthmemory.demo';
-      if (typeof window !== 'undefined') {
-        savedEmail = window.localStorage.getItem('active_patient_email') || savedEmail;
+      const params = new URLSearchParams();
+      if (patientId) {
+        params.set('patientId', patientId);
+      } else if (typeof window !== 'undefined') {
+        const savedEmail = window.localStorage.getItem('active_patient_email');
+        if (savedEmail) {
+          params.set('email', savedEmail);
+        }
       }
 
-      const params = new URLSearchParams();
-      params.set('email', savedEmail);
       if (category && category !== 'all') {
         params.set('category', category);
       }
 
       const res = await fetch(`/api/timeline?${params.toString()}`);
       if (!res.ok) {
-        return mockTimelineEvents;
+        throw new Error(`Failed to fetch timeline events (Status: ${res.status})`);
       }
 
       const data = await res.json();
@@ -38,8 +40,9 @@ export const timelineApiService = {
       }
 
       return events;
-    } catch {
-      return mockTimelineEvents;
+    } catch (err) {
+      console.error('timelineApiService.getTimelineEvents error:', err);
+      return [];
     }
   },
 

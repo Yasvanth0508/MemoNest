@@ -4,24 +4,40 @@ import { prisma } from '@/lib/db/prisma';
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
-    const email = searchParams.get('email') || 'ravi@healthmemory.demo';
+    const patientId = searchParams.get('patientId') || searchParams.get('id');
+    const email = searchParams.get('email');
 
-    let patient = await prisma.patient.findFirst({
-      where: { email },
-      include: {
-        caregiverObservations: {
-          orderBy: { timestamp: 'desc' },
-          take: 20,
+    let patient = null;
+    if (patientId) {
+      patient = await prisma.patient.findUnique({
+        where: { id: patientId },
+        include: {
+          caregiverObservations: {
+            orderBy: { timestamp: 'desc' },
+            take: 30,
+          },
         },
-      },
-    });
+      });
+    }
+
+    if (!patient && email) {
+      patient = await prisma.patient.findFirst({
+        where: { email },
+        include: {
+          caregiverObservations: {
+            orderBy: { timestamp: 'desc' },
+            take: 30,
+          },
+        },
+      });
+    }
 
     if (!patient) {
       patient = await prisma.patient.findFirst({
         include: {
           caregiverObservations: {
             orderBy: { timestamp: 'desc' },
-            take: 20,
+            take: 30,
           },
         },
       });

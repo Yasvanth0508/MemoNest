@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { useCaregiver } from "./caregiver-store";
+import { useCaregiver, formatTimeDeterministic } from "./caregiver-store";
 import { TimelineEvent } from "@/types";
 import {
   HeartHandshake,
@@ -261,7 +261,7 @@ export function CombinedHealthTimeline() {
                       <div key={note.id} className={styles.noteItem}>
                         <div className={styles.noteAuthorRow}>
                           <strong>{note.author} ({note.authorRole})</strong>
-                          <span>{new Date(note.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</span>
+                          <span>{formatTimeDeterministic(note.timestamp)}</span>
                         </div>
                         <div className={styles.noteText}>{note.note}</div>
                       </div>

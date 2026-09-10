@@ -1,35 +1,42 @@
 import { Patient } from '@/types';
-import { mockPatient } from '@/data/mock/patients';
 
 export const patientApiService = {
   async getPatient(patientId?: string): Promise<Patient> {
     try {
-      let savedEmail = 'ravi@healthmemory.demo';
-      if (typeof window !== 'undefined') {
-        savedEmail = window.localStorage.getItem('active_patient_email') || savedEmail;
+      let url = '/api/patient';
+      if (patientId) {
+        url = `/api/patient?id=${encodeURIComponent(patientId)}`;
+      } else if (typeof window !== 'undefined') {
+        const savedEmail = window.localStorage.getItem('active_patient_email');
+        if (savedEmail) {
+          url = `/api/patient?email=${encodeURIComponent(savedEmail)}`;
+        }
       }
 
-      const res = await fetch(`/api/patient?email=${encodeURIComponent(savedEmail)}`, {
-        method: 'GET',
-      });
-
+      const res = await fetch(url);
       if (!res.ok) {
-        return mockPatient;
+        throw new Error(`Failed to fetch patient (Status: ${res.status})`);
       }
 
       const data = await res.json();
-      return data.patient || mockPatient;
-    } catch {
-      return mockPatient;
+      return data.patient;
+    } catch (err) {
+      console.error('patientApiService.getPatient error:', err);
+      throw err;
     }
   },
 
   async getPatients(): Promise<Patient[]> {
     try {
-      const p = await this.getPatient();
-      return [p];
-    } catch {
-      return [mockPatient];
+      const res = await fetch('/api/clinician/patients/search?all=true');
+      if (!res.ok) {
+        throw new Error(`Failed to fetch patients roster (Status: ${res.status})`);
+      }
+      const data = await res.json();
+      return data.patients || [];
+    } catch (err) {
+      console.error('patientApiService.getPatients error:', err);
+      throw err;
     }
   },
 

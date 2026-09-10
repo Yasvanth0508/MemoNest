@@ -44,6 +44,9 @@ export default function HealthTimelinePage() {
   const [selectedSourceEvent, setSelectedSourceEvent] = React.useState<TimelineEvent | null>(null);
 
   React.useEffect(() => {
+    patientPortalStore.initFromApi().then(() => {
+      setEvents([...patientPortalStore.getTimelineEvents()]);
+    });
     const unsub = patientPortalStore.subscribe(() => {
       setEvents([...patientPortalStore.getTimelineEvents()]);
     });

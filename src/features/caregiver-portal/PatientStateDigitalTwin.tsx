@@ -20,7 +20,44 @@ import styles from "./PatientStateDigitalTwin.module.css";
 
 export function PatientStateDigitalTwin() {
   const { activePatient, activePatientCare } = useCaregiver();
-  const { digitalTwin, escalationProtocol } = activePatientCare;
+  const [liveTrendData, setLiveTrendData] = React.useState<any | null>(null);
+
+  React.useEffect(() => {
+    let isMounted = true;
+    async function loadTrends() {
+      try {
+        const query = activePatient?.email
+          ? `email=${encodeURIComponent(activePatient.email)}`
+          : `patientId=${activePatient?.id || "patient-001"}`;
+        const res = await fetch(`/api/caregiver/trends?${query}`);
+        if (res.ok && isMounted) {
+          const data = await res.json();
+          setLiveTrendData(data);
+        }
+      } catch (err) {
+        console.warn("Could not load live caregiver trends:", err);
+      }
+    }
+    loadTrends();
+    return () => {
+      isMounted = false;
+    };
+  }, [activePatient?.id, activePatient?.email]);
+
+  const digitalTwin = React.useMemo(() => {
+    if (!liveTrendData) return activePatientCare.digitalTwin;
+    return {
+      ...activePatientCare.digitalTwin,
+      state: liveTrendData.state || activePatientCare.digitalTwin.state,
+      label: liveTrendData.label || activePatientCare.digitalTwin.label,
+      plainExplanation: liveTrendData.plainExplanation || activePatientCare.digitalTwin.plainExplanation,
+      lastCalculated: liveTrendData.lastCalculated || activePatientCare.digitalTwin.lastCalculated,
+      contributingFactors: liveTrendData.contributingFactors || activePatientCare.digitalTwin.contributingFactors,
+      trendSignals: liveTrendData.trendSignals || activePatientCare.digitalTwin.trendSignals,
+    };
+  }, [liveTrendData, activePatientCare.digitalTwin]);
+
+  const { escalationProtocol } = activePatientCare;
 
   const getStatusLabel = (status: DigitalTwinSignalComparison["status"]) => {
     switch (status) {
@@ -73,7 +110,7 @@ export function PatientStateDigitalTwin() {
         </p>
 
         <div className={styles.factorGrid}>
-          {digitalTwin.contributingFactors.map((factor, idx) => (
+          {digitalTwin.contributingFactors.map((factor: string, idx: number) => (
             <div key={idx} className={styles.factorCard}>
               <div
                 style={{
@@ -104,7 +141,7 @@ export function PatientStateDigitalTwin() {
         </div>
 
         <div className={styles.signalsGrid}>
-          {digitalTwin.trendSignals.map((signal, idx) => (
+          {digitalTwin.trendSignals.map((signal: any, idx: number) => (
             <div key={idx} className={styles.signalCard}>
               <div className={styles.signalCardHeader}>
                 <span className={styles.signalName}>{signal.name}</span>

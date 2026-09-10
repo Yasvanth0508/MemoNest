@@ -39,6 +39,9 @@ export default function NotificationsPage() {
   const [activeCategory, setActiveCategory] = React.useState<string>("all");
 
   React.useEffect(() => {
+    patientPortalStore.initFromApi().then(() => {
+      setNotifications([...patientPortalStore.getNotifications()]);
+    });
     const unsub = patientPortalStore.subscribe(() => {
       setNotifications([...patientPortalStore.getNotifications()]);
     });

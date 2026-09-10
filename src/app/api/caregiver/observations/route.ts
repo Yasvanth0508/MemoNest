@@ -6,22 +6,29 @@ import { createRecordChunk } from '@/lib/ai/chunking';
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
-    const email = searchParams.get('email') || 'ravi@healthmemory.demo';
+    const patientIdParam = searchParams.get('patientId') || searchParams.get('id');
+    const email = searchParams.get('email');
 
-    let patient = await prisma.patient.findFirst({
-      where: { email },
-    });
+    let targetPatientId: string | undefined = patientIdParam || undefined;
 
-    if (!patient) {
-      patient = await prisma.patient.findFirst();
+    if (!targetPatientId) {
+      const patient = await prisma.patient.findFirst({
+        where: { email: email || 'ravi@healthmemory.demo' },
+      });
+      targetPatientId = patient?.id;
     }
 
-    if (!patient) {
+    if (!targetPatientId) {
+      const fallback = await prisma.patient.findFirst();
+      targetPatientId = fallback?.id;
+    }
+
+    if (!targetPatientId) {
       return NextResponse.json({ observations: [] });
     }
 
     const observations = await prisma.caregiverObservation.findMany({
-      where: { patientId: patient.id },
+      where: { patientId: targetPatientId },
       orderBy: { timestamp: 'desc' },
     });
 

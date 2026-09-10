@@ -55,6 +55,10 @@ export default function ConsentSharingPage() {
   const [newDuration, setNewDuration] = React.useState<number>(30);
 
   React.useEffect(() => {
+    patientPortalStore.initFromApi().then(() => {
+      setConsentRecords([...patientPortalStore.getConsentRecords()]);
+      setAccessRequests([...patientPortalStore.getAccessRequests()]);
+    });
     const unsub = patientPortalStore.subscribe(() => {
       setConsentRecords([...patientPortalStore.getConsentRecords()]);
       setAccessRequests([...patientPortalStore.getAccessRequests()]);

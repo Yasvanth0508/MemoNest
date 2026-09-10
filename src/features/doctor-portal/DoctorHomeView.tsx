@@ -89,6 +89,7 @@ export function DoctorHomeView() {
           <div className={styles.changesList}>
             {filteredChanges.map((change) => {
               const p = patients.find((pat) => pat.id === change.patientId) || patients[0];
+              const patientName = p?.name || "Ravi Kumar";
               const isCritical = change.severity === "critical";
               const isHigh = change.severity === "high";
 
@@ -104,7 +105,7 @@ export function DoctorHomeView() {
                 >
                   <div className={changeTopRowStyle(change.severity)}>
                     <div className={styles.changeTitleGroup}>
-                      <span className={styles.changePatientBadge}>{p.name}</span>
+                      <span className={styles.changePatientBadge}>{patientName}</span>
                       <h3 className={styles.changeTitle}>{change.title}</h3>
                     </div>
 
@@ -144,7 +145,7 @@ export function DoctorHomeView() {
                         type="button"
                         className={styles.viewSourceBtn}
                         onClick={() => selectPatient(change.patientId, "changes")}
-                        aria-label={`Inspect ${p.name}'s records`}
+                        aria-label={`Inspect ${patientName}'s records`}
                       >
                         <span>Open Record</span>
                         <ArrowRight size={12} />

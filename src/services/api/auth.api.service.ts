@@ -1,5 +1,12 @@
 import { AuthSession, UserRole } from '@/types';
-import { SignUpData } from '../mock/auth.service';
+
+export interface SignUpData {
+  name: string;
+  email: string;
+  role: UserRole;
+  password?: string;
+  patientEmail?: string;
+}
 
 export const authApiService = {
   async login(

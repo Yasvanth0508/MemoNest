@@ -3,7 +3,7 @@
 import * as React from "react";
 import { PatientPortalShell } from "@/components/patient";
 import { Medication } from "@/types";
-import { medicationService } from "@/services";
+import { medicationService, patientService } from "@/services";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
@@ -18,24 +18,31 @@ import styles from "./medications.module.css";
 
 export default function PatientMedicationsPage() {
   const [medications, setMedications] = React.useState<Medication[]>([]);
+  const [allergies, setAllergies] = React.useState<any[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
 
   const [selectedEvidenceId, setSelectedEvidenceId] = React.useState<string | null>(null);
   const [isEvidenceOpen, setIsEvidenceOpen] = React.useState(false);
 
   React.useEffect(() => {
-    async function loadMeds() {
+    async function loadData() {
       try {
         setIsLoading(true);
-        const data = await medicationService.getMedications();
-        setMedications(data);
+        const [medsData, patientData] = await Promise.all([
+          medicationService.getMedications(),
+          patientService.getPatient(),
+        ]);
+        setMedications(medsData || []);
+        if (patientData?.allergies) {
+          setAllergies(patientData.allergies);
+        }
       } catch (err) {
-        console.error("Failed to load medications:", err);
+        console.error("Failed to load medications data:", err);
       } finally {
         setIsLoading(false);
       }
     }
-    loadMeds();
+    loadData();
   }, []);
 
   const handleViewEvidence = (evidenceId: string) => {
@@ -45,6 +52,10 @@ export default function PatientMedicationsPage() {
 
   const activeMeds = medications.filter((m) => m.status === "active");
   const stoppedMeds = medications.filter((m) => m.status !== "active");
+
+  const flaggedMed =
+    activeMeds.find((m) => m.fallRiskWarning || m.sedationRisk || m.isRecentChange) ||
+    activeMeds.find((m) => m.name.toLowerCase().includes("zolpidem"));
 
   return (
     <PatientPortalShell>
@@ -61,40 +72,55 @@ export default function PatientMedicationsPage() {
         </div>
 
         {/* Critical Drug Alert / Recent Change Callout */}
-        <div className={styles.recentChangeBanner}>
-          <div className={styles.alertIconCol}>
-            <AlertTriangle size={24} className={styles.alertIcon} />
-          </div>
-          <div className={styles.alertContent}>
-            <div className={styles.alertTitleRow}>
-              <span className={styles.alertTitle}>
-                Alert: Zolpidem 5mg Added
-              </span>
-              <Badge variant="danger">Fall Risk Correlation</Badge>
+        {flaggedMed && (
+          <div className={styles.recentChangeBanner}>
+            <div className={styles.alertIconCol}>
+              <AlertTriangle size={24} className={styles.alertIcon} />
+            </div>
+            <div className={styles.alertContent}>
+              <div className={styles.alertTitleRow}>
+                <span className={styles.alertTitle}>
+                  Alert: {flaggedMed.name} {flaggedMed.dosage} Active Regimen
+                </span>
+                <Badge variant="danger">
+                  {flaggedMed.fallRiskWarning ? "Fall Risk Correlation" : "Sedative Caution"}
+                </Badge>
+              </div>
+              <div style={{ fontSize: "13px", color: "var(--color-text-secondary)", marginTop: "4px" }}>
+                {flaggedMed.recentChangeNotes ||
+                  "Associated with Beers Criteria caution. Monitor morning balance, transfer steadiness, and hydration."}
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
         {/* Documented Allergies & Intolerances */}
         <Card className={styles.allergiesCard}>
           <CardHeader className={styles.cardHeaderSmall}>
             <div className={styles.allergiesHeaderTitle}>
               <ShieldAlert size={18} color="var(--color-danger)" />
-              <CardTitle>Allergies</CardTitle>
+              <CardTitle>Allergies & Adverse Intolerances</CardTitle>
             </div>
           </CardHeader>
           <CardContent className={styles.cardContentSmall}>
             <div className={styles.allergiesList}>
-              <div className={styles.allergyItem}>
-                <span className={styles.allergyName}>Penicillin</span>
-                <Badge variant="danger">Severe Rash & Urticaria</Badge>
-                <span className={styles.allergySource}>Source: Inpatient Record 2018</span>
-              </div>
-              <div className={styles.allergyItem}>
-                <span className={styles.allergyName}>Sulfa Drugs</span>
-                <Badge variant="warning">Moderate Gastrointestinal Intolerance</Badge>
-                <span className={styles.allergySource}>Source: Clinic Intake 2021</span>
-              </div>
+              {allergies.length > 0 ? (
+                allergies.map((a, idx) => (
+                  <div key={a.id || idx} className={styles.allergyItem}>
+                    <span className={styles.allergyName}>{a.allergen}</span>
+                    <Badge variant={a.severity === "severe" ? "danger" : "warning"}>
+                      {a.reaction || `${a.severity} reaction`}
+                    </Badge>
+                    <span className={styles.allergySource}>
+                      {a.diagnosedDate ? `Documented: ${a.diagnosedDate}` : "Verified Clinical Intake Record"}
+                    </span>
+                  </div>
+                ))
+              ) : (
+                <div style={{ color: "var(--color-text-secondary)", fontSize: "13px" }}>
+                  No active drug allergies documented on official record.
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>

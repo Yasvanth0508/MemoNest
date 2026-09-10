@@ -12,15 +12,22 @@ import {
   AuditEntry,
   CaregiverObservation,
 } from "@/types";
-import { mockPatients, mockPatient } from "@/data/mock/patients";
-import { mockMedications } from "@/data/mock/medications";
-import { mockTimelineEvents } from "@/data/mock/timeline";
-import { mockDocuments } from "@/data/mock/documents";
-import { mockEvidenceSnippets } from "@/data/mock/evidence";
-import { mockRisks } from "@/data/mock/risks";
-import { mockCaregiverObservations } from "@/data/mock/caregiver-observations";
-import { mockConsentRecords } from "@/data/mock/consent";
-import { mockAuditEntries } from "@/data/mock/audit";
+const EMPTY_PATIENT: Patient = {
+  id: "",
+  name: "Loading...",
+  age: 0,
+  dateOfBirth: "",
+  gender: "Male",
+  primaryDoctor: "Dr. Rajesh Sharma, MD",
+  activeConditions: [],
+  allergies: [],
+  emergencyContact: {
+    name: "",
+    relationship: "",
+    phone: "",
+  },
+};
+
 
 export type DoctorPortalTab =
   | "home"
@@ -213,6 +220,7 @@ export interface DoctorStoreContextType {
   isEmergencySosOpen: boolean;
   openEmergencySos: () => void;
   closeEmergencySos: () => void;
+  recordEmergencyBreakGlass: (reason: string, department?: string) => Promise<boolean>;
 }
 
 const DoctorStoreContext = React.createContext<DoctorStoreContextType | null>(null);
@@ -603,11 +611,36 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
   const [activeTab, setActiveTab] = React.useState<DoctorPortalTab>("home");
 
   // Patients
-  const [patients] = React.useState<Patient[]>(mockPatients);
-  const [selectedPatientId, setSelectedPatientId] = React.useState<string>("patient-001");
+  const [patients, setPatients] = React.useState<Patient[]>([]);
+  const [selectedPatientId, setSelectedPatientId] = React.useState<string>("");
   const selectedPatient = React.useMemo(() => {
-    return patients.find((p) => p.id === selectedPatientId) || patients[0];
+    return patients.find((p) => p.id === selectedPatientId) || patients[0] || EMPTY_PATIENT;
   }, [patients, selectedPatientId]);
+
+  // Load patient roster from API
+  React.useEffect(() => {
+    let isMounted = true;
+    async function loadRoster() {
+      try {
+        const res = await fetch("/api/clinician/patients/search?all=true");
+        if (res.ok && isMounted) {
+          const data = await res.json();
+          if (data.patients && data.patients.length > 0) {
+            setPatients(data.patients);
+            if (!selectedPatientId || !data.patients.some((p: Patient) => p.id === selectedPatientId)) {
+              setSelectedPatientId(data.patients[0].id);
+            }
+          }
+        }
+      } catch (err) {
+        console.error("Failed to load patient roster:", err);
+      }
+    }
+    loadRoster();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const selectPatient = (patientId: string, targetTab: DoctorPortalTab = "overview") => {
     setSelectedPatientId(patientId);
@@ -622,7 +655,7 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
 
   // Care Team & Consent
   const [careTeam] = React.useState<CareTeamMember[]>(INITIAL_CARE_TEAM);
-  const [consentScopes] = React.useState<ConsentScopeItem[]>(INITIAL_CONSENT_SCOPES);
+  const [consentScopes, setConsentScopes] = React.useState<ConsentScopeItem[]>(INITIAL_CONSENT_SCOPES);
 
   // Digital Twin
   const [digitalTwinState, setDigitalTwinState] = React.useState<DigitalTwinState>("significant_deviation");
@@ -711,7 +744,7 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   // Timeline
-  const [timelineEvents, setTimelineEvents] = React.useState<TimelineEvent[]>(mockTimelineEvents);
+  const [timelineEvents, setTimelineEvents] = React.useState<TimelineEvent[]>([]);
   const [timelineSearchQuery, setTimelineSearchQuery] = React.useState("");
   const [timelineFilterType, setTimelineFilterType] = React.useState("all");
   const [timelineFilterProvider, setTimelineFilterProvider] = React.useState("all");
@@ -809,7 +842,7 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
   };
 
   // Medications
-  const [medications, setMedications] = React.useState<Medication[]>(mockMedications);
+  const [medications, setMedications] = React.useState<Medication[]>([]);
   const [polypharmacyInteractions] = React.useState<PolypharmacyInteraction[]>(
     INITIAL_POLYPHARMACY_INTERACTIONS
   );
@@ -931,7 +964,7 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
     );
   };
 
-  const addClinicalNote = (note: {
+  const addClinicalNote = async (note: {
     title: string;
     diagnosisCodes: string[];
     soap: { subjective: string; objective: string; assessment: string; plan: string };
@@ -951,8 +984,40 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
       sourceType: "Clinical Progress Note",
       author: "Dr. Rajesh Sharma, MD",
       authorRole: "Attending Geriatrician",
+      metadata: {
+        diagnosisCodes: note.diagnosisCodes,
+        soap: note.soap,
+        freeText: note.freeText,
+      },
     };
     setTimelineEvents((prev) => [newTl, ...prev]);
+
+    try {
+      await fetch("/api/timeline", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          patientId: selectedPatient.id,
+          date: today,
+          time: "12:15",
+          type: "routine_visit",
+          category: "medical",
+          title: `Clinical Progress Note: ${note.title}`,
+          description: `Assessment: ${note.soap.assessment}. Plan: ${note.soap.plan}. Codes: ${note.diagnosisCodes.join(", ")}`,
+          severity: "low",
+          sourceType: "Clinical Progress Note",
+          author: "Dr. Rajesh Sharma, MD",
+          authorRole: "Attending Geriatrician",
+          metadata: {
+            diagnosisCodes: note.diagnosisCodes,
+            soap: note.soap,
+            freeText: note.freeText,
+          },
+        }),
+      });
+    } catch (err) {
+      console.error("Failed to persist clinical progress note:", err);
+    }
 
     addAuditEntry(
       "Signed Clinical Progress Note",
@@ -1105,7 +1170,7 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
   };
 
   // Audit Logs
-  const [auditLogs, setAuditLogs] = React.useState<AuditEntry[]>(mockAuditEntries);
+  const [auditLogs, setAuditLogs] = React.useState<AuditEntry[]>([]);
 
   const addAuditEntry = (action: string, details: string, resource: string) => {
     const newEntry: AuditEntry = {
@@ -1136,52 +1201,159 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
   React.useEffect(() => {
     let isMounted = true;
     async function loadLiveData() {
-      try {
-        const medRes = await fetch(`/api/medications?patientId=${selectedPatientId}&status=active`);
-        if (medRes.ok && isMounted) {
-          const data = await medRes.json();
-          if (data.medications && data.medications.length > 0) {
-            setMedications(data.medications);
-          }
+      if (!selectedPatient.id || selectedPatient.id === "loading") return;
+
+      const [medRes, tlRes, auditRes, trendRes, obsRes, consentRes, docRes, riskRes] = await Promise.all([
+        fetch(`/api/medications?patientId=${selectedPatient.id}&status=active`).catch(() => null),
+        fetch(`/api/timeline?patientId=${selectedPatient.id}`).catch(() => null),
+        fetch(`/api/audit?patientId=${selectedPatient.id}`).catch(() => null),
+        fetch(`/api/caregiver/trends?patientId=${selectedPatient.id}`).catch(() => null),
+        fetch(`/api/caregiver/observations?patientId=${selectedPatient.id}`).catch(() => null),
+        fetch(`/api/consent?patientId=${selectedPatient.id}`).catch(() => null),
+        fetch(`/api/documents?patientId=${selectedPatient.id}`).catch(() => null),
+        fetch(`/api/risks?patientId=${selectedPatient.id}`).catch(() => null),
+      ]);
+
+      let activeMeds: Medication[] = [];
+      if (medRes && medRes.ok && isMounted) {
+        const data = await medRes.json();
+        if (data.medications) {
+          activeMeds = data.medications;
+          setMedications(activeMeds);
         }
-      } catch (e) {
-        // Fall back gracefully to seeded/mock state
       }
 
-      try {
-        const tlRes = await fetch(`/api/timeline?patientId=${selectedPatientId}`);
-        if (tlRes.ok && isMounted) {
-          const data = await tlRes.json();
-          if (data.events && data.events.length > 0) {
-            setTimelineEvents(data.events);
-          }
+      let activeEvents: TimelineEvent[] = [];
+      if (tlRes && tlRes.ok && isMounted) {
+        const data = await tlRes.json();
+        if (data.events) {
+          activeEvents = data.events;
+          setTimelineEvents(activeEvents);
         }
-      } catch (e) {
-        // Fall back gracefully
       }
 
-      try {
-        const auditRes = await fetch(`/api/audit?patientId=${selectedPatientId}`);
-        if (auditRes.ok && isMounted) {
-          const data = await auditRes.json();
-          if (data.auditLogs && data.auditLogs.length > 0) {
-            setAuditLogs(data.auditLogs);
-          }
+      if (auditRes && auditRes.ok && isMounted) {
+        const data = await auditRes.json();
+        if (data.auditLogs) {
+          setAuditLogs(data.auditLogs);
         }
-      } catch (e) {
-        // Fall back gracefully
       }
 
-      try {
-        const trendRes = await fetch(`/api/caregiver/trends?patientId=${selectedPatientId}`);
-        if (trendRes.ok && isMounted) {
-          const data = await trendRes.json();
-          if (data.status) {
-            setDigitalTwinState(data.status as DigitalTwinState);
-          }
+      if (trendRes && trendRes.ok && isMounted) {
+        const data = await trendRes.json();
+        const resolvedState = data.state || data.status;
+        if (resolvedState) {
+          setDigitalTwinState(resolvedState as DigitalTwinState);
         }
-      } catch (e) {
-        // Fall back gracefully
+      }
+
+      let activeObs: CaregiverObservation[] = [];
+      if (obsRes && obsRes.ok && isMounted) {
+        const data = await obsRes.json();
+        if (data.observations) {
+          activeObs = data.observations;
+        }
+      }
+
+      let activeRisks: RiskSignal[] = [];
+      if (riskRes && riskRes.ok && isMounted) {
+        const data = await riskRes.json();
+        if (data.risks) {
+          activeRisks = data.risks;
+        }
+      }
+
+      if (consentRes && consentRes.ok && isMounted) {
+        const data = await consentRes.json();
+        if (data.records && data.records.length > 0) {
+          const scopes: ConsentScopeItem[] = data.records.map((r: any) => ({
+            category: r.granteeName ? `${r.granteeName} (${r.granteeRole})` : "General Consent",
+            status: r.status === "active" ? "available" : r.status === "revoked" ? "restricted" : "pending",
+            details: `Permissions: ${(r.grantedPermissions || []).join(", ") || "General access"}. ${r.notes || ""}`,
+            validUntil: r.validUntil ? new Date(r.validUntil).toLocaleDateString("en-US", { day: "2-digit", month: "short", year: "numeric" }) : undefined,
+          }));
+          setConsentScopes(scopes);
+        }
+      }
+
+      if (docRes && docRes.ok && isMounted) {
+        const data = await docRes.json();
+        if (data.documents && data.documents.length > 0) {
+          const convertedDocs: UploadedDocItem[] = data.documents.map((d: any) => ({
+            id: d.id,
+            patientId: d.patientId,
+            patientName: selectedPatient.name,
+            documentName: d.title,
+            documentType: d.type ? d.type.replace(/_/g, " ").toUpperCase() : "Clinical Report",
+            date: d.date,
+            uploadDate: d.createdAt ? new Date(d.createdAt).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" }) : d.date,
+            status: "confirmed" as const,
+            fileSize: "450 KB",
+            extractedEntities: {
+              date: d.date,
+              provider: d.facility || d.author || "Clinical Facility",
+              diagnoses: d.extractedEntities || [],
+              medications: [],
+              keyFindings: [d.summary || "Medical report archived in health memory."],
+              summary: d.summary || "",
+            },
+          }));
+          setUploadQueue(convertedDocs);
+        }
+      }
+
+      // Dynamically compute key changes feed from real patient data
+      const dynamicChanges: KeyChangeItem[] = [];
+
+      activeMeds.forEach((med) => {
+        if (med.isRecentChange || med.fallRiskWarning || med.sedationRisk || med.name.toLowerCase().includes("zolpidem")) {
+          dynamicChanges.push({
+            id: `kc-med-${med.id}`,
+            patientId: med.patientId,
+            title: `Medication Alert: ${med.name} ${med.dosage || ""}`,
+            date: med.startDate ? new Date(med.startDate).toLocaleDateString("en-US", { day: "2-digit", month: "short", year: "numeric" }) : "Recent",
+            shortExplanation: `${med.frequency}. Indication: ${med.indication}. ${med.fallRiskWarning ? "Fall & sedation risk alert." : ""}`,
+            severity: med.fallRiskWarning ? "critical" : "high",
+            category: "medication",
+            sourceText: med.prescriber ? `Prescribed by ${med.prescriber}` : "EHR Medication Record",
+            evidenceId: med.evidenceIds?.[0],
+            isNew: true,
+          });
+        }
+      });
+
+      activeObs.forEach((obs) => {
+        if (obs.category === "fall" || obs.category === "confusion" || obs.severity === "high" || obs.severity === "critical") {
+          dynamicChanges.push({
+            id: `kc-obs-${obs.id}`,
+            patientId: obs.patientId,
+            title: `Caregiver Alert: ${obs.category === "fall" ? "Fall Incident" : obs.category.toUpperCase()}`,
+            date: obs.timestamp ? new Date(obs.timestamp).toLocaleDateString("en-US", { day: "2-digit", month: "short", year: "numeric" }) : "Recent",
+            shortExplanation: obs.note || obs.notes || obs.summary || "Acute observation logged by caregiver.",
+            severity: obs.severity === "critical" || obs.category === "fall" ? "critical" : "high",
+            category: obs.category === "fall" ? "incident" : "state",
+            sourceText: `Caregiver Log by ${obs.caregiverName || "Caregiver"}`,
+            isNew: true,
+          });
+        }
+      });
+
+      activeRisks.forEach((r) => {
+        dynamicChanges.push({
+          id: `kc-risk-${r.id}`,
+          patientId: r.patientId,
+          title: `Risk Signal: ${r.title}`,
+          date: r.detectedAt ? new Date(r.detectedAt).toLocaleDateString("en-US", { day: "2-digit", month: "short", year: "numeric" }) : "Current",
+          shortExplanation: r.description || "Identified through clinical risk model.",
+          severity: r.priority === "high" ? "high" : "medium",
+          category: "state",
+          sourceText: "Predictive Risk Model",
+          isNew: false,
+        });
+      });
+
+      if (dynamicChanges.length > 0) {
+        setAllChanges(dynamicChanges);
       }
     }
 
@@ -1190,6 +1362,40 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
       isMounted = false;
     };
   }, [selectedPatientId]);
+
+  const recordEmergencyBreakGlass = async (reason: string, department = "Emergency Care"): Promise<boolean> => {
+    try {
+      const res = await fetch("/api/consent/break-glass", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          patientId: selectedPatient.id,
+          doctorName: "Dr. Rajesh Sharma",
+          doctorId: "user-clinician-001",
+          reason,
+          department,
+        }),
+      });
+      if (res.ok) {
+        setConsentScopes((prev) =>
+          prev.map((s) => ({
+            ...s,
+            status: "available" as const,
+            details: `${s.details} [EMERGENCY OVERRIDE GRANTED 24h]`,
+          }))
+        );
+        addAuditEntry(
+          "Emergency Break-Glass Override Executed",
+          `Full patient health memory unlocked under emergency justification: "${reason}"`,
+          "Emergency Consent Registry / Security Vault"
+        );
+        return true;
+      }
+    } catch (err) {
+      console.error("Emergency break-glass request failed:", err);
+    }
+    return false;
+  };
 
   const downloadAuditCsv = () => {
     const headers = [
@@ -1232,13 +1438,20 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
   const [isEvidenceDrawerOpen, setIsEvidenceDrawerOpen] = React.useState(false);
   const [selectedEvidenceId, setSelectedEvidenceId] = React.useState<string | null>(null);
 
-  const selectedEvidence = React.useMemo(() => {
-    if (!selectedEvidenceId) return mockEvidenceSnippets[0];
-    return mockEvidenceSnippets.find((e) => e.id === selectedEvidenceId) || mockEvidenceSnippets[0];
-  }, [selectedEvidenceId]);
+  const [selectedEvidence, setSelectedEvidence] = React.useState<EvidenceSnippet | null>(null);
 
-  const openEvidenceDrawer = (evidenceId?: string) => {
-    if (evidenceId) setSelectedEvidenceId(evidenceId);
+  const openEvidenceDrawer = async (evidenceId?: string) => {
+    if (evidenceId) {
+      try {
+        const res = await fetch(`/api/evidence?id=${encodeURIComponent(evidenceId)}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.evidence) setSelectedEvidence(data.evidence);
+        }
+      } catch (err) {
+        console.warn("Failed to load evidence details:", err);
+      }
+    }
     setIsEvidenceDrawerOpen(true);
   };
 
@@ -1297,6 +1510,7 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
         isEmergencySosOpen,
         openEmergencySos,
         closeEmergencySos,
+        recordEmergencyBreakGlass,
       }}
     >
       {children}

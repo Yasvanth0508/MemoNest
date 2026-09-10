@@ -1,23 +1,28 @@
 import { CaregiverObservation } from '@/types';
-import { mockCaregiverObservations } from '@/data/mock/caregiver-observations';
 
 export const caregiverApiService = {
   async getObservations(patientId?: string): Promise<CaregiverObservation[]> {
     try {
-      let savedEmail = 'ravi@healthmemory.demo';
-      if (typeof window !== 'undefined') {
-        savedEmail = window.localStorage.getItem('active_patient_email') || savedEmail;
+      let url = '/api/caregiver/observations';
+      if (patientId) {
+        url = `/api/caregiver/observations?patientId=${encodeURIComponent(patientId)}`;
+      } else if (typeof window !== 'undefined') {
+        const savedEmail = window.localStorage.getItem('active_patient_email');
+        if (savedEmail) {
+          url = `/api/caregiver/observations?email=${encodeURIComponent(savedEmail)}`;
+        }
       }
 
-      const res = await fetch(`/api/caregiver/observations?email=${encodeURIComponent(savedEmail)}`);
+      const res = await fetch(url);
       if (!res.ok) {
-        return mockCaregiverObservations;
+        throw new Error(`Failed to fetch caregiver observations (Status: ${res.status})`);
       }
 
       const data = await res.json();
-      return data.observations || mockCaregiverObservations;
-    } catch {
-      return mockCaregiverObservations;
+      return data.observations || [];
+    } catch (err) {
+      console.error('caregiverApiService.getObservations error:', err);
+      return [];
     }
   },
 
@@ -65,11 +70,16 @@ export const caregiverApiService = {
 
   async getTrends(patientId?: string) {
     try {
-      let savedEmail = 'ravi@healthmemory.demo';
-      if (typeof window !== 'undefined') {
-        savedEmail = window.localStorage.getItem('active_patient_email') || savedEmail;
+      let url = '/api/caregiver/trends';
+      if (patientId) {
+        url = `/api/caregiver/trends?patientId=${encodeURIComponent(patientId)}`;
+      } else if (typeof window !== 'undefined') {
+        const savedEmail = window.localStorage.getItem('active_patient_email');
+        if (savedEmail) {
+          url = `/api/caregiver/trends?email=${encodeURIComponent(savedEmail)}`;
+        }
       }
-      const res = await fetch(`/api/caregiver/trends?email=${encodeURIComponent(savedEmail)}`);
+      const res = await fetch(url);
       if (!res.ok) return null;
       return await res.json();
     } catch {

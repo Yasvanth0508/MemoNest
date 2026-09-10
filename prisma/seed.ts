@@ -642,6 +642,36 @@ async function main() {
     ],
   });
 
+  // 11b. Access Requests (Doctor & Specialist Consent Applications)
+  await prisma.accessRequest.createMany({
+    data: [
+      {
+        id: 'req-01',
+        patientId: patient.id,
+        requesterName: 'Dr. Priya Sharma',
+        requesterRole: 'Consultant Cardiologist',
+        requesterOrg: 'MetroHealth Heart & Vascular Pavilion',
+        reason: 'Pre-consultation review of blood tests, stroke history, and blood pressure medications',
+        durationDays: 30,
+        requestedCategories: JSON.stringify(['medical_reports', 'medications', 'diagnoses']),
+        requestDate: '10 Sep 2026',
+        status: 'pending',
+      },
+      {
+        id: 'req-02',
+        patientId: patient.id,
+        requesterName: 'Elena Rostova, PT',
+        requesterRole: 'Senior Physical Therapist',
+        requesterOrg: 'MetroHealth Physical Rehabilitation Center',
+        reason: 'Post-fall gait evaluation and assistive device fit verification',
+        durationDays: 60,
+        requestedCategories: JSON.stringify(['caregiver_notes', 'medications']),
+        requestDate: '08 Sep 2026',
+        status: 'approved',
+      },
+    ],
+  });
+
   // 12. Patient Notifications
   await prisma.patientNotification.createMany({
     data: [

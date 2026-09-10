@@ -4,17 +4,29 @@ import { prisma } from '@/lib/db/prisma';
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
-    const email = searchParams.get('email') || 'ravi@healthmemory.demo';
+    const patientIdParam = searchParams.get('patientId') || searchParams.get('id');
+    const email = searchParams.get('email');
 
-    let patient = await prisma.patient.findFirst({ where: { email } });
-    if (!patient) patient = await prisma.patient.findFirst();
+    let targetPatientId: string | undefined = patientIdParam || undefined;
 
-    if (!patient) {
+    if (!targetPatientId) {
+      const patient = await prisma.patient.findFirst({
+        where: { email: email || 'ravi@healthmemory.demo' },
+      });
+      targetPatientId = patient?.id;
+    }
+
+    if (!targetPatientId) {
+      const fallback = await prisma.patient.findFirst();
+      targetPatientId = fallback?.id;
+    }
+
+    if (!targetPatientId) {
       return NextResponse.json({ records: [] });
     }
 
     const records = await prisma.consentRecord.findMany({
-      where: { patientId: patient.id },
+      where: { patientId: targetPatientId },
       orderBy: { createdAt: 'desc' },
     });
 

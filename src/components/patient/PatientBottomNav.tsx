@@ -28,11 +28,12 @@ const BOTTOM_NAV_ITEMS = [
 
 export function PatientBottomNav() {
   const pathname = usePathname();
-  const [unreadCount, setUnreadCount] = React.useState(() =>
-    patientPortalStore.getUnreadNotificationsCount()
-  );
+  const [mounted, setMounted] = React.useState(false);
+  const [unreadCount, setUnreadCount] = React.useState(0);
 
   React.useEffect(() => {
+    setMounted(true);
+    setUnreadCount(patientPortalStore.getUnreadNotificationsCount());
     const unsub = patientPortalStore.subscribe(() => {
       setUnreadCount(patientPortalStore.getUnreadNotificationsCount());
     });
@@ -63,7 +64,7 @@ export function PatientBottomNav() {
                   <Icon size={20} />
                 </div>
                 <span>{item.label}</span>
-                {item.hasBadge && unreadCount > 0 && (
+                {item.hasBadge && mounted && unreadCount > 0 && (
                   <span className={styles.badge}>{unreadCount}</span>
                 )}
               </Link>

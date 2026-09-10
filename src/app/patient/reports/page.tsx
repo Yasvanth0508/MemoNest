@@ -50,6 +50,9 @@ export default function ReportsPage() {
   const [editTitle, setEditTitle] = React.useState("");
 
   React.useEffect(() => {
+    patientPortalStore.initFromApi().then(() => {
+      setReports([...patientPortalStore.getReports()]);
+    });
     const unsub = patientPortalStore.subscribe(() => {
       setReports([...patientPortalStore.getReports()]);
     });
@@ -58,33 +61,41 @@ export default function ReportsPage() {
 
   const filteredReports = React.useMemo(() => {
     return reports.filter((item) => {
-      const matchesCategory =
-        activeFilter === "all" ||
-        item.type.toLowerCase() === activeFilter.toLowerCase();
-
+      const matchFilter =
+        activeFilter === "all" || item.type === activeFilter;
       const q = searchQuery.toLowerCase().trim();
-      const matchesSearch =
+      const matchSearch =
         !q ||
         item.title.toLowerCase().includes(q) ||
+        item.facility.toLowerCase().includes(q) ||
         (item.author && item.author.toLowerCase().includes(q)) ||
-        (item.facility && item.facility.toLowerCase().includes(q)) ||
-        (item.summary && item.summary.toLowerCase().includes(q));
-
-      return matchesCategory && matchesSearch;
+        (item.extractedEntities &&
+          item.extractedEntities.some((e) => e.toLowerCase().includes(q)));
+      return matchFilter && matchSearch;
     });
   }, [reports, activeFilter, searchQuery]);
 
-  const handleOpenReport = (doc: UploadedRecordItem) => {
-    setSelectedReport(doc);
-    setEditTitle(doc.title);
+  const handleOpenReport = (item: UploadedRecordItem) => {
+    setSelectedReport(item);
+    setEditTitle(item.title);
     setIsEditingReport(false);
   };
 
-  const handleSaveEdit = () => {
+  const handleSaveEdit = async () => {
     if (selectedReport && editTitle.trim()) {
-      selectedReport.title = editTitle.trim();
-      setSelectedReport({ ...selectedReport, title: editTitle.trim() });
+      const updatedTitle = editTitle.trim();
+      selectedReport.title = updatedTitle;
+      setSelectedReport({ ...selectedReport, title: updatedTitle });
       setIsEditingReport(false);
+      try {
+        await fetch("/api/documents", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id: selectedReport.id, title: updatedTitle }),
+        });
+      } catch (err) {
+        console.error("Failed to persist document title change:", err);
+      }
     }
   };
 

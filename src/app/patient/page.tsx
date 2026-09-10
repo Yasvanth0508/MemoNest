@@ -29,6 +29,7 @@ export default function PatientHomePage() {
   const [isEmergencyOpen, setIsEmergencyOpen] = React.useState(false);
 
   React.useEffect(() => {
+    patientPortalStore.initFromApi();
     const unsub = patientPortalStore.subscribe(() => {
       setPatient({ ...patientPortalStore.getPatient() });
     });

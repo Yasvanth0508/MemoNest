@@ -1,23 +1,28 @@
 import { MedicalDocument } from '@/types';
-import { mockDocuments } from '@/data/mock/documents';
 
 export const documentApiService = {
   async getDocuments(patientId?: string): Promise<MedicalDocument[]> {
     try {
-      let savedEmail = 'ravi@healthmemory.demo';
-      if (typeof window !== 'undefined') {
-        savedEmail = window.localStorage.getItem('active_patient_email') || savedEmail;
+      let url = '/api/documents';
+      if (patientId) {
+        url = `/api/documents?patientId=${encodeURIComponent(patientId)}`;
+      } else if (typeof window !== 'undefined') {
+        const savedEmail = window.localStorage.getItem('active_patient_email');
+        if (savedEmail) {
+          url = `/api/documents?email=${encodeURIComponent(savedEmail)}`;
+        }
       }
 
-      const res = await fetch(`/api/documents?email=${encodeURIComponent(savedEmail)}`);
+      const res = await fetch(url);
       if (!res.ok) {
-        return mockDocuments;
+        throw new Error(`Failed to fetch documents (Status: ${res.status})`);
       }
 
       const data = await res.json();
-      return data.documents || mockDocuments;
-    } catch {
-      return mockDocuments;
+      return data.documents || [];
+    } catch (err) {
+      console.error('documentApiService.getDocuments error:', err);
+      return [];
     }
   },
 

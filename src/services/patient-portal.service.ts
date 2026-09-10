@@ -1,8 +1,4 @@
 import { Patient, MedicalDocument, ConsentRecord, ConsentScope, TimelineEvent } from "@/types";
-import { mockPatient } from "@/data/mock/patients";
-import { mockDocuments } from "@/data/mock/documents";
-import { mockConsentRecords } from "@/data/mock/consent";
-import { mockTimelineEvents } from "@/data/mock/timeline";
 
 export interface PatientNotification {
   id: string;
@@ -55,123 +51,36 @@ export interface UploadedRecordItem extends MedicalDocument {
   hasDuplicateWarning?: boolean;
 }
 
-// Initial Mock Notifications
-const INITIAL_NOTIFICATIONS: PatientNotification[] = [
-  {
-    id: "notif-1",
-    category: "appointment",
-    title: "Doctor appointment tomorrow at 10:00 AM",
-    message: "Geriatric follow-up consultation with Dr. Rajesh Sharma at MetroHealth Senior Specialty Clinic.",
-    timestamp: "2026-09-10T09:00:00Z",
-    timeDisplay: "Tomorrow at 10:00 AM",
-    severity: "gentle",
-    isRead: false,
-    actionLabel: "View Details",
-    actionUrl: "/patient/timeline",
+const DEFAULT_PATIENT: Patient = {
+  id: "",
+  name: "Loading...",
+  dateOfBirth: "",
+  age: 0,
+  gender: "Male",
+  email: "",
+  activeConditions: [],
+  allergies: [],
+  bloodType: "",
+  primaryDoctor: "",
+  emergencyContact: {
+    name: "",
+    relationship: "",
+    phone: "",
   },
-  {
-    id: "notif-2",
-    category: "medication",
-    title: "Time to take your medication",
-    message: "Morning dose: Amlodipine 5mg (1 tablet) and Metformin 500mg with breakfast.",
-    timestamp: "2026-09-10T08:00:00Z",
-    timeDisplay: "Today at 8:00 AM",
-    severity: "gentle",
-    isRead: false,
-    actionLabel: "Mark as Taken",
-  },
-  {
-    id: "notif-3",
-    category: "consent",
-    title: "Dr. Priya Sharma requested access to your health records",
-    message: "Reason: Pre-consultation review for cardiology follow-up. Requested duration: 30 days.",
-    timestamp: "2026-09-10T07:30:00Z",
-    timeDisplay: "2 hours ago",
-    severity: "attention",
-    isRead: false,
-    actionLabel: "Review Request",
-    actionUrl: "/patient/consent",
-  },
-  {
-    id: "notif-4",
-    category: "health_record",
-    title: "A new report was added to your health timeline",
-    message: "Comprehensive Metabolic Panel & Lipid Profile from Quest Diagnostics confirmed by your care team.",
-    timestamp: "2026-09-08T14:20:00Z",
-    timeDisplay: "2 days ago",
-    severity: "info",
-    isRead: true,
-    actionLabel: "View Report",
-    actionUrl: "/patient/reports",
-  },
-  {
-    id: "notif-5",
-    category: "caregiver",
-    title: "Your caregiver added a health observation",
-    message: "Anita Desai noted: Morning transfer assisted safely with four-wheel walker. Vital signs stable.",
-    timestamp: "2026-09-07T11:15:00Z",
-    timeDisplay: "3 days ago",
-    severity: "info",
-    isRead: true,
-    actionLabel: "View Timeline",
-    actionUrl: "/patient/timeline",
-  },
-];
-
-// Initial Access Requests
-const INITIAL_ACCESS_REQUESTS: AccessRequest[] = [
-  {
-    id: "req-priya-01",
-    requesterName: "Dr. Priya Sharma",
-    requesterRole: "Consultant Cardiologist",
-    requesterOrg: "MetroHealth Heart & Vascular Pavilion",
-    reason: "Pre-consultation review of blood tests, stroke history, and blood pressure medications",
-    durationDays: 30,
-    requestedCategories: ["Medical reports", "Medications", "Lab results"],
-    requestDate: "Today, 09:15 AM",
-    status: "pending",
-  },
-];
-
-// Initial Profile Change Requests
-const INITIAL_CHANGE_REQUESTS: ProfileChangeRequest[] = [
-  {
-    id: "cr-01",
-    field: "Blood Type",
-    currentValue: "B+",
-    requestedValue: "B+",
-    reason: "Verified during recent clinic visit with lab confirmation",
-    dateSubmitted: "2026-08-28",
-    status: "approved",
-    reviewedBy: "Dr. Rajesh Sharma",
-  },
-];
-
-// Initial Reports / Documents
-const INITIAL_REPORTS: UploadedRecordItem[] = mockDocuments.map((doc) => ({
-  ...doc,
-  processingStatus: "Confirmed" as const,
-  aiExtracted: {
-    date: doc.date,
-    provider: doc.author || doc.facility,
-    diagnosis: doc.extractedEntities?.[0] || "Geriatric Evaluation",
-    medication: doc.extractedEntities?.[3] || "Standard Care",
-    reportType: doc.type.replace("_", " ").toUpperCase(),
-    confidence: 0.98,
-    notes: doc.summary,
-  },
-}));
+  mobilityStatus: "Normal",
+};
 
 // Client-side in-memory singleton
 class PatientPortalStore {
-  private patient: Patient = { ...mockPatient };
-  private reports: UploadedRecordItem[] = [...INITIAL_REPORTS];
-  private notifications: PatientNotification[] = [...INITIAL_NOTIFICATIONS];
-  private consentRecords: ConsentRecord[] = [...mockConsentRecords];
-  private accessRequests: AccessRequest[] = [...INITIAL_ACCESS_REQUESTS];
-  private changeRequests: ProfileChangeRequest[] = [...INITIAL_CHANGE_REQUESTS];
-  private timelineEvents: TimelineEvent[] = [...mockTimelineEvents];
+  private patient: Patient = { ...DEFAULT_PATIENT };
+  private reports: UploadedRecordItem[] = [];
+  private notifications: PatientNotification[] = [];
+  private consentRecords: ConsentRecord[] = [];
+  private accessRequests: AccessRequest[] = [];
+  private changeRequests: ProfileChangeRequest[] = [];
+  private timelineEvents: TimelineEvent[] = [];
   private listeners: Array<() => void> = [];
+  private isLoaded: boolean = false;
 
   constructor() {
     if (typeof window !== "undefined") {
@@ -181,35 +90,63 @@ class PatientPortalStore {
 
   public async initFromApi() {
     try {
-      const email = window.localStorage.getItem("active_patient_email") || "ravi@healthmemory.demo";
-      const [patientRes, timelineRes, reqRes, notifRes, docsRes, consentRes] = await Promise.all([
-        fetch(`/api/patient?email=${encodeURIComponent(email)}`).catch(() => null),
-        fetch(`/api/timeline?email=${encodeURIComponent(email)}`).catch(() => null),
-        fetch(`/api/patient/requests?email=${encodeURIComponent(email)}`).catch(() => null),
-        fetch(`/api/patient/notifications?email=${encodeURIComponent(email)}`).catch(() => null),
-        fetch(`/api/documents?email=${encodeURIComponent(email)}`).catch(() => null),
-        fetch(`/api/consent?email=${encodeURIComponent(email)}`).catch(() => null),
-      ]);
+      const email =
+        typeof window !== "undefined"
+          ? window.localStorage.getItem("active_patient_email") || "ravi@healthmemory.demo"
+          : "ravi@healthmemory.demo";
 
+      const storedId =
+        typeof window !== "undefined"
+          ? window.localStorage.getItem("active_patient_id")
+          : null;
+
+      const patientUrl = storedId
+        ? `/api/patient?id=${encodeURIComponent(storedId)}`
+        : `/api/patient?email=${encodeURIComponent(email)}`;
+
+      const patientRes = await fetch(patientUrl).catch(() => null);
+
+      let targetPatientId = storedId || "";
       if (patientRes && patientRes.ok) {
         const data = await patientRes.json();
-        if (data.patient) this.patient = data.patient;
+        if (data.patient) {
+          this.patient = data.patient;
+          targetPatientId = data.patient.id;
+          if (typeof window !== "undefined") {
+            window.localStorage.setItem("active_patient_id", data.patient.id);
+            if (data.patient.email) {
+              window.localStorage.setItem("active_patient_email", data.patient.email);
+            }
+          }
+        }
       }
+
+      const queryParams = `patientId=${targetPatientId}&email=${encodeURIComponent(email)}`;
+
+      const [timelineRes, reqRes, notifRes, docsRes, consentRes, accessRes] = await Promise.all([
+        fetch(`/api/timeline?${queryParams}`).catch(() => null),
+        fetch(`/api/patient/requests?${queryParams}`).catch(() => null),
+        fetch(`/api/patient/notifications?${queryParams}`).catch(() => null),
+        fetch(`/api/documents?${queryParams}`).catch(() => null),
+        fetch(`/api/consent?${queryParams}`).catch(() => null),
+        fetch(`/api/patient/access-requests?${queryParams}`).catch(() => null),
+      ]);
+
       if (timelineRes && timelineRes.ok) {
         const data = await timelineRes.json();
-        if (data.events && data.events.length > 0) this.timelineEvents = data.events;
+        if (data.events) this.timelineEvents = data.events;
       }
       if (reqRes && reqRes.ok) {
         const data = await reqRes.json();
-        if (data.requests && data.requests.length > 0) this.changeRequests = data.requests;
+        if (data.requests) this.changeRequests = data.requests;
       }
       if (notifRes && notifRes.ok) {
         const data = await notifRes.json();
-        if (data.notifications && data.notifications.length > 0) this.notifications = data.notifications;
+        if (data.notifications) this.notifications = data.notifications;
       }
       if (docsRes && docsRes.ok) {
         const data = await docsRes.json();
-        if (data.documents && data.documents.length > 0) {
+        if (data.documents) {
           this.reports = data.documents.map((d: any) => ({
             ...d,
             processingStatus: "Confirmed" as const,
@@ -218,11 +155,17 @@ class PatientPortalStore {
       }
       if (consentRes && consentRes.ok) {
         const data = await consentRes.json();
-        if (data.records && data.records.length > 0) this.consentRecords = data.records;
+        if (data.records) this.consentRecords = data.records;
       }
+      if (accessRes && accessRes.ok) {
+        const data = await accessRes.json();
+        if (data.requests) this.accessRequests = data.requests;
+      }
+
+      this.isLoaded = true;
       this.notify();
-    } catch {
-      // fallback to initial
+    } catch (err) {
+      console.error("Failed to init patient portal from API:", err);
     }
   }
 
@@ -242,6 +185,10 @@ class PatientPortalStore {
     return this.patient;
   }
 
+  public isDataLoaded(): boolean {
+    return this.isLoaded;
+  }
+
   public updatePatient(patch: Partial<Patient>): Patient {
     this.patient = { ...this.patient, ...patch };
     this.notify();
@@ -249,7 +196,7 @@ class PatientPortalStore {
       fetch("/api/patient", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...patch, email: this.patient.email }),
+        body: JSON.stringify({ ...patch, email: this.patient.email, id: this.patient.id }),
       }).catch(() => {});
     }
     return this.patient;
@@ -293,7 +240,6 @@ class PatientPortalStore {
 
   public addReport(report: UploadedRecordItem): UploadedRecordItem {
     this.reports = [report, ...this.reports];
-    // Also inject into timeline if confirmed
     if (report.processingStatus === "Confirmed") {
       this.timelineEvents = [
         {
@@ -369,78 +315,63 @@ class PatientPortalStore {
     return this.accessRequests;
   }
 
-  public approveAccessRequest(id: string): boolean {
+  public async approveAccessRequest(id: string): Promise<boolean> {
     const req = this.accessRequests.find((r) => r.id === id);
     if (!req) return false;
 
     req.status = "approved";
-
-    // Add to active consent records
-    const newConsent: ConsentRecord = {
-      id: `consent-${Date.now()}`,
-      patientId: this.patient.id,
-      granteeId: `user-${Date.now()}`,
-      granteeName: req.requesterName,
-      granteeRole: "doctor",
-      granteeEmail: "doctor@metrohealth.demo",
-      organization: req.requesterOrg,
-      grantedPermissions: req.requestedCategories.map(
-        (c) => c.toLowerCase().replace(/ /g, "_") as ConsentScope
-      ),
-      deniedPermissions: [],
-      restrictedPermissions: [],
-      status: "active",
-      validFrom: new Date().toISOString(),
-      validUntil: new Date(
-        Date.now() + req.durationDays * 24 * 60 * 60 * 1000
-      ).toISOString(),
-      lastUpdated: new Date().toISOString(),
-      notes: `Access approved for ${req.reason}`,
-    };
-
-    this.consentRecords = [newConsent, ...this.consentRecords];
-
-    // Push notification
-    this.notifications = [
-      {
-        id: `notif-${Date.now()}`,
-        category: "consent",
-        title: `Access granted to ${req.requesterName}`,
-        message: `Health information access granted for 30 days. You can change or cancel this anytime.`,
-        timestamp: new Date().toISOString(),
-        timeDisplay: "Just now",
-        severity: "info",
-        isRead: false,
-        actionLabel: "Manage Access",
-        actionUrl: "/patient/consent",
-      },
-      ...this.notifications,
-    ];
-
     this.notify();
+
+    if (typeof window !== "undefined") {
+      try {
+        const res = await fetch("/api/patient/access-requests", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id, status: "approved" }),
+        });
+
+        if (res.ok) {
+          const email = this.patient.email || "ravi@healthmemory.demo";
+          const queryParams = `patientId=${this.patient.id}&email=${encodeURIComponent(email)}`;
+          const [consentRes, notifRes] = await Promise.all([
+            fetch(`/api/consent?${queryParams}`).catch(() => null),
+            fetch(`/api/patient/notifications?${queryParams}`).catch(() => null),
+          ]);
+          if (consentRes && consentRes.ok) {
+            const cData = await consentRes.json();
+            if (cData.records) this.consentRecords = cData.records;
+          }
+          if (notifRes && notifRes.ok) {
+            const nData = await notifRes.json();
+            if (nData.notifications) this.notifications = nData.notifications;
+          }
+          this.notify();
+        }
+      } catch (err) {
+        console.error("Error persisting approved access request:", err);
+      }
+    }
     return true;
   }
 
-  public denyAccessRequest(id: string): boolean {
+  public async denyAccessRequest(id: string): Promise<boolean> {
     const req = this.accessRequests.find((r) => r.id === id);
     if (!req) return false;
+
     req.status = "denied";
-
-    this.notifications = [
-      {
-        id: `notif-${Date.now()}`,
-        category: "consent",
-        title: `Access request from ${req.requesterName} declined`,
-        message: `Your health records remain private and were not shared.`,
-        timestamp: new Date().toISOString(),
-        timeDisplay: "Just now",
-        severity: "info",
-        isRead: false,
-      },
-      ...this.notifications,
-    ];
-
     this.notify();
+
+    if (typeof window !== "undefined") {
+      try {
+        await fetch("/api/patient/access-requests", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id, status: "denied" }),
+        });
+      } catch (err) {
+        console.error("Error persisting denied access request:", err);
+      }
+    }
     return true;
   }
 

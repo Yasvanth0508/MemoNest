@@ -7,9 +7,21 @@ import {
   TimelineEvent,
   ObservationCategory,
 } from "@/types";
-import { mockPatients } from "@/data/mock/patients";
-import { mockCaregiverObservations } from "@/data/mock/caregiver-observations";
-import { mockTimelineEvents } from "@/data/mock/timeline";
+const FALLBACK_PATIENT: Patient = {
+  id: "patient-001",
+  name: "Ravi Kumar",
+  age: 74,
+  dateOfBirth: "1952-04-12",
+  gender: "Male",
+  primaryDoctor: "Dr. Rajesh Sharma, MD",
+  activeConditions: ["Hypertension", "Type 2 Diabetes", "Ischemic Stroke", "Mild Cognitive Impairment"],
+  allergies: [],
+  emergencyContact: {
+    name: "Meera Kumar",
+    relationship: "Daughter / Legal Healthcare Proxy",
+    phone: "+1-555-0199",
+  },
+};
 
 export type CaregiverRelationship = "paid_caregiver" | "family_member" | "agency_staff";
 export type CaregiverPermissionLevel = "view_only" | "observation_input" | "full_proxy";
@@ -112,7 +124,7 @@ const DEFAULT_CAREGIVER: CaregiverProfile = {
 
 // Rich Patient Care Details for Ravi Kumar
 const RAVI_CARE_DETAILS: PatientCareDetails = {
-  patient: mockPatients[0],
+  patient: FALLBACK_PATIENT,
   escalationProtocol: {
     step1: "Ensure patient safety: Sit patient down immediately, lock walker wheels, remove floor obstacles.",
     step2: "Check vital signs & orientation: Take blood pressure, ask patient today's date & location, check for contusions or head strike.",
@@ -323,7 +335,14 @@ const RAVI_CARE_DETAILS: PatientCareDetails = {
 
 // Margaret Higgins Care Details
 const MARGARET_CARE_DETAILS: PatientCareDetails = {
-  patient: mockPatients[1],
+  patient: {
+    ...FALLBACK_PATIENT,
+    id: "patient-002",
+    name: "Margaret Higgins",
+    age: 82,
+    gender: "Female",
+    activeConditions: ["Macular Degeneration", "Osteoporosis", "Mild Cognitive Decline"],
+  },
   escalationProtocol: {
     step1: "Provide physical stability: Seat Margaret immediately with single-point cane accessible.",
     step2: "Assess vision and comfort: Check for acute eye pain or sudden vision dimming.",
@@ -412,7 +431,14 @@ const MARGARET_CARE_DETAILS: PatientCareDetails = {
 
 // David Chen Care Details
 const DAVID_CARE_DETAILS: PatientCareDetails = {
-  patient: mockPatients[2],
+  patient: {
+    ...FALLBACK_PATIENT,
+    id: "patient-003",
+    name: "David Chen",
+    age: 69,
+    gender: "Male",
+    activeConditions: ["Coronary Artery Disease", "Post-CABG Recovery", "Hyperlipidemia"],
+  },
   escalationProtocol: {
     step1: "Have David sit comfortably and rest.",
     step2: "Check heart rate and pulse oximeter reading.",
@@ -552,8 +578,24 @@ const STORAGE_KEY_PATIENT = "memonest_caregiver_active_patient_v2";
 const STORAGE_KEY_REL = "memonest_caregiver_relationship_v2";
 const STORAGE_KEY_NOTES = "memonest_caregiver_notes_v2";
 
+export function formatTimeDeterministic(isoString: string): string {
+  try {
+    const d = new Date(isoString);
+    if (isNaN(d.getTime())) return "08:00 AM";
+    let hours = d.getUTCHours();
+    const minutes = String(d.getUTCMinutes()).padStart(2, "0");
+    const ampm = hours >= 12 ? "PM" : "AM";
+    hours = hours % 12;
+    hours = hours ? hours : 12;
+    return `${String(hours).padStart(2, "0")}:${minutes} ${ampm}`;
+  } catch {
+    return "08:00 AM";
+  }
+}
+
 export function CaregiverProvider({ children }: { children: React.ReactNode }) {
   const [caregiver, setCaregiver] = React.useState<CaregiverProfile>(DEFAULT_CAREGIVER);
+  const [patients, setPatients] = React.useState<Patient[]>([]);
   const [activePatientId, setActivePatientId] = React.useState<string>("patient-001");
   const [observations, setObservations] = React.useState<CaregiverObservation[]>(() => {
     if (typeof window !== "undefined") {
@@ -566,7 +608,7 @@ export function CaregiverProvider({ children }: { children: React.ReactNode }) {
         // fallback
       }
     }
-    return mockCaregiverObservations;
+    return [];
   });
 
   const [followUpNotes, setFollowUpNotes] = React.useState<Record<string, FollowUpNote[]>>(() => {
@@ -623,14 +665,25 @@ export function CaregiverProvider({ children }: { children: React.ReactNode }) {
     observation: null,
   });
 
-  // Restore stored active patient and relationship on mount
+  // Restore stored active patient and relationship on mount + load roster
   React.useEffect(() => {
+    fetch("/api/clinician/patients/search?all=true")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data?.patients && data.patients.length > 0) {
+          setPatients(data.patients);
+          const savedPatient = typeof window !== "undefined" ? window.localStorage.getItem(STORAGE_KEY_PATIENT) : null;
+          if (savedPatient && data.patients.some((p: Patient) => p.id === savedPatient)) {
+            setActivePatientId(savedPatient);
+          } else {
+            setActivePatientId(data.patients[0].id);
+          }
+        }
+      })
+      .catch((err) => console.error("Failed to load caregiver patients roster:", err));
+
     if (typeof window !== "undefined") {
       try {
-        const savedPatient = window.localStorage.getItem(STORAGE_KEY_PATIENT);
-        if (savedPatient && PATIENT_DETAILS_MAP[savedPatient]) {
-          setActivePatientId(savedPatient);
-        }
         const savedRel = window.localStorage.getItem(STORAGE_KEY_REL) as CaregiverRelationship | null;
         if (savedRel) {
           setCaregiver((prev) => ({
@@ -654,17 +707,69 @@ export function CaregiverProvider({ children }: { children: React.ReactNode }) {
         // ignore
       }
     }
+  }, []);
 
-    // Hydrate observations from live database
-    fetch("/api/caregiver/observations")
+  const [clinicalEvents, setClinicalEvents] = React.useState<TimelineEvent[]>([]);
+  const [liveMedications, setLiveMedications] = React.useState<any[]>([]);
+  const [liveRisks, setLiveRisks] = React.useState<RiskIndicator[]>([]);
+
+  // Hydrate clinical timeline, observations, medications, and risks for active patient
+  React.useEffect(() => {
+    let isMounted = true;
+    fetch(`/api/timeline?patientId=${activePatientId}`)
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
-        if (data?.observations && data.observations.length > 0) {
+        if (data?.events && isMounted) {
+          setClinicalEvents(data.events);
+        }
+      })
+      .catch(() => {});
+
+    fetch(`/api/caregiver/observations?patientId=${activePatientId}`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data?.observations && isMounted) {
           setObservations(data.observations);
         }
       })
       .catch(() => {});
-  }, []);
+
+    Promise.all([
+      fetch(`/api/medications?patientId=${activePatientId}&status=active`).then((r) => (r.ok ? r.json() : null)).catch(() => null),
+      fetch(`/api/risks?patientId=${activePatientId}`).then((r) => (r.ok ? r.json() : null)).catch(() => null),
+    ]).then(([medData, riskData]) => {
+      if (!isMounted) return;
+      if (medData?.medications) {
+        const mapped = medData.medications.map((m: any) => ({
+          id: m.id,
+          name: m.name,
+          dosage: m.dosage || "Standard",
+          schedule: m.frequency || "Daily",
+          timing: m.frequency || "Morning",
+          purpose: m.indication || "Prescribed regimen",
+          specialInstructions: m.instructions || (m.fallRiskWarning ? "Fall risk precaution" : undefined),
+        }));
+        setLiveMedications(mapped);
+      }
+      if (riskData?.risks) {
+        const mappedRisks: RiskIndicator[] = riskData.risks.map((r: any) => ({
+          id: r.id,
+          title: r.title,
+          category: r.category as ObservationCategory,
+          severity: r.priority === "high" ? "urgent" : r.priority === "medium" ? "moderate" : "mild",
+          description: r.description || "Identified risk factor",
+          doctorInstructions: (r.recommendations && r.recommendations.join(". ")) || "Follow standard caregiver observation protocol.",
+          suggestedAction: "Log any symptom deviations immediately.",
+          signals: r.factors || [],
+        }));
+        setLiveRisks(mappedRisks);
+      }
+    });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [activePatientId]);
 
   // Save observations & followUpNotes when changed
   React.useEffect(() => {
@@ -714,21 +819,71 @@ export function CaregiverProvider({ children }: { children: React.ReactNode }) {
     }));
   }, []);
 
-  const switchPatient = React.useCallback((patientId: string) => {
-    if (PATIENT_DETAILS_MAP[patientId]) {
-      setActivePatientId(patientId);
-      if (typeof window !== "undefined") {
-        try {
-          window.localStorage.setItem(STORAGE_KEY_PATIENT, patientId);
-        } catch {
-          // ignore
+  const switchPatient = React.useCallback(
+    (patientId: string) => {
+      if (patients.some((p) => p.id === patientId) || PATIENT_DETAILS_MAP[patientId]) {
+        setActivePatientId(patientId);
+        if (typeof window !== "undefined") {
+          try {
+            window.localStorage.setItem(STORAGE_KEY_PATIENT, patientId);
+          } catch {
+            // ignore
+          }
         }
       }
+    },
+    [patients]
+  );
+
+  // Live Digital Twin State from Backend API
+  const [liveDigitalTwin, setLiveDigitalTwin] = React.useState<PatientStateData | null>(null);
+
+  const fetchTrends = React.useCallback(async (patId: string) => {
+    try {
+      const res = await fetch(`/api/caregiver/trends?patientId=${patId}`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.state) {
+          setLiveDigitalTwin({
+            state: data.state,
+            label: data.label,
+            plainExplanation: data.plainExplanation,
+            lastCalculated: data.lastCalculated || "Just now",
+            baselineSummary: data.baselineSummary || "74-year-old male baseline",
+            trendSignals: data.trendSignals || [],
+            contributingFactors: data.contributingFactors || [],
+            whatThisMightMean: data.whatThisMightMean || {
+              interpretation: "Patient status synchronized with live observation telemetry.",
+              clinicalContext: "Baseline monitoring active.",
+              actionableAdvice: "Continue current care plan.",
+              whenToContactDoctor: "Notify attending physician if unsteadiness persists.",
+            },
+          });
+        }
+      }
+    } catch (err) {
+      console.warn("Failed to fetch live digital twin trends:", err);
     }
   }, []);
 
-  const activePatientCare = PATIENT_DETAILS_MAP[activePatientId] || RAVI_CARE_DETAILS;
-  const activePatient = activePatientCare.patient;
+  React.useEffect(() => {
+    fetchTrends(activePatientId);
+  }, [activePatientId, fetchTrends]);
+
+  const activePatient = React.useMemo(() => {
+    return patients.find((p) => p.id === activePatientId) || patients[0] || FALLBACK_PATIENT;
+  }, [patients, activePatientId]);
+
+  const basePatientCare = PATIENT_DETAILS_MAP[activePatientId] || RAVI_CARE_DETAILS;
+  const activePatientCare = React.useMemo(() => {
+    return {
+      ...basePatientCare,
+      patient: activePatient,
+      medicationsList: liveMedications.length > 0 ? liveMedications : basePatientCare.medicationsList,
+      watchList: liveRisks.length > 0 ? liveRisks : basePatientCare.watchList,
+      digitalTwin: liveDigitalTwin || basePatientCare.digitalTwin,
+    };
+  }, [basePatientCare, activePatient, liveMedications, liveRisks, liveDigitalTwin]);
 
   // Add observation
   const addObservation = React.useCallback(
@@ -772,6 +927,8 @@ export function CaregiverProvider({ children }: { children: React.ReactNode }) {
           if (data.observation) {
             resolvedObs = data.observation;
           }
+          // Refresh digital twin trend state dynamically from newly computed observations
+          fetchTrends(activePatientId);
         }
       } catch (err) {
         console.warn("Backend observation API error, falling back to local:", err);
@@ -789,7 +946,7 @@ export function CaregiverProvider({ children }: { children: React.ReactNode }) {
 
       return resolvedObs;
     },
-    [activePatientId, caregiver.id, caregiver.name]
+    [activePatientId, caregiver.id, caregiver.name, fetchTrends]
   );
 
   // Add follow-up note
@@ -810,8 +967,26 @@ export function CaregiverProvider({ children }: { children: React.ReactNode }) {
         ...prev,
         [eventId]: [...(prev[eventId] || []), newNote],
       }));
+
+      // Asynchronously record follow up note in the backend timeline
+      fetch("/api/timeline", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          patientId: activePatientId,
+          type: "caregiver_observation",
+          category: "caregiver",
+          title: `Caregiver Follow-Up: ${caregiver.name}`,
+          description: noteText.trim(),
+          severity: "low",
+          sourceType: "Caregiver Follow-Up Note",
+          sourceId: eventId,
+          author: caregiver.name,
+          authorRole: caregiver.title || "Caregiver",
+        }),
+      }).catch((err) => console.warn("Failed to record follow-up note to timeline:", err));
     },
-    [caregiver.name, caregiver.title]
+    [activePatientId, caregiver.name, caregiver.title]
   );
 
   const dismissRoutingNotice = React.useCallback(() => {
@@ -835,6 +1010,7 @@ export function CaregiverProvider({ children }: { children: React.ReactNode }) {
     setPreselectedCategory(undefined);
     setPreselectedTag(undefined);
   }, []);
+
 
   // Combined timeline events (merging base clinical events + filtered caregiver observations for active patient)
   const timelineEvents = React.useMemo(() => {
@@ -868,7 +1044,7 @@ export function CaregiverProvider({ children }: { children: React.ReactNode }) {
           id: obs.id,
           patientId: obs.patientId,
           date: obs.timestamp.slice(0, 10),
-          time: new Date(obs.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+          time: formatTimeDeterministic(obs.timestamp),
           type: obs.category === "fall" ? "fall" : "caregiver_observation",
           category: "caregiver",
           title,
@@ -888,7 +1064,7 @@ export function CaregiverProvider({ children }: { children: React.ReactNode }) {
       });
 
     // Clinical timeline events
-    const clinicalEvents = mockTimelineEvents.filter((ev) => ev.patientId === activePatientId);
+    const currentClinical = clinicalEvents.filter((ev) => ev.patientId === activePatientId);
 
     // Merge and deduplicate by id
     const existingIds = new Set<string>();
@@ -901,7 +1077,7 @@ export function CaregiverProvider({ children }: { children: React.ReactNode }) {
     }
 
     // Add clinical events not shadowed by an observation
-    for (const ev of clinicalEvents) {
+    for (const ev of currentClinical) {
       if (!existingIds.has(ev.id) && !existingIds.has(ev.sourceId || "")) {
         existingIds.add(ev.id);
         merged.push(ev);
@@ -914,7 +1090,7 @@ export function CaregiverProvider({ children }: { children: React.ReactNode }) {
       const timeB = new Date(`${b.date}T${b.time || "00:00"}`).getTime();
       return timeB - timeA;
     });
-  }, [observations, activePatientId]);
+  }, [observations, activePatientId, clinicalEvents]);
 
   return (
     <CaregiverContext.Provider
@@ -922,7 +1098,7 @@ export function CaregiverProvider({ children }: { children: React.ReactNode }) {
         caregiver,
         setCaregiverRelationship,
         setCaregiverPermission,
-        patients: mockPatients,
+        patients,
         activePatientId,
         activePatient,
         activePatientCare,

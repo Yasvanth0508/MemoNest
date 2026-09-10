@@ -10,17 +10,40 @@ import {
   ChevronDown,
   ChevronUp,
   Lock,
+  ShieldAlert,
+  X,
 } from "lucide-react";
 import clsx from "clsx";
 import styles from "./ConsentBanner.module.css";
 
 export function ConsentBanner() {
-  const { consentScopes, selectedPatient } = useDoctorStore();
+  const { consentScopes, selectedPatient, recordEmergencyBreakGlass } = useDoctorStore();
   const [isExpanded, setIsExpanded] = React.useState(false);
+  const [isBreakGlassOpen, setIsBreakGlassOpen] = React.useState(false);
+  const [justification, setJustification] = React.useState("");
+  const [department, setDepartment] = React.useState("Emergency Department / Trauma");
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [hasOverrideActive, setHasOverrideActive] = React.useState(false);
 
   const availableCount = consentScopes.filter((s) => s.status === "available").length;
   const restrictedCount = consentScopes.filter((s) => s.status === "restricted").length;
   const pendingCount = consentScopes.filter((s) => s.status === "pending").length;
+
+  const handleBreakGlassSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!justification.trim() || justification.trim().length < 10) return;
+    setIsSubmitting(true);
+    try {
+      const ok = await recordEmergencyBreakGlass(justification.trim(), department);
+      if (ok) {
+        setHasOverrideActive(true);
+        setIsBreakGlassOpen(false);
+        setJustification("");
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className={styles.bannerContainer} role="region" aria-label="Patient Data Consent Scope">
@@ -55,6 +78,24 @@ export function ConsentBanner() {
 
         <div className={styles.rightGroup}>
           <span className={styles.expiryText}>Active authorization valid through 01 Oct 2026</span>
+
+          {hasOverrideActive ? (
+            <span className={styles.pillOverridden} title="24-Hour Emergency Override Active">
+              <ShieldAlert size={12} />
+              <span>EMERGENCY OVERRIDE ACTIVE</span>
+            </span>
+          ) : (
+            <button
+              type="button"
+              className={styles.breakGlassBtn}
+              onClick={() => setIsBreakGlassOpen(true)}
+              aria-label="Trigger emergency break-glass override"
+            >
+              <AlertTriangle size={13} />
+              <span>Break-Glass Override</span>
+            </button>
+          )}
+
           <button
             type="button"
             className={styles.expandToggle}
@@ -67,6 +108,78 @@ export function ConsentBanner() {
           </button>
         </div>
       </div>
+
+      {/* Break Glass Modal */}
+      {isBreakGlassOpen && (
+        <div className={styles.modalBackdrop} role="dialog" aria-modal="true" onClick={() => setIsBreakGlassOpen(false)}>
+          <div className={styles.modalBox} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.modalHeader}>
+              <div className={styles.modalTitleRow}>
+                <AlertTriangle size={22} />
+                <span>Emergency Break-Glass Override</span>
+              </div>
+              <button
+                type="button"
+                className={styles.cancelBtn}
+                style={{ padding: "4px 8px" }}
+                onClick={() => setIsBreakGlassOpen(false)}
+              >
+                <X size={16} />
+              </button>
+            </div>
+
+            <div className={styles.legalNotice}>
+              <strong>HIPAA & 45 CFR § 164.512 Protocol:</strong> Executing emergency break-glass grants immediate, full 24-hour access to restricted clinical data for <strong>{selectedPatient.name}</strong>. This event is permanently and immutably written to compliance audit logs.
+            </div>
+
+            <form onSubmit={handleBreakGlassSubmit} className={styles.modalForm}>
+              <div>
+                <label className={styles.inputLabel}>Clinical Justification (Required, min 10 characters):</label>
+                <textarea
+                  className={styles.modalTextarea}
+                  placeholder="e.g. Acute trauma or altered mental status with high risk of drug interaction; surrogate unavailable..."
+                  value={justification}
+                  onChange={(e) => setJustification(e.target.value)}
+                  required
+                />
+              </div>
+
+              <div>
+                <label className={styles.inputLabel}>Department / Clinical Context:</label>
+                <select
+                  className={styles.modalSelect}
+                  value={department}
+                  onChange={(e) => setDepartment(e.target.value)}
+                >
+                  <option value="Emergency Department / Trauma">Emergency Department / Trauma</option>
+                  <option value="Geriatric Intensive Care Unit">Geriatric Intensive Care Unit</option>
+                  <option value="Inpatient Acute Medical Care">Inpatient Acute Medical Care</option>
+                  <option value="Rapid Response Consult">Rapid Response Consult</option>
+                </select>
+              </div>
+
+              <div className={styles.modalActions}>
+                <button
+                  type="button"
+                  className={styles.cancelBtn}
+                  onClick={() => setIsBreakGlassOpen(false)}
+                  disabled={isSubmitting}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className={styles.confirmOverrideBtn}
+                  disabled={isSubmitting || justification.trim().length < 10}
+                >
+                  <ShieldAlert size={14} />
+                  <span>{isSubmitting ? "Authorizing Override..." : "Authorize Emergency Override"}</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       {isExpanded && (
         <div className={styles.expandedDetails}>

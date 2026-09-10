@@ -5,8 +5,13 @@ import { Database, ShieldCheck, CheckCircle2 } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import styles from "./LongitudinalSummary.module.css";
 
-export function LongitudinalSummary() {
-  const milestones = [
+export interface LongitudinalSummaryProps {
+  milestones?: Array<{ year: number | string; label: string }>;
+  domainCount?: number;
+}
+
+export function LongitudinalSummary({ milestones, domainCount = 7 }: LongitudinalSummaryProps) {
+  const activeMilestones = milestones && milestones.length > 0 ? milestones : [
     { year: 2014, label: "Hypertension" },
     { year: 2016, label: "Diabetes" },
     { year: 2018, label: "Stroke" },
@@ -30,12 +35,12 @@ export function LongitudinalSummary() {
 
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <Badge variant="success">Verified</Badge>
-          <Badge variant="secondary">7 Domains</Badge>
+          <Badge variant="secondary">{domainCount} Domains</Badge>
         </div>
       </div>
 
       <div className={styles.timelineTrack}>
-        {milestones.map((m, idx) => (
+        {activeMilestones.map((m, idx) => (
           <div key={idx} className={styles.milestone}>
             <span className={styles.milestoneYear}>{m.year}</span>
             <div className={styles.milestoneDot} />

@@ -4,24 +4,31 @@ import { prisma } from '@/lib/db/prisma';
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
-    const email = searchParams.get('email') || 'ravi@healthmemory.demo';
+    const patientIdParam = searchParams.get('patientId') || searchParams.get('id');
+    const email = searchParams.get('email');
     const category = searchParams.get('category');
     const severity = searchParams.get('severity');
 
-    let patient = await prisma.patient.findFirst({
-      where: { email },
-    });
+    let targetPatientId: string | undefined = patientIdParam || undefined;
 
-    if (!patient) {
-      patient = await prisma.patient.findFirst();
+    if (!targetPatientId) {
+      const patient = await prisma.patient.findFirst({
+        where: { email: email || 'ravi@healthmemory.demo' },
+      });
+      targetPatientId = patient?.id;
     }
 
-    if (!patient) {
+    if (!targetPatientId) {
+      const fallback = await prisma.patient.findFirst();
+      targetPatientId = fallback?.id;
+    }
+
+    if (!targetPatientId) {
       return NextResponse.json({ events: [] });
     }
 
     const whereClause: any = {
-      patientId: patient.id,
+      patientId: targetPatientId,
     };
 
     if (category && category !== 'all') {

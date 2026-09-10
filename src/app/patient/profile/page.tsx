@@ -48,6 +48,10 @@ export default function MyProfilePage() {
   const [submittedNotice, setSubmittedNotice] = React.useState<string | null>(null);
 
   React.useEffect(() => {
+    patientPortalStore.initFromApi().then(() => {
+      setPatient({ ...patientPortalStore.getPatient() });
+      setChangeRequests([...patientPortalStore.getChangeRequests()]);
+    });
     const unsub = patientPortalStore.subscribe(() => {
       setPatient({ ...patientPortalStore.getPatient() });
       setChangeRequests([...patientPortalStore.getChangeRequests()]);

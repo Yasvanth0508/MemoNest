@@ -60,12 +60,64 @@ export function PrescriptionNotesView() {
     "Deprescribe Zolpidem PRN immediately. Order updated home safety PT consult. Hydration and non-pharmacologic sleep hygiene."
   );
   const [freeText, setFreeText] = React.useState("");
+  const [apiInteraction, setApiInteraction] = React.useState<any | null>(null);
 
-  // Real-time polypharmacy interaction check
-  const activeInteraction = React.useMemo(() => {
+  // Debounced live backend Beers Criteria & drug-drug interaction check
+  React.useEffect(() => {
+    if (!medName || medName.trim().length < 3) {
+      setApiInteraction(null);
+      return;
+    }
+
+    const timer = setTimeout(async () => {
+      try {
+        const res = await fetch("/api/medications/check", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            patientId: selectedPatient.id,
+            medicationName: medName.trim(),
+            dosage,
+          }),
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          if (data.hasInteractions || (data.warnings && data.warnings.length > 0) || data.beersFlag) {
+            setApiInteraction({
+              id: `api-check-${Date.now()}`,
+              medicationsInvolved: [
+                medName,
+                ...(data.evaluatedAgainst || []).slice(0, 3).map((m: any) => m.name),
+              ],
+              severity: data.isHighRisk ? "critical" : "high",
+              concern: data.warnings.join(" • "),
+              source: data.beersFlag
+                ? "Beers Criteria 2023 Guidelines for Inappropriate Medication Use in Older Adults"
+                : "Pharmacological Safety Engine & FDA Interaction Database",
+              recommendation:
+                (data.recommendations || []).join(" • ") ||
+                "Evaluate clinical necessity and consider geriatric alternatives.",
+            });
+          } else {
+            setApiInteraction(null);
+          }
+        }
+      } catch {
+        // Fall back gracefully
+      }
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [medName, dosage, selectedPatient.id]);
+
+  // Real-time polypharmacy interaction check (API preferred, local fallback)
+  const localInteraction = React.useMemo(() => {
     if (!medName) return null;
     return checkMedicationInteractions(medName);
   }, [medName, checkMedicationInteractions]);
+
+  const activeInteraction = apiInteraction || localInteraction;
 
   const activePatientMeds = medications.filter(
     (m) => m.patientId === selectedPatient.id && m.status === "active"
