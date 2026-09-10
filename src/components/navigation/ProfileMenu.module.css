@@ -1,0 +1,255 @@
+.container {
+  position: relative;
+  display: inline-block;
+}
+
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 12px 4px 6px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: var(--font-body);
+  color: var(--color-text-primary);
+  box-shadow: 0 1px 3px rgba(18, 37, 68, 0.05);
+}
+
+.trigger:hover,
+.trigger:focus-visible {
+  background-color: var(--color-surface-accent);
+  border-color: var(--color-secondary);
+  box-shadow: 0 2px 8px rgba(103, 184, 186, 0.2);
+  outline: none;
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-primary), #203f6f);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 12px;
+  border: 1.5px solid var(--color-surface);
+  box-shadow: 0 1px 3px rgba(18, 37, 68, 0.15);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.avatarImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.triggerDetails {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  line-height: 1.2;
+}
+
+.triggerName {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  white-space: nowrap;
+}
+
+.triggerRole {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--color-secondary);
+  text-transform: capitalize;
+}
+
+.chevron {
+  color: var(--color-text-secondary);
+  transition: transform 0.2s ease;
+  margin-left: 2px;
+}
+
+.chevronRotated {
+  transform: rotate(180deg);
+}
+
+/* Dropdown Menu */
+.menu {
+  position: absolute;
+  top: calc(100% + var(--space-2));
+  right: 0;
+  width: 280px;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-floating);
+  z-index: 100;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: menuFade 0.15s ease-out;
+}
+
+@keyframes menuFade {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.menuHeader {
+  padding: var(--space-4);
+  background-color: var(--color-surface-accent);
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.headerAvatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-primary), #203f6f);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: var(--font-size-md);
+  flex-shrink: 0;
+}
+
+.headerInfo {
+  overflow: hidden;
+}
+
+.userName {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0 0 2px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.userEmail {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.section {
+  padding: var(--space-2);
+}
+
+.sectionTitle {
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-secondary);
+  padding: var(--space-2) var(--space-3) var(--space-1);
+  margin: 0;
+}
+
+.roleList {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.roleItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  border: none;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: left;
+}
+
+.roleItem:hover {
+  background-color: var(--color-surface-accent);
+}
+
+.roleItemActive {
+  background-color: var(--color-surface-accent);
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.roleLabelGroup {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.roleIcon {
+  color: var(--color-text-secondary);
+}
+
+.roleItemActive .roleIcon {
+  color: var(--color-primary);
+}
+
+.checkIcon {
+  color: var(--color-success);
+}
+
+.divider {
+  height: 1px;
+  background-color: var(--color-border);
+  margin: var(--space-1) 0;
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  border: none;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: left;
+  text-decoration: none;
+}
+
+.menuItem:hover {
+  background-color: var(--color-surface-accent);
+}
+
+.menuItemDanger {
+  color: var(--color-danger);
+}
+
+.menuItemDanger:hover {
+  background-color: #FDF2F2;
+  color: var(--color-danger);
+}

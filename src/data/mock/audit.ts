@@ -1,0 +1,51 @@
+import { AuditEntry } from '@/types';
+
+export const mockAuditEntries: AuditEntry[] = [
+  {
+    id: 'audit-001',
+    patientId: 'patient-001',
+    timestamp: '2026-09-10T09:15:22Z',
+    userId: 'user-clinician-001',
+    userName: 'Dr. Rajesh Sharma',
+    userRole: 'doctor',
+    eventType: 'access',
+    action: 'Viewed AI Clinical Brief & Fall Risk Signals',
+    resource: 'AI Clinical Brief / Patient Memory Summary',
+    details: 'Dr. Sharma accessed longitudinal clinical summary prior to scheduled telehealth emergency triage follow-up.',
+    purposeOfUse: 'Acute clinical consultation following caregiver fall report',
+    ipAddress: '192.168.10.45',
+    status: 'success',
+  },
+  {
+    id: 'audit-002',
+    patientId: 'patient-001',
+    timestamp: '2026-09-10T08:35:10Z',
+    userId: 'user-caregiver-001',
+    userName: 'Anita Desai',
+    userRole: 'caregiver',
+    eventType: 'create',
+    action: 'Submitted Caregiver Incident Observation',
+    resource: 'Caregiver Observation / Incident Log',
+    details: 'Logged bed-to-chair transfer fall incident with minor knee contusion and dizziness.',
+    purposeOfUse: 'Routine daily elderly home care logging & critical incident reporting',
+    ipAddress: '10.0.4.112',
+    status: 'success',
+  },
+  {
+    id: 'audit-004',
+    patientId: 'patient-001',
+    timestamp: '2026-09-01T10:15:00Z',
+    userId: 'user-patient-001',
+    userName: 'Ravi Kumar (Assisted by Priya Kumar)',
+    userRole: 'patient',
+    eventType: 'update',
+    action: 'Updated Clinician Consent Permissions',
+    resource: 'Consent Authorization / Dr. Rajesh Sharma',
+    details: 'Granted 30-day full clinical access; explicitly denied access to genetic testing markers.',
+    purposeOfUse: 'Patient self-governance of medical record disclosure',
+    ipAddress: '192.168.1.88',
+    status: 'success',
+  },
+];
+
+export const mockAuditLogs = mockAuditEntries;

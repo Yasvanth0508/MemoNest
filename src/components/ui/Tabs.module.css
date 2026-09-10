@@ -1,0 +1,56 @@
+.list {
+  display: inline-flex;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  background-color: var(--color-surface-accent);
+  padding: var(--space-1);
+}
+
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  border-radius: calc(var(--radius-sm) - 2px);
+  padding: 0 var(--space-4);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  transition: all 0.2s ease-in-out;
+  background: transparent;
+  border: none;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  height: 100%;
+}
+
+.trigger:hover {
+  color: var(--color-text-primary);
+}
+
+.trigger:disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.trigger[data-state="active"] {
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.trigger:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: -2px;
+}
+
+.content {
+  margin-top: var(--space-4);
+}
+
+.content:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}

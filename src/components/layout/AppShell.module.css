@@ -1,0 +1,49 @@
+.shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+}
+
+.body {
+  display: flex;
+  flex: 1;
+  min-height: calc(100vh - 64px);
+  position: relative;
+}
+
+.sidebarWrapper {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .sidebarWrapper {
+    display: block;
+    position: sticky;
+    top: 64px;
+    height: calc(100vh - 64px);
+  }
+}
+
+.mainWrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow-x: hidden;
+}
+
+.contentWrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.topSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}

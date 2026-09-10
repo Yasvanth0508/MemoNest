@@ -1,0 +1,55 @@
+import { ClinicalBrief } from '@/types';
+
+export const mockClinicalBrief: ClinicalBrief = {
+  id: 'brief-001',
+  patientId: 'patient-001',
+  generatedAt: '2026-09-10T09:00:00Z',
+  patientName: 'Ravi Kumar',
+  age: 74,
+  primaryDoctor: 'Dr. Rajesh Sharma',
+  highPriorityAlerts: [
+    'CRITICAL: 2 unassisted falls reported within the past 24 hours (2026-09-09 bathroom fall, 2026-09-10 bed-to-chair transfer fall).',
+    'Caregiver Anita Desai notes acute morning confusion, disorientation, and subjective dizziness during sit-to-stand transfers.',
+    'Minor contusion observed on right knee; no documented loss of consciousness or head strike.',
+  ],
+  recentChanges: [
+    'Medication addition 5 days ago (2026-09-05): Zolpidem Tartrate 5mg PRN at bedtime prescribed for sleep onset insomnia.',
+    'Increased daytime drowsiness and reduced appetite noted by caregiver starting 2026-09-07.',
+    'Rapid acceleration of mobility instability over the last 72 hours, with hesitations during transfers.',
+  ],
+  activeMedicationsCount: 7,
+  activeMedications: [
+    'Amlodipine 5mg PO Daily (Hypertension)',
+    'Metformin 500mg PO BID (Type 2 Diabetes)',
+    'Atorvastatin 20mg PO QHS (Cardiovascular / Stroke Secondary Prevention)',
+    'Donepezil 5mg PO QHS (Mild Cognitive Impairment)',
+    'Omeprazole 20mg PO Daily (GERD / Gastroprotection)',
+    'Aspirin 81mg PO Daily (Antiplatelet)',
+    'Zolpidem 5mg PO PRN QHS (Insomnia — RECENT CHANGE, High Sedation/Fall Risk)',
+  ],
+  relevantHistory: [
+    '2018 Acute Ischemic Stroke (Right MCA territory, 10-day hospitalization, residual left-sided motor weakness and gait asymmetry).',
+    '2024 Mild Cognitive Impairment (MoCA 23/30 with memory retrieval and executive dysfunction).',
+    '2025 Mobility decline with prescribed rolling walker dependence for all ambulation.',
+    'Bilateral knee osteoarthritis causing transfer stiffness.',
+    'Prior adverse drug reaction: Lisinopril-induced severe intractable dry cough (switched to Amlodipine in 2021).',
+  ],
+  clinicalSummary: '74-year-old male with history of ischemic stroke, mild cognitive impairment, and bilateral knee osteoarthritis presents with an acute cluster of two falls in 24 hours. The clinical trajectory strongly points to adverse sedative-hypnotic effects from Zolpidem 5mg initiated 5 days ago, acting synergistically with Donepezil and baseline cerebrovascular motor deficits. Urgent medication deprescribing review and in-person fall safety evaluation are recommended.',
+  recommendedActions: [
+    'Urgently discontinue Zolpidem 5mg PRN and explore non-pharmacologic sleep optimization.',
+    'Evaluate in-clinic or urgent home nurse visit to rule out occult head injury, fracture, or UTI.',
+    'Perform orthostatic blood pressure check to rule out postural hypotension.',
+    'Prescribe PT home safety and caregiver transfer mechanics refresh.',
+    'Order updated comprehensive metabolic panel to assess renal clearance and electrolytes.',
+  ],
+  evidenceIds: [
+    'ev-rx-zolpidem-01',
+    'ev-caregiver-fall-01',
+    'ev-caregiver-fall-02',
+    'ev-caregiver-obs-01',
+    'ev-walker-mobility-01',
+    'ev-neuro-consult-01',
+    'ev-stroke-discharge-01',
+    'ev-lab-metabolic-01',
+  ],
+};

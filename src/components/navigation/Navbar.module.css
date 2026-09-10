@@ -1,0 +1,249 @@
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  width: 100%;
+  height: 64px;
+  background-color: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  box-shadow: 0 1px 3px rgba(18, 37, 68, 0.04);
+  font-family: var(--font-body);
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  width: min(100% - 32px, var(--container-width));
+  margin-inline: auto;
+  gap: var(--space-4);
+}
+
+.leftSection {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+}
+
+.menuButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.menuButton:hover {
+  background-color: var(--color-surface-accent);
+}
+
+@media (min-width: 1024px) {
+  .menuButton {
+    display: none;
+  }
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  text-decoration: none;
+  color: var(--color-primary);
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  transition: all 0.15s ease;
+}
+
+.brand:hover {
+  background-color: var(--color-surface-accent);
+}
+
+.logoMark {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--color-primary) 0%, #203f6f 50%, var(--color-secondary) 100%);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 8px rgba(18, 37, 68, 0.15);
+  flex-shrink: 0;
+}
+
+.brandTitle {
+  font-family: var(--font-body);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--color-primary);
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+
+/* Desktop Navigation Links */
+.navLinks {
+  display: none;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+@media (min-width: 1024px) {
+  .navLinks {
+    display: flex;
+  }
+}
+
+.navLink {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.navLink:hover {
+  color: var(--color-text-primary);
+  background-color: var(--color-surface-accent);
+}
+
+.navLinkActive {
+  color: var(--color-primary);
+  font-weight: 600;
+  background-color: var(--color-surface-accent);
+}
+
+.navLinkActive::after {
+  content: "";
+  position: absolute;
+  bottom: -12px;
+  left: var(--space-3);
+  right: var(--space-3);
+  height: 2px;
+  background-color: var(--color-primary);
+  border-radius: var(--radius-pill);
+}
+
+/* Right Section */
+.rightSection {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+/* Role Indicator Pill */
+.rolePillContainer {
+  position: relative;
+}
+
+.rolePill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.rolePill:hover {
+  border-color: var(--color-secondary);
+  box-shadow: 0 2px 6px rgba(103, 184, 186, 0.2);
+}
+
+.roleDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.roleDot_clinician {
+  background-color: #122544;
+}
+
+.roleDot_caregiver {
+  background-color: var(--color-success);
+}
+
+.roleDot_pharmacist {
+  background-color: var(--color-secondary);
+}
+
+.roleDot_guardian {
+  background-color: var(--color-warning);
+}
+
+.roleDot_patient {
+  background-color: var(--color-info);
+}
+
+.roleLabel {
+  text-transform: capitalize;
+  letter-spacing: 0.02em;
+}
+
+/* Action Buttons */
+.actionButton {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: transparent;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.actionButton:hover {
+  background-color: var(--color-surface-accent);
+  color: var(--color-text-primary);
+}
+
+.actionBadge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border-radius: var(--radius-pill);
+  background-color: var(--color-danger);
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--color-surface);
+}
+
+.divider {
+  width: 1px;
+  height: 20px;
+  background-color: var(--color-border);
+  margin: 0 2px;
+  opacity: 0.8;
+}

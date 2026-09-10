@@ -1,0 +1,401 @@
+.hero {
+  position: relative;
+  overflow: hidden;
+  min-height: calc(100vh - 70px);
+  min-height: calc(100dvh - 70px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-10) 0;
+  background-color: var(--color-background);
+  background: radial-gradient(
+    circle at 80% 20%,
+    rgba(103, 184, 186, 0.15) 0%,
+    rgba(246, 245, 241, 0) 60%
+  ),
+  radial-gradient(
+    circle at 10% 80%,
+    rgba(18, 37, 68, 0.05) 0%,
+    rgba(246, 245, 241, 0) 50%
+  );
+}
+
+.container {
+  width: min(100% - 96px, 1200px);
+  margin-inline: auto;
+  padding-inline: var(--space-4);
+}
+
+@media (max-width: 768px) {
+  .container {
+    width: min(100% - 32px, 1200px);
+    padding-inline: var(--space-2);
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: var(--space-10);
+  align-items: center;
+}
+
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-10);
+  }
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  align-self: flex-start;
+  padding: 6px 14px;
+  background-color: var(--color-surface-accent);
+  border: 1px solid rgba(103, 184, 186, 0.4);
+  border-radius: var(--radius-pill);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--color-primary);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.eyebrowIcon {
+  color: var(--color-secondary);
+}
+
+.headline {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 4.5vw, 3.8rem);
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--color-text-primary);
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.headlineEmphasis {
+  color: var(--color-secondary);
+  font-style: italic;
+  display: block;
+}
+
+.narrative {
+  font-family: var(--font-body);
+  font-size: clamp(1.05rem, 1.25vw, 1.25rem);
+  line-height: 1.65;
+  color: var(--color-text-secondary);
+  margin: 0;
+  max-width: 580px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  align-items: center;
+  padding-top: var(--space-2);
+}
+
+.actionLink {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.buttonText {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.metricsRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-border);
+}
+
+@media (max-width: 640px) {
+  .metricsRow {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+}
+
+.metricItem {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 14px;
+  background: var(--color-surface-accent);
+  border: 1px solid rgba(103, 184, 186, 0.35);
+  border-radius: var(--radius-pill);
+}
+
+.metricValue {
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  color: var(--color-primary);
+  white-space: nowrap;
+}
+
+/* Mockup Card Styling */
+.mockupWrapper {
+  position: relative;
+}
+
+.mockupCard {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-floating);
+  overflow: hidden;
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.mockupCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 25px 55px rgba(18, 37, 68, 0.16);
+}
+
+.cardTopHeader {
+  background: linear-gradient(135deg, var(--color-primary) 0%, #1c355e 100%);
+  color: #ffffff;
+  padding: var(--space-4) var(--space-5);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.patientIdentity {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.avatarMock {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(135deg, var(--color-secondary), #89cbcd);
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: var(--font-size-md);
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.patientMeta {
+  display: flex;
+  flex-direction: column;
+}
+
+.patientName {
+  font-family: var(--font-display);
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.2;
+}
+
+.patientSubtext {
+  font-size: var(--font-size-xs);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.livePill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  color: #ffffff;
+}
+
+.pulseDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #55d6a8;
+  box-shadow: 0 0 8px #55d6a8;
+}
+
+.cardBody {
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  background-color: var(--color-surface);
+}
+
+.conditionsRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.conditionTag {
+  font-size: 11px;
+  padding: 3px 8px;
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  font-weight: 500;
+}
+
+/* Active Risk Box */
+.riskBox {
+  background-color: #fff9f5;
+  border: 1px solid rgba(168, 93, 88, 0.35);
+  border-left: 4px solid var(--color-danger);
+  border-radius: var(--radius-sm);
+  padding: var(--space-3) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.riskHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+
+.riskTitleGroup {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-danger);
+  font-weight: 700;
+  font-size: var(--font-size-sm);
+}
+
+.riskDescription {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-primary);
+  line-height: 1.45;
+  margin: 0;
+}
+
+.riskCorrelation {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  background: rgba(168, 93, 88, 0.08);
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.riskCorrelation strong {
+  color: var(--color-danger);
+}
+
+/* Timeline Teaser Box */
+.timelineTeaser {
+  background-color: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-3) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.timelineTeaserHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.timelineEvents {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  position: relative;
+  padding-left: var(--space-3);
+  border-left: 2px solid var(--color-border);
+}
+
+.timelineItem {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.timelineItemDot {
+  position: absolute;
+  left: calc(-1 * var(--space-3) - 5px);
+  top: 4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--color-secondary);
+  border: 2px solid var(--color-surface);
+}
+
+.timelineItemDotDanger {
+  background-color: var(--color-danger);
+}
+
+.timelineItemTime {
+  font-size: 10px;
+  color: var(--color-text-secondary);
+  font-weight: 600;
+}
+
+.timelineItemText {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-primary);
+  line-height: 1.35;
+  margin: 0;
+}
+
+/* Card Bottom Guarantee */
+.cardFooterStatus {
+  background-color: var(--color-surface-accent);
+  padding: var(--space-3) var(--space-5);
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--color-primary);
+  font-weight: 500;
+}
+
+.statusCheck {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}

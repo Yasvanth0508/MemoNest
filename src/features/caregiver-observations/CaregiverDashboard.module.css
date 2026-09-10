@@ -1,0 +1,435 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  width: 100%;
+}
+
+/* Shift Context Header */
+.shiftHeader {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-card);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.shiftInfo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.caregiverAvatar {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-pill);
+  background: var(--color-primary);
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: var(--font-size-md);
+  box-shadow: 0 4px 12px rgba(18, 37, 68, 0.15);
+}
+
+.shiftDetails {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.greetingRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.greeting {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: var(--color-primary);
+  margin: 0;
+}
+
+.shiftMeta {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.shiftDivider {
+  color: var(--color-border);
+}
+
+/* Quick Action Buttons Bar */
+.quickActionsBar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.actionBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-weight: 600;
+}
+
+/* Safety Fall Alert Banner */
+.fallAlertBanner {
+  background: #FDF2F1;
+  border: 1px solid #E8A7A1;
+  border-left: 5px solid var(--color-danger);
+  border-radius: var(--radius-md);
+  padding: var(--space-4) var(--space-5);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+  box-shadow: 0 4px 14px rgba(168, 93, 88, 0.08);
+}
+
+.alertLeft {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+.alertIcon {
+  color: var(--color-danger);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.alertContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.alertTitle {
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  color: #8C2E29;
+}
+
+.alertText {
+  font-size: var(--font-size-xs);
+  color: #63221E;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Two Column Layout: Checklist + Overview Cards */
+.topGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  gap: var(--space-6);
+}
+
+@media (max-width: 960px) {
+  .topGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Care Checklist Card */
+.checklistCard {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.checklistHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: var(--space-3);
+}
+
+.checklistTitleGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.checklistTitle {
+  font-size: var(--font-size-md);
+  font-weight: 700;
+  color: var(--color-primary);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.checklistSubtitle {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.progressBarContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  background: var(--color-background);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-sm);
+}
+
+.progressTextRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.progressBarTrack {
+  width: 100%;
+  height: 8px;
+  background: var(--color-border);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+}
+
+.progressBarFill {
+  height: 100%;
+  background: var(--color-success);
+  border-radius: var(--radius-pill);
+  transition: width 0.3s ease;
+}
+
+.checklistItems {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.checklistItem {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.checklistItem:hover {
+  background: var(--color-surface-accent);
+  border-color: var(--color-secondary);
+}
+
+.checklistItemCompleted {
+  background: #F4FAF7;
+  border-color: #C3E3D4;
+}
+
+.checkboxSquare {
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  border: 2px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: transparent;
+  flex-shrink: 0;
+  margin-top: 2px;
+  background: var(--color-surface);
+  transition: all 0.15s ease;
+}
+
+.checkboxSquareChecked {
+  background: var(--color-success);
+  border-color: var(--color-success);
+  color: #FFFFFF;
+}
+
+.itemContent {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.itemHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.itemLabel {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.itemLabelCompleted {
+  text-decoration: line-through;
+  color: var(--color-text-secondary);
+}
+
+.itemTime {
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+.itemDescription {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  line-height: 1.4;
+}
+
+.itemIncidentTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--color-danger);
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+/* Metrics Column */
+.metricsCol {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.metricCard {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-4) var(--space-5);
+  box-shadow: var(--shadow-card);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.metricLeft {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.metricIconWrapper {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  background: var(--color-surface-accent);
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.metricIcon_danger {
+  background: #FDF2F1;
+  color: var(--color-danger);
+}
+
+.metricIcon_success {
+  background: #EDF7F2;
+  color: var(--color-success);
+}
+
+.metricIcon_warning {
+  background: #FDF8E8;
+  color: var(--color-warning);
+}
+
+.metricDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.metricTitle {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+.metricValue {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.metricSubtext {
+  font-size: 11px;
+  color: var(--color-text-secondary);
+}
+
+/* Stream Section */
+.streamSection {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.streamHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: var(--space-3);
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.streamTitleGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.streamTitle {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: var(--color-primary);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.streamSubtitle {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  margin: 0;
+}

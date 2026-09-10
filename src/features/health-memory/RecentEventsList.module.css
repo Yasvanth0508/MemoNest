@@ -1,0 +1,105 @@
+.eventsContainer {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-5);
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: var(--space-3);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--color-primary);
+  margin: 0;
+}
+
+.eventsList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.eventItem {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-background);
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.eventItem:hover {
+  background: var(--color-surface-accent);
+  border-color: rgba(103, 184, 186, 0.3);
+}
+
+.eventDot {
+  width: 10px;
+  height: 10px;
+  border-radius: var(--radius-pill);
+  margin-top: 5px;
+  flex-shrink: 0;
+}
+
+.dotCritical {
+  background: var(--color-danger);
+  box-shadow: 0 0 0 3px rgba(168, 93, 88, 0.25);
+}
+
+.dotWarning {
+  background: var(--color-warning);
+  box-shadow: 0 0 0 3px rgba(181, 138, 67, 0.25);
+}
+
+.dotInfo {
+  background: var(--color-info);
+  box-shadow: 0 0 0 3px rgba(95, 143, 160, 0.25);
+}
+
+.eventContent {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.eventTopRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.eventTitle {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.eventDate {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+.eventDescription {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  margin: 0;
+  line-height: 1.5;
+}

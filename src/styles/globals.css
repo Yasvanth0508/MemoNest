@@ -1,0 +1,85 @@
+:root {
+  --color-primary: #122544;
+  --color-secondary: #67B8BA;
+
+  --color-background: #F6F5F1;
+  --color-surface: #FFFFFF;
+  --color-surface-accent: #EAF5F4;
+
+  --color-text-primary: #122544;
+  --color-text-secondary: #68717C;
+
+  --color-border: #DDE2E1;
+
+  --color-success: #4E8B72;
+  --color-warning: #B58A43;
+  --color-danger: #A85D58;
+  --color-info: #5F8FA0;
+
+  --font-display: "Playfair Display", serif;
+  --font-body: "Inter", sans-serif;
+
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-md: 16px;
+  --font-size-lg: 20px;
+  --font-size-xl: 24px;
+  --font-size-2xl: 32px;
+  --font-size-3xl: 40px;
+  --font-size-4xl: 56px;
+  --font-size-hero: 72px;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+
+  --radius-sm: 12px;
+  --radius-md: 18px;
+  --radius-lg: 24px;
+  --radius-pill: 999px;
+
+  --shadow-card: 0 10px 30px rgba(18, 37, 68, 0.08);
+  --shadow-floating: 0 20px 50px rgba(18, 37, 68, 0.12);
+
+  --container-width: 1280px;
+
+  /* Patient portal — elderly-first accessibility */
+  --patient-font-base: 18px;
+  --patient-font-lg: 22px;
+  --patient-font-xl: 28px;
+  --patient-font-heading: 36px;
+  --patient-touch-target: 48px;
+  --patient-sidebar-width: 240px;
+  --patient-sidebar-collapsed: 64px;
+  --patient-mobile-nav-height: 64px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--color-background);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  font-size: var(--font-size-md);
+  line-height: 1.6;
+}
+
+.container {
+  width: min(100% - 48px, var(--container-width));
+  margin-inline: auto;
+}

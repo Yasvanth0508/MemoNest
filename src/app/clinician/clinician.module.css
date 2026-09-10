@@ -1,0 +1,346 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  width: 100%;
+}
+
+.workspaceHero {
+  background: linear-gradient(135deg, var(--color-primary) 0%, #1D3A68 100%);
+  color: #FFFFFF;
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-floating);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+
+.clinicianMeta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.doctorAvatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--color-secondary);
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  border: 3px solid #FFFFFF;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.doctorInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.doctorName {
+  font-family: var(--font-display);
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  margin: 0;
+  color: #FFFFFF;
+}
+
+.doctorTitle {
+  font-size: var(--font-size-sm);
+  color: var(--color-surface-accent);
+  margin: 0;
+}
+
+.statsBar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  padding: var(--space-3) var(--space-5);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.statItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.statValue {
+  font-family: var(--font-display);
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  color: #FFFFFF;
+  line-height: 1.1;
+}
+
+.statLabel {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.8);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.statDivider {
+  width: 1px;
+  height: 28px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Toolbar & Filters */
+.toolbarCard {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-4) var(--space-5);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  box-shadow: var(--shadow-card);
+}
+
+.searchBox {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex: 1;
+  min-width: 260px;
+  background: #FAF9F6;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  padding: 6px var(--space-4);
+}
+
+.searchIcon {
+  color: var(--color-text-secondary);
+}
+
+.searchInput {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+  width: 100%;
+}
+
+.filterPills {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.filterButton {
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.filterButton:hover {
+  border-color: var(--color-secondary);
+  color: var(--color-primary);
+}
+
+.filterActive {
+  background: var(--color-primary);
+  color: #FFFFFF !important;
+  border-color: var(--color-primary);
+}
+
+/* Roster Section */
+.rosterGrid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.patientCard {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5) var(--space-6);
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.patientCard:hover {
+  box-shadow: var(--shadow-floating);
+}
+
+.cardUrgent {
+  border: 2px solid var(--color-danger);
+  background: linear-gradient(180deg, #FFF9F8 0%, #FFFFFF 100%);
+  position: relative;
+}
+
+.cardUrgent::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 6px;
+  height: 100%;
+  background: var(--color-danger);
+  border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+}
+
+.patientHeaderRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.patientProfile {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.patientAvatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--color-surface-accent);
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--font-size-lg);
+  border: 1px solid var(--color-border);
+}
+
+.patientDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.patientNameRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.patientName {
+  font-family: var(--font-display);
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  color: var(--color-primary);
+  margin: 0;
+}
+
+.patientMrn {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  font-weight: 600;
+}
+
+.patientSubtext {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+}
+
+.badgeStack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.clinicalSummaryStrip {
+  background: #FAF8F5;
+  border-radius: var(--radius-sm);
+  padding: var(--space-3) var(--space-4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+}
+
+.summaryGroup {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.summaryKey {
+  font-weight: 700;
+  color: var(--color-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.summaryValue {
+  color: var(--color-text-primary);
+  font-weight: 500;
+}
+
+.cardFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-border);
+}
+
+.footerLeftNotice {
+  font-size: var(--font-size-xs);
+  color: var(--color-danger);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.actionButtons {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .workspaceHero {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .patientHeaderRow {
+    flex-direction: column;
+  }
+  .cardFooter {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
