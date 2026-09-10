@@ -654,6 +654,16 @@ export function CaregiverProvider({ children }: { children: React.ReactNode }) {
         // ignore
       }
     }
+
+    // Hydrate observations from live database
+    fetch("/api/caregiver/observations")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data?.observations && data.observations.length > 0) {
+          setObservations(data.observations);
+        }
+      })
+      .catch(() => {});
   }, []);
 
   // Save observations & followUpNotes when changed
@@ -732,27 +742,52 @@ export function CaregiverProvider({ children }: { children: React.ReactNode }) {
         obsData.category === "fall" ||
         obsData.incidentReported;
 
-      const newObs: CaregiverObservation = {
+      let resolvedObs: CaregiverObservation = {
         ...obsData,
         id: `obs-${Date.now()}`,
         patientId: activePatientId,
         caregiverId: caregiver.id,
         caregiverName: caregiver.name,
         timestamp: new Date().toISOString(),
-        status: "unverified",
+        status: "reviewed",
       };
 
-      setObservations((prev) => [newObs, ...prev]);
-      setLastSubmittedObservation(newObs);
+      try {
+        const res = await fetch("/api/caregiver/observations", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            note: obsData.note,
+            category: obsData.category,
+            severity: obsData.severity,
+            caregiverName: caregiver.name,
+            caregiverId: caregiver.id,
+            location: obsData.location,
+            patientId: activePatientId,
+          }),
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          if (data.observation) {
+            resolvedObs = data.observation;
+          }
+        }
+      } catch (err) {
+        console.warn("Backend observation API error, falling back to local:", err);
+      }
+
+      setObservations((prev) => [resolvedObs, ...prev]);
+      setLastSubmittedObservation(resolvedObs);
 
       // Open routing feedback modal
       setRoutingNotice({
         isOpen: true,
         type: isUrgent ? "urgent" : "routine",
-        observation: newObs,
+        observation: resolvedObs,
       });
 
-      return newObs;
+      return resolvedObs;
     },
     [activePatientId, caregiver.id, caregiver.name]
   );

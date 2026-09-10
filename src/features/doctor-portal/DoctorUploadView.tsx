@@ -76,8 +76,29 @@ export function DoctorUploadView() {
     }, 1200);
   };
 
-  const handleConfirmAndCommit = () => {
+  const handleConfirmAndCommit = async () => {
     if (!draftDoc) return;
+
+    try {
+      await fetch("/api/documents/confirm", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          patientId: draftDoc.patientId,
+          title: draftDoc.documentName,
+          reportType: draftDoc.documentType,
+          date: editDate || draftDoc.date,
+          facility: "MetroHealth Senior Specialty Clinic",
+          provider: editProvider,
+          diagnoses: [editDiagnosis],
+          medications: [editMedication],
+          keyFindings: [editFindings],
+          summary: draftDoc.extractedEntities.summary,
+        }),
+      });
+    } catch (err) {
+      console.warn("Backend document confirm error:", err);
+    }
 
     addUploadedDocument({
       patientId: draftDoc.patientId,

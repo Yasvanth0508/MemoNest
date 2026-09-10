@@ -625,7 +625,7 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
   const [consentScopes] = React.useState<ConsentScopeItem[]>(INITIAL_CONSENT_SCOPES);
 
   // Digital Twin
-  const [digitalTwinState] = React.useState<DigitalTwinState>("significant_deviation");
+  const [digitalTwinState, setDigitalTwinState] = React.useState<DigitalTwinState>("significant_deviation");
   const [selectedSnapshot, setSelectedSnapshot] = React.useState<TimeframeSnapshot>("6m");
 
   const digitalTwinTrends = React.useMemo(() => {
@@ -870,7 +870,7 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
       indication: "Prescribed via Doctor Clinical Portal",
       status: "active",
       startDate: new Date().toISOString().split("T")[0],
-      prescriber: "Dr. Rajesh Sharma",
+      prescriber: "Dr. Rajesh Sharma, MD",
       prescriberId: "user-clinician-001",
       instructions: prescription.instructions,
     };
@@ -906,6 +906,22 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
       isNew: true,
     };
     setAllChanges((prev) => [newKc, ...prev]);
+
+    // Async persist to backend API
+    fetch("/api/medications", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        patientId: selectedPatient.id,
+        name: prescription.medication,
+        dosage: prescription.dosage,
+        frequency: prescription.frequency,
+        instructions: prescription.instructions,
+        prescriber: "Dr. Rajesh Sharma, MD",
+        prescriberId: "user-clinician-001",
+        changeReason: `Prescribed for ${prescription.duration}`,
+      }),
+    }).catch((err) => console.warn("Backend prescription save error:", err));
 
     // Audit log
     addAuditEntry(
@@ -954,16 +970,58 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
     setIsAiProcessing(true);
     setActiveQueryTraceStep(1);
 
-    // Simulate 5-layer workflow transitions
-    await new Promise((r) => setTimeout(r, 600));
-    setActiveQueryTraceStep(2);
-    await new Promise((r) => setTimeout(r, 600));
-    setActiveQueryTraceStep(3);
-    await new Promise((r) => setTimeout(r, 600));
-    setActiveQueryTraceStep(4);
-    await new Promise((r) => setTimeout(r, 600));
+    const step2Timer = setTimeout(() => setActiveQueryTraceStep(2), 400);
+    const step3Timer = setTimeout(() => setActiveQueryTraceStep(3), 800);
+    const step4Timer = setTimeout(() => setActiveQueryTraceStep(4), 1200);
+
+    try {
+      const res = await fetch("/api/clinician/assistant/query", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          patientId: selectedPatient.id,
+          query: queryText,
+          doctorName: "Dr. Rajesh Sharma, MD",
+          doctorId: "user-clinician-001",
+        }),
+      });
+
+      clearTimeout(step2Timer);
+      clearTimeout(step3Timer);
+      clearTimeout(step4Timer);
+      setActiveQueryTraceStep(5);
+
+      if (res.ok) {
+        const data = await res.json();
+        const liveQuery: AiAssistantQuery = {
+          id: `ai-q-${Date.now()}`,
+          patientId: selectedPatient.id,
+          query: queryText,
+          timestamp: "Today · Just now",
+          answer: data.answer,
+          sourceReferences: data.sourceReferences || [],
+          trace: data.trace || {
+            intake: "Natural language clinical query parsed & intent classified.",
+            retrieval: "Unified timeline, medications, and caregiver observations scanned.",
+            riskCheck: "Safety alerts evaluated against Beers Criteria & active diagnoses.",
+            declineTrajectory: "Longitudinal deviation indicators cross-referenced.",
+            synthesis: "Evidence-backed answer generated with explicit source attribution.",
+          },
+        };
+
+        setAssistantQueries((prev) => [liveQuery, ...prev]);
+        setIsAiProcessing(false);
+        setActiveQueryTraceStep(0);
+        return liveQuery;
+      }
+    } catch (err) {
+      console.warn("Live AI assistant error, falling back to local synthesis:", err);
+    }
+
+    clearTimeout(step2Timer);
+    clearTimeout(step3Timer);
+    clearTimeout(step4Timer);
     setActiveQueryTraceStep(5);
-    await new Promise((r) => setTimeout(r, 400));
 
     let synthesizedAnswer = "";
     let refs = [
@@ -1055,7 +1113,7 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
       patientId: selectedPatient.id,
       timestamp: new Date().toISOString(),
       userId: "user-clinician-001",
-      userName: "Dr. Rajesh Sharma",
+      userName: "Dr. Rajesh Sharma, MD",
       userRole: "doctor",
       eventType: "access",
       action,
@@ -1066,7 +1124,72 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
       status: "success",
     };
     setAuditLogs((prev) => [newEntry, ...prev]);
+
+    fetch("/api/audit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newEntry),
+    }).catch((err) => console.warn("Backend audit log save error:", err));
   };
+
+  // Live Data Hydration
+  React.useEffect(() => {
+    let isMounted = true;
+    async function loadLiveData() {
+      try {
+        const medRes = await fetch(`/api/medications?patientId=${selectedPatientId}&status=active`);
+        if (medRes.ok && isMounted) {
+          const data = await medRes.json();
+          if (data.medications && data.medications.length > 0) {
+            setMedications(data.medications);
+          }
+        }
+      } catch (e) {
+        // Fall back gracefully to seeded/mock state
+      }
+
+      try {
+        const tlRes = await fetch(`/api/timeline?patientId=${selectedPatientId}`);
+        if (tlRes.ok && isMounted) {
+          const data = await tlRes.json();
+          if (data.events && data.events.length > 0) {
+            setTimelineEvents(data.events);
+          }
+        }
+      } catch (e) {
+        // Fall back gracefully
+      }
+
+      try {
+        const auditRes = await fetch(`/api/audit?patientId=${selectedPatientId}`);
+        if (auditRes.ok && isMounted) {
+          const data = await auditRes.json();
+          if (data.auditLogs && data.auditLogs.length > 0) {
+            setAuditLogs(data.auditLogs);
+          }
+        }
+      } catch (e) {
+        // Fall back gracefully
+      }
+
+      try {
+        const trendRes = await fetch(`/api/caregiver/trends?patientId=${selectedPatientId}`);
+        if (trendRes.ok && isMounted) {
+          const data = await trendRes.json();
+          if (data.status) {
+            setDigitalTwinState(data.status as DigitalTwinState);
+          }
+        }
+      } catch (e) {
+        // Fall back gracefully
+      }
+    }
+
+    loadLiveData();
+    return () => {
+      isMounted = false;
+    };
+  }, [selectedPatientId]);
 
   const downloadAuditCsv = () => {
     const headers = [

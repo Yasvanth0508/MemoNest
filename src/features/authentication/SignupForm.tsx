@@ -6,6 +6,7 @@ import Link from "next/link";
 import { UserRole } from "@/types";
 import { useAuth } from "./useAuth";
 import { ROLE_OPTIONS, ROLE_WORKSPACES } from "./LoginForm";
+import { PatientOnboardingWizard } from "./PatientOnboardingWizard";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Badge } from "@/components/ui/Badge";
@@ -35,6 +36,7 @@ export function SignupForm() {
   const [password, setPassword] = React.useState("");
   const [role, setRole] = React.useState<UserRole>("doctor");
   const [showPassword, setShowPassword] = React.useState(false);
+  const [showPatientWizard, setShowPatientWizard] = React.useState(false);
 
   const [nameError, setNameError] = React.useState<string | null>(null);
   const [emailError, setEmailError] = React.useState<string | null>(null);
@@ -98,6 +100,12 @@ export function SignupForm() {
       return;
     }
 
+    // When registering as a patient, require the health onboarding wizard before dashboard access
+    if (role === "patient") {
+      setShowPatientWizard(true);
+      return;
+    }
+
     setIsSubmitting(true);
     setGeneralError(null);
 
@@ -121,6 +129,17 @@ export function SignupForm() {
       setIsSubmitting(false);
     }
   };
+
+  if (showPatientWizard) {
+    return (
+      <PatientOnboardingWizard
+        initialName={name.trim()}
+        initialEmail={email.trim()}
+        initialPassword={password}
+        onCancel={() => setShowPatientWizard(false)}
+      />
+    );
+  }
 
   const isBusy = isSubmitting || isAuthLoading;
 

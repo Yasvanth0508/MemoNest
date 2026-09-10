@@ -65,21 +65,30 @@ import {
   getCurrentSession,
   logout,
 } from './mock/auth.service';
+import { authApiService } from './api/auth.api.service';
+import { patientApiService } from './api/patient.api.service';
+import { timelineApiService } from './api/timeline.api.service';
+import { caregiverApiService } from './api/caregiver.api.service';
+import { documentApiService } from './api/document.api.service';
+import { medicationApiService } from './api/medication.api.service';
+import { consentApiService } from './api/consent.api.service';
+import { auditApiService } from './api/audit.api.service';
+import { clinicalBriefApiService } from './api/clinical-brief.api.service';
 
 export const DATA_SOURCE = process.env.NEXT_PUBLIC_DATA_SOURCE || 'mock';
 
 // Switchable service bindings based on DATA_SOURCE
-export const patientService = mockPatientService;
-export const timelineService = mockTimelineService;
-export const medicationService = mockMedicationService;
+export const patientService = DATA_SOURCE === 'api' ? patientApiService : mockPatientService;
+export const timelineService = DATA_SOURCE === 'api' ? timelineApiService : mockTimelineService;
+export const medicationService = DATA_SOURCE === 'api' ? medicationApiService : mockMedicationService;
 export const riskService = mockRiskService;
-export const caregiverService = mockCaregiverService;
-export const consentService = mockConsentService;
-export const auditService = mockAuditService;
+export const caregiverService = DATA_SOURCE === 'api' ? caregiverApiService : mockCaregiverService;
+export const consentService = DATA_SOURCE === 'api' ? consentApiService : mockConsentService;
+export const auditService = DATA_SOURCE === 'api' ? auditApiService : mockAuditService;
 export const evidenceService = mockEvidenceService;
-export const clinicalBriefService = mockClinicalBriefService;
-export const documentService = mockDocumentService;
-export const authService = mockAuthService;
+export const clinicalBriefService = DATA_SOURCE === 'api' ? clinicalBriefApiService : mockClinicalBriefService;
+export const documentService = DATA_SOURCE === 'api' ? documentApiService : mockDocumentService;
+export const authService = DATA_SOURCE === 'api' ? authApiService : mockAuthService;
 
 // Direct named function exports for convenient import
 export {

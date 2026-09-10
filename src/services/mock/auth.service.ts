@@ -23,38 +23,41 @@ export interface SignUpData {
 }
 
 export const authService = {
-  async login(email: string, role: UserRole, patientEmail?: string): Promise<AuthSession> {
-    await simulateDelay();
+  async login(
+    email: string,
+    password?: string,
+    role?: UserRole,
+    patientEmail?: string
+  ): Promise<AuthSession> {
+    const targetRole: UserRole = role || 'patient';
 
     // Look for matching user by role and/or email
     let user = mockUsers.find(
-      (u) => u.email.toLowerCase() === email.toLowerCase() && u.role === role
+      (u) => u.email.toLowerCase() === email.toLowerCase() && u.role === targetRole
     );
 
     if (!user) {
-      user = mockUsers.find((u) => u.role === role);
+      user = mockUsers.find((u) => u.role === targetRole);
     }
 
     if (!user) {
       user = mockUsers.find((u) => u.email.toLowerCase() === email.toLowerCase());
     }
 
-    if (!user) {
-      user = {
-        id: `user-${role}-${Date.now()}`,
-        name: email.split('@')[0] || 'Demo User',
-        email,
-        role,
-      };
-    }
+    const resolvedUser: User = user || {
+      id: `user-${targetRole}-${Date.now()}`,
+      name: email.split('@')[0] || 'Demo User',
+      email,
+      role: targetRole,
+    };
 
     const resolvedPatientEmail =
       patientEmail?.trim() ||
-      (role === 'patient' ? email.trim() : 'ravi@healthmemory.demo');
+      (targetRole === 'patient' ? email.trim() : 'ravi@healthmemory.demo');
 
     currentSession = {
-      user,
-      token: `mock-jwt-token-${user.id}-${Date.now()}`,
+      user: resolvedUser,
+      token: `mock-jwt-token-${resolvedUser.id}-${Date.now()}`,
       expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
     };
 

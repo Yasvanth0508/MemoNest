@@ -1,0 +1,331 @@
+// MemoNest Prisma Schema (SQLite for Agile Development, PostgreSQL compatible)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         String   // "patient" | "caregiver" | "doctor"
+  title        String?
+  relationship String?
+  organization String?
+  phone        String?
+  avatarUrl    String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relational links
+  patient      Patient?
+}
+
+model Patient {
+  id                     String   @id @default(cuid())
+  userId                 String?  @unique
+  user                   User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  name                   String
+  age                    Int
+  dateOfBirth            String
+  gender                 String   // "Male" | "Female" | "Other"
+  primaryDoctor          String
+  primaryDoctorId        String?
+  bloodType              String?
+  address                String?
+  phone                  String?
+  email                  String?
+  preferredLanguage      String?  @default("English")
+  mobilityStatus         String?
+  emergencyContactName   String
+  emergencyContactRel    String
+  emergencyContactPhone  String
+  emergencyContactEmail  String?
+  profileImage           String?
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+
+  // Related health memory collections
+  conditions             Condition[]
+  allergies              Allergy[]
+  medications            Medication[]
+  timelineEvents         TimelineEvent[]
+  caregiverObservations  CaregiverObservation[]
+  documents              MedicalDocument[]
+  evidenceSnippets       EvidenceSnippet[]
+  riskSignals            RiskSignal[]
+  consentRecords         ConsentRecord[]
+  accessRequests         AccessRequest[]
+  profileChangeRequests  ProfileChangeRequest[]
+  notifications          PatientNotification[]
+  auditEntries           AuditEntry[]
+  aiAssistantQueries     AiAssistantQuery[]
+  recordChunks           RecordChunk[]
+}
+
+model Condition {
+  id            String   @id @default(cuid())
+  patientId     String
+  patient       Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  name          String
+  status        String   // "active" | "managed" | "resolved" | "historical"
+  diagnosedYear Int
+  icdCode       String?
+  notes         String?
+  createdAt     DateTime @default(now())
+}
+
+model Allergy {
+  id            String   @id @default(cuid())
+  patientId     String
+  patient       Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  allergen      String
+  reaction      String
+  severity      String   // "mild" | "moderate" | "severe"
+  diagnosedDate String?
+  createdAt     DateTime @default(now())
+}
+
+model Medication {
+  id                  String   @id @default(cuid())
+  patientId           String
+  patient             Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  name                String
+  genericName         String?
+  dosage              String
+  frequency           String
+  route               String?
+  indication          String
+  status              String   // "active" | "stopped" | "historical"
+  startDate           String
+  endDate             String?
+  prescriber          String
+  prescriberId        String?
+  instructions        String?
+  stopReason          String?
+  changeReason        String?
+  recentChangeNotes   String?
+  sideEffectsReported String?  // JSON string array
+  isRecentChange      Boolean  @default(false)
+  fallRiskWarning     Boolean  @default(false)
+  sedationRisk        Boolean  @default(false)
+  evidenceIds         String?  // JSON string array
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+}
+
+model TimelineEvent {
+  id          String   @id @default(cuid())
+  patientId   String
+  patient     Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  date        String
+  time        String?
+  type        String   // "hospitalization" | "review" | "cognitive" | "mobility" | "routine_visit" | "lab_result" | "medication_change" | "caregiver_observation" | "incident" | "fall"
+  category    String   // "medical" | "medication" | "laboratory" | "labs" | "cognitive" | "functional" | "caregiver" | "hospitalization" | "other"
+  title       String
+  description String
+  severity    String?  // "low" | "medium" | "high" | "critical"
+  sourceType  String
+  sourceId    String?
+  author      String?
+  authorRole  String?
+  evidenceId  String?
+  metadata    String?  // JSON string
+  createdAt   DateTime @default(now())
+}
+
+model CaregiverObservation {
+  id               String   @id @default(cuid())
+  patientId        String
+  patient          Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  caregiverId      String
+  caregiverName    String
+  timestamp        String
+  category         String   // "fall" | "mobility" | "confusion" | "drowsiness" | "appetite" | "behavior" | "medication_adherence" | "physical_symptom" | "general"
+  note             String
+  summary          String?
+  severity         String   // "low" | "medium" | "high" | "critical"
+  incidentReported Boolean  @default(false)
+  location         String?
+  actionTaken      String?
+  vitalsChecked    Boolean  @default(false)
+  evidenceId       String?
+  status           String   @default("unverified")
+  createdAt        DateTime @default(now())
+}
+
+model MedicalDocument {
+  id                String   @id @default(cuid())
+  patientId         String
+  patient           Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  title             String
+  type              String   // "discharge_summary" | "consultation" | "lab_report" | "prescription" | "clinical_note"
+  date              String
+  facility          String
+  author            String
+  fileType          String
+  fileSize          String
+  fileUrl           String?
+  summary           String
+  keyFindings       String?  // JSON string array
+  extractedEntities String?  // JSON string array
+  createdAt         DateTime @default(now())
+
+  evidenceSnippets  EvidenceSnippet[]
+}
+
+model EvidenceSnippet {
+  id              String           @id @default(cuid())
+  patientId       String
+  patient         Patient          @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  documentId      String?
+  document        MedicalDocument? @relation(fields: [documentId], references: [id], onDelete: SetNull)
+  documentTitle   String
+  documentDate    String
+  sourceType      String           // "document" | "observation" | "prescription" | "lab_report" | "clinical_note" | "discharge_summary" | "consultation"
+  quote           String
+  context         String
+  linkedEntity    String
+  confidenceScore Float            @default(0.95)
+  pageNumber      Int?
+  author          String?
+  createdAt       DateTime         @default(now())
+}
+
+model RiskSignal {
+  id              String   @id @default(cuid())
+  patientId       String
+  patient         Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  title           String
+  priority        String   // "high" | "medium" | "low"
+  category        String   // "falls" | "medication" | "cognitive" | "mobility" | "cardiovascular" | "general"
+  description     String
+  factors         String   // JSON string array
+  evidenceIds     String   // JSON string array
+  recommendations String   // JSON string array
+  detectedAt      String
+  confidence      String?  @default("high")
+  status          String   @default("active") // "active" | "monitoring" | "resolved"
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model ConsentRecord {
+  id                    String   @id @default(cuid())
+  patientId             String
+  patient               Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  granteeId             String
+  granteeName           String
+  granteeRole           String   // "patient" | "caregiver" | "doctor"
+  granteeEmail          String?
+  organization          String?
+  grantedPermissions    String   // JSON string array
+  deniedPermissions     String   // JSON string array
+  restrictedPermissions String   // JSON string array
+  status                String   // "active" | "expired" | "revoked" | "pending"
+  validFrom             String
+  validUntil            String?
+  notes                 String?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+}
+
+model AccessRequest {
+  id                  String   @id @default(cuid())
+  patientId           String
+  patient             Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  requesterName       String
+  requesterRole       String
+  requesterOrg        String
+  reason              String
+  durationDays        Int      @default(30)
+  requestedCategories String   // JSON string array
+  requestDate         String
+  status              String   @default("pending") // "pending" | "approved" | "denied"
+  createdAt           DateTime @default(now())
+}
+
+model ProfileChangeRequest {
+  id             String   @id @default(cuid())
+  patientId      String
+  patient        Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  field          String
+  currentValue   String
+  requestedValue String
+  reason         String
+  dateSubmitted  String
+  status         String   @default("pending_review") // "pending_review" | "approved" | "rejected"
+  reviewedBy     String?
+  createdAt      DateTime @default(now())
+}
+
+model PatientNotification {
+  id          String   @id @default(cuid())
+  patientId   String
+  patient     Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  category    String   // "medication" | "appointment" | "health_record" | "consent" | "caregiver"
+  title       String
+  message     String
+  timestamp   String
+  severity    String   @default("info") // "info" | "gentle" | "attention"
+  isRead      Boolean  @default(false)
+  actionLabel String?
+  actionUrl   String?
+  source      String?
+  createdAt   DateTime @default(now())
+}
+
+model AuditEntry {
+  id           String   @id @default(cuid())
+  patientId    String
+  patient      Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  timestamp    String
+  userId       String
+  userName     String
+  userRole     String
+  eventType    String   // "access" | "query" | "create" | "update" | "delete" | "export" | "override"
+  action       String
+  resource     String
+  details      String
+  purposeOfUse String
+  ipAddress    String?  @default("127.0.0.1")
+  status       String   @default("success") // "success" | "denied" | "flagged"
+  createdAt    DateTime @default(now())
+}
+
+model AiAssistantQuery {
+  id               String   @id @default(cuid())
+  patientId        String
+  patient          Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  userId           String?
+  query            String
+  timestamp        String
+  answer           String
+  sourceReferences String   // JSON string array
+  trace            String   // JSON string object
+  createdAt        DateTime @default(now())
+}
+
+model RecordChunk {
+  id         String   @id @default(cuid())
+  patientId  String
+  patient    Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  sourceType String   // "document" | "observation" | "timeline" | "medication" | "profile"
+  sourceId   String
+  title      String
+  date       String
+  category   String
+  content    String
+  metadata   String?  // JSON string
+  embedding  String?  // JSON float array if embedding model computed
+  createdAt  DateTime @default(now())
+
+  @@index([patientId, sourceType])
+  @@index([patientId, category])
+}

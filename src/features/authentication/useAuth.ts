@@ -14,7 +14,7 @@ export interface AuthState {
   activePatientEmail: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (email: string, role: UserRole, patientEmail?: string) => Promise<AuthSession>;
+  login: (email: string, password?: string, role?: UserRole, patientEmail?: string) => Promise<AuthSession>;
   signup: (data: { name: string; email: string; role: UserRole; password?: string; patientEmail?: string }) => Promise<AuthSession>;
   logout: () => Promise<void>;
   setUser: (user: User | null) => void;
@@ -47,11 +47,12 @@ export const useAuthStore = create<AuthState>((set) => ({
     set({ activePatientEmail: email });
   },
 
-  login: async (email: string, role: UserRole, patientEmail?: string): Promise<AuthSession> => {
+  login: async (email: string, password?: string, role?: UserRole, patientEmail?: string): Promise<AuthSession> => {
     set({ isLoading: true });
     try {
-      const resolvedPatient = patientEmail?.trim() || (role === "patient" ? email.trim() : "ravi@healthmemory.demo");
-      const session = await authService.login(email, role, resolvedPatient);
+      const targetRole = role || "patient";
+      const resolvedPatient = patientEmail?.trim() || (targetRole === "patient" ? email.trim() : "ravi@healthmemory.demo");
+      const session = await authService.login(email, password, targetRole, resolvedPatient);
       if (typeof window !== "undefined") {
         try {
           window.localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(session));

@@ -151,7 +151,7 @@ export function LoginForm({
     setGeneralError(null);
 
     try {
-      const session = await login(email.trim(), role, patientEmail.trim());
+      const session = await login(email.trim(), password, role, patientEmail.trim());
       if (onSuccess) {
         onSuccess(session);
       }

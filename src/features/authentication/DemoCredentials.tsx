@@ -99,7 +99,7 @@ export function DemoCredentials({
       if (onSelectPersona) {
         onSelectPersona(persona);
       }
-      await login(persona.email, persona.role);
+      await login(persona.email, "demo1234", persona.role, "ravi@healthmemory.demo");
       router.push(persona.workspace);
     } catch (err) {
       const msg =

@@ -173,6 +173,59 @@ class PatientPortalStore {
   private timelineEvents: TimelineEvent[] = [...mockTimelineEvents];
   private listeners: Array<() => void> = [];
 
+  constructor() {
+    if (typeof window !== "undefined") {
+      this.initFromApi();
+    }
+  }
+
+  public async initFromApi() {
+    try {
+      const email = window.localStorage.getItem("active_patient_email") || "ravi@healthmemory.demo";
+      const [patientRes, timelineRes, reqRes, notifRes, docsRes, consentRes] = await Promise.all([
+        fetch(`/api/patient?email=${encodeURIComponent(email)}`).catch(() => null),
+        fetch(`/api/timeline?email=${encodeURIComponent(email)}`).catch(() => null),
+        fetch(`/api/patient/requests?email=${encodeURIComponent(email)}`).catch(() => null),
+        fetch(`/api/patient/notifications?email=${encodeURIComponent(email)}`).catch(() => null),
+        fetch(`/api/documents?email=${encodeURIComponent(email)}`).catch(() => null),
+        fetch(`/api/consent?email=${encodeURIComponent(email)}`).catch(() => null),
+      ]);
+
+      if (patientRes && patientRes.ok) {
+        const data = await patientRes.json();
+        if (data.patient) this.patient = data.patient;
+      }
+      if (timelineRes && timelineRes.ok) {
+        const data = await timelineRes.json();
+        if (data.events && data.events.length > 0) this.timelineEvents = data.events;
+      }
+      if (reqRes && reqRes.ok) {
+        const data = await reqRes.json();
+        if (data.requests && data.requests.length > 0) this.changeRequests = data.requests;
+      }
+      if (notifRes && notifRes.ok) {
+        const data = await notifRes.json();
+        if (data.notifications && data.notifications.length > 0) this.notifications = data.notifications;
+      }
+      if (docsRes && docsRes.ok) {
+        const data = await docsRes.json();
+        if (data.documents && data.documents.length > 0) {
+          this.reports = data.documents.map((d: any) => ({
+            ...d,
+            processingStatus: "Confirmed" as const,
+          }));
+        }
+      }
+      if (consentRes && consentRes.ok) {
+        const data = await consentRes.json();
+        if (data.records && data.records.length > 0) this.consentRecords = data.records;
+      }
+      this.notify();
+    } catch {
+      // fallback to initial
+    }
+  }
+
   private notify() {
     this.listeners.forEach((fn) => fn());
   }
@@ -192,6 +245,13 @@ class PatientPortalStore {
   public updatePatient(patch: Partial<Patient>): Patient {
     this.patient = { ...this.patient, ...patch };
     this.notify();
+    if (typeof window !== "undefined") {
+      fetch("/api/patient", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...patch, email: this.patient.email }),
+      }).catch(() => {});
+    }
     return this.patient;
   }
 
@@ -212,6 +272,13 @@ class PatientPortalStore {
     };
     this.changeRequests = [req, ...this.changeRequests];
     this.notify();
+    if (typeof window !== "undefined") {
+      fetch("/api/patient/requests", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ field, currentValue, requestedValue, reason, email: this.patient.email }),
+      }).catch(() => {});
+    }
     return req;
   }
 
@@ -272,11 +339,25 @@ class PatientPortalStore {
       n.id === id ? { ...n, isRead: true } : n
     );
     this.notify();
+    if (typeof window !== "undefined") {
+      fetch("/api/patient/notifications", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      }).catch(() => {});
+    }
   }
 
   public markAllNotificationsAsRead() {
     this.notifications = this.notifications.map((n) => ({ ...n, isRead: true }));
     this.notify();
+    if (typeof window !== "undefined") {
+      fetch("/api/patient/notifications", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ markAllRead: true, email: this.patient.email }),
+      }).catch(() => {});
+    }
   }
 
   // Consent & Sharing
@@ -366,6 +447,13 @@ class PatientPortalStore {
   public revokeConsent(consentId: string): boolean {
     this.consentRecords = this.consentRecords.filter((c) => c.id !== consentId);
     this.notify();
+    if (typeof window !== "undefined") {
+      fetch("/api/consent", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: consentId, status: "revoked" }),
+      }).catch(() => {});
+    }
     return true;
   }
 
@@ -396,6 +484,22 @@ class PatientPortalStore {
       lastUpdated: new Date().toISOString(),
       notes: "Granted by patient through Consent & Sharing center.",
     };
+
+    if (typeof window !== "undefined") {
+      fetch("/api/consent", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          patientId: this.patient.id,
+          granteeName: name,
+          granteeRole: role === "guardian" ? "caregiver" : role,
+          organization: org,
+          grantedPermissions: categories,
+          durationDays,
+          notes: "Granted by patient through Consent & Sharing center.",
+        }),
+      }).catch(() => {});
+    }
 
     this.consentRecords = [newRecord, ...this.consentRecords];
     this.notify();

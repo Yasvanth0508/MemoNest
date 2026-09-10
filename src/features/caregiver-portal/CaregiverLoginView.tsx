@@ -3,6 +3,7 @@
 import * as React from "react";
 import { useRouter } from "next/navigation";
 import { useCaregiver, CaregiverRelationship } from "./caregiver-store";
+import { useAuth } from "@/features/authentication";
 import {
   HeartHandshake,
   UserCheck,
@@ -12,12 +13,14 @@ import {
   Heart,
   ArrowRight,
   Lock,
+  AlertCircle,
 } from "lucide-react";
 import clsx from "clsx";
 import styles from "./CaregiverLoginView.module.css";
 
 export function CaregiverLoginView() {
   const router = useRouter();
+  const { login } = useAuth();
   const {
     caregiver,
     setCaregiverRelationship,
@@ -27,6 +30,9 @@ export function CaregiverLoginView() {
   } = useCaregiver();
 
   const [email, setEmail] = React.useState(caregiver.email || "anita@caregiver.demo");
+  const [password, setPassword] = React.useState("demo1234");
+  const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
+  const [isLoggingIn, setIsLoggingIn] = React.useState(false);
   const [selectedRel, setSelectedRel] = React.useState<CaregiverRelationship>(caregiver.relationship);
   const [selectedPatientId, setSelectedPatientId] = React.useState<string>(activePatientId);
 
@@ -36,11 +42,24 @@ export function CaregiverLoginView() {
     full_proxy: "Full proxy",
   };
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setCaregiverRelationship(selectedRel);
-    switchPatient(selectedPatientId);
-    router.push("/caregiver");
+    setErrorMessage(null);
+    setIsLoggingIn(true);
+
+    try {
+      const selectedPatient = patients.find((p) => p.id === selectedPatientId);
+      const patientEmail = selectedPatient?.email || "ravi@healthmemory.demo";
+
+      await login(email.trim(), password, "caregiver", patientEmail);
+      setCaregiverRelationship(selectedRel);
+      switchPatient(selectedPatientId);
+      router.push("/caregiver");
+    } catch (err: any) {
+      setErrorMessage(err?.message || "Failed to authenticate caregiver. Please check credentials.");
+    } finally {
+      setIsLoggingIn(false);
+    }
   };
 
   return (
@@ -55,6 +74,25 @@ export function CaregiverLoginView() {
             Elderly health companion portal for daily care, observations &amp; safety monitoring
           </p>
         </div>
+        {errorMessage && (
+          <div
+            style={{
+              padding: "12px 16px",
+              background: "#FCE8E6",
+              color: "#C5221F",
+              borderRadius: "8px",
+              marginBottom: "16px",
+              fontSize: "14px",
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+            }}
+            role="alert"
+          >
+            <AlertCircle size={16} />
+            <span>{errorMessage}</span>
+          </div>
+        )}
 
         <div className={styles.formSection}>
           {/* Email / Caregiver ID */}
@@ -68,6 +106,21 @@ export function CaregiverLoginView() {
               className={styles.inputField}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+
+          {/* Password */}
+          <div className={styles.inputGroup}>
+            <label htmlFor="caregiver-password" className={styles.inputLabel}>
+              Password
+            </label>
+            <input
+              id="caregiver-password"
+              type="password"
+              className={styles.inputField}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               required
             />
           </div>
