@@ -14,13 +14,13 @@ export function LandingFooter() {
       <div className={styles.container}>
         <div className={styles.oneLineFooter}>
           <div className={styles.brandRow}>
-            <Link href="/" className={styles.brand} aria-label="MemoNest">
+            <Link href="/" className={styles.brand} aria-label="KinSphere">
               <div className={styles.logoMark}>
                 <Activity size={16} strokeWidth={2.4} />
               </div>
-              <span className={styles.brandTitle}>MemoNest</span>
+              <span className={styles.brandTitle}>KinSphere</span>
             </Link>
-            <span className={styles.copyright}>© 2026 MemoNest</span>
+            <span className={styles.copyright}>© 2026 KinSphere</span>
           </div>
 
           <div className={styles.linksRow}>

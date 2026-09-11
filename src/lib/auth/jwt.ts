@@ -4,7 +4,7 @@ import { NextRequest } from 'next/server';
 import { User, UserRole } from '@/types';
 import { prisma } from '@/lib/db/prisma';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'memonest-super-secret-jwt-key-2026';
+const JWT_SECRET = process.env.JWT_SECRET || 'kinsphere-super-secret-jwt-key-2026';
 const TOKEN_EXPIRY = '7d';
 
 export interface TokenPayload {
@@ -44,7 +44,7 @@ export async function getAuthUserFromRequest(req: NextRequest): Promise<User | n
     }
 
     if (!token) {
-      token = req.cookies.get('memonest_session')?.value;
+      token = req.cookies.get('kinsphere_session')?.value || req.cookies.get('memonest_session')?.value;
     }
 
     if (!token) return null;

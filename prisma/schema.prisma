@@ -1,4 +1,4 @@
-// MemoNest Prisma Schema (SQLite for Agile Development, PostgreSQL compatible)
+// KinSphere Prisma Schema (SQLite for Agile Development, PostgreSQL compatible)
 
 generator client {
   provider = "prisma-client-js"

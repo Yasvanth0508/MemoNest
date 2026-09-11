@@ -47,11 +47,16 @@ export default function PatientHomePage() {
   const todayDateStr = "Thursday, September 10, 2026";
 
   const initials = React.useMemo(() => {
-    const parts = (patient.name || "Ravi Kumar").split(" ");
-    return parts.length >= 2 ? `${parts[0][0]}${parts[1][0]}` : "RK";
+    const trimmed = (patient.name || "").trim();
+    if (!trimmed || trimmed === "Loading...") return "PT";
+    const parts = trimmed.split(/\s+/);
+    if (parts.length >= 2 && parts[0] && parts[1]) {
+      return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
+    }
+    return trimmed.substring(0, 2).toUpperCase();
   }, [patient.name]);
 
-  const speechSummary = `Good morning, ${patient.name}. Here is what is important about your health today: You have an upcoming appointment tomorrow at 10 AM with Dr. Rajesh Sharma. Your morning medications are due. Your recent blood pressure reading was 128 over 82, which is normal. Your overall health state is stable. Emergency access is always available.`;
+  const speechSummary = `Good morning, ${patient.name || "Patient"}. Here is what is important about your health today: Your health profile is established. Your care team is keeping a gentle watch on your evening rest. Emergency access is always available.`;
 
   return (
     <PatientPortalShell pageSpeechSummary={speechSummary}>

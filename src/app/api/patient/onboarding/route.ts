@@ -194,7 +194,7 @@ export async function POST(req: NextRequest) {
         data: {
           patientId: patient.id,
           category: 'health_record',
-          title: 'Welcome to MemoNest',
+          title: 'Welcome to KinSphere',
           message: 'Your persistent longitudinal health memory has been established. You can view your timeline, manage consent, and upload medical documents.',
           timestamp: new Date().toISOString(),
           severity: 'gentle',
@@ -236,13 +236,15 @@ export async function POST(req: NextRequest) {
       message: 'Onboarding complete! Health profile initialized.',
     });
 
-    response.cookies.set('memonest_session', token, {
+    const cookieOptions = {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
+      sameSite: 'lax' as const,
       maxAge: 7 * 24 * 60 * 60,
       path: '/',
-    });
+    };
+
+    response.cookies.set('kinsphere_session', token, cookieOptions);
 
     return response;
   } catch (error) {

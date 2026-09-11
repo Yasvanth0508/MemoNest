@@ -88,21 +88,63 @@ class PatientPortalStore {
     }
   }
 
+  public setPatient(patient: Patient) {
+    this.patient = { ...patient };
+    this.isLoaded = true;
+    this.notify();
+  }
+
+  public reset(newPatient?: Patient) {
+    this.patient = newPatient ? { ...newPatient } : { ...DEFAULT_PATIENT };
+    this.reports = [];
+    this.notifications = [];
+    this.consentRecords = [];
+    this.accessRequests = [];
+    this.changeRequests = [];
+    this.timelineEvents = [];
+    this.isLoaded = !!newPatient;
+    this.notify();
+  }
+
   public async initFromApi() {
     try {
+      let sessionUser: any = null;
+      if (typeof window !== "undefined") {
+        try {
+          const raw = window.localStorage.getItem("health_memory_auth_session");
+          if (raw) sessionUser = JSON.parse(raw);
+        } catch {}
+      }
+
       const email =
-        typeof window !== "undefined"
-          ? window.localStorage.getItem("active_patient_email") || "ravi@healthmemory.demo"
-          : "ravi@healthmemory.demo";
+        (typeof window !== "undefined" ? window.localStorage.getItem("active_patient_email") : null) ||
+        sessionUser?.activePatientEmail ||
+        sessionUser?.user?.email ||
+        "";
 
-      const storedId =
-        typeof window !== "undefined"
-          ? window.localStorage.getItem("active_patient_id")
-          : null;
+      let storedId =
+        (typeof window !== "undefined" ? window.localStorage.getItem("active_patient_id") : null) ||
+        sessionUser?.patientId ||
+        null;
 
-      const patientUrl = storedId
-        ? `/api/patient?id=${encodeURIComponent(storedId)}`
-        : `/api/patient?email=${encodeURIComponent(email)}`;
+      // Invalidation: If storedId is 'patient-001' but the email is a registered patient (not demo),
+      // clear the stale mock patient-001 ID so the actual entered patient is loaded!
+      if (storedId === "patient-001" && email && email.toLowerCase() !== "ravi@healthmemory.demo") {
+        storedId = null;
+        if (typeof window !== "undefined") {
+          window.localStorage.removeItem("active_patient_id");
+        }
+      }
+
+      // Prioritize active registered email over mock storedId
+      let patientUrl = "/api/patient";
+      if (email && email !== "ravi@healthmemory.demo") {
+        patientUrl = `/api/patient?email=${encodeURIComponent(email)}${storedId ? `&id=${encodeURIComponent(storedId)}` : ""}`;
+      } else if (storedId) {
+        patientUrl = `/api/patient?id=${encodeURIComponent(storedId)}`;
+      } else if (email) {
+        patientUrl = `/api/patient?email=${encodeURIComponent(email)}`;
+      }
 
       const patientRes = await fetch(patientUrl).catch(() => null);
 
@@ -121,7 +163,8 @@ class PatientPortalStore {
         }
       }
 
-      const queryParams = `patientId=${targetPatientId}&email=${encodeURIComponent(email)}`;
+      const resolvedEmail = this.patient.email || email || "ravi@healthmemory.demo";
+      const queryParams = `patientId=${targetPatientId}&email=${encodeURIComponent(resolvedEmail)}`;
 
       const [timelineRes, reqRes, notifRes, docsRes, consentRes, accessRes] = await Promise.all([
         fetch(`/api/timeline?${queryParams}`).catch(() => null),

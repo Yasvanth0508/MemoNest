@@ -38,7 +38,7 @@ export function VoiceAssistantBar({
 
     const textToSpeak =
       pageSpeechSummary ||
-      "Welcome to your MemoNest Health Memory System. Your health state is stable. You have a doctor appointment tomorrow at 10 AM, and morning medications due. Emergency assistance is always available.";
+      "Welcome to your KinSphere Health Memory System. Your health state is stable. You have a doctor appointment tomorrow at 10 AM, and morning medications due. Emergency assistance is always available.";
 
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(textToSpeak);
@@ -194,7 +194,7 @@ export function VoiceAssistantBar({
           aria-label={isListening ? "Stop listening" : "Speak a command to navigate or search"}
         >
           {isListening ? <MicOff size={20} /> : <Mic size={20} />}
-          <span>{isListening ? "Listening..." : "Speak to MemoNest"}</span>
+          <span>{isListening ? "Listening..." : "Speak to KinSphere"}</span>
         </button>
 
         <button

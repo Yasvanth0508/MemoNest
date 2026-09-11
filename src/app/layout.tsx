@@ -13,7 +13,7 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "MemoNest",
+  title: "KinSphere",
   description: "AI-agent-powered healthcare memory system",
 };
 

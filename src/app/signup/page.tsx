@@ -48,7 +48,7 @@ export default function SignupPage() {
           <div className={styles.logoIconWrapper} aria-hidden="true">
             <HeartPulse size={28} />
           </div>
-          <h1 className={styles.title}>MemoNest</h1>
+          <h1 className={styles.title}>KinSphere</h1>
           <p className={styles.subtitle}>Register</p>
         </div>
       </header>

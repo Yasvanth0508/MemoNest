@@ -1,12 +1,38 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
+import { getAuthUserFromRequest } from '@/lib/auth/jwt';
 
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
-    const email = searchParams.get('email') || 'ravi@healthmemory.demo';
+    const emailParam = searchParams.get('email');
+    const patientIdParam = searchParams.get('patientId');
 
-    const patient = await prisma.patient.findFirst({ where: { email } });
+    let patient = null;
+
+    // 1. Authenticated user
+    const authUser = await getAuthUserFromRequest(req);
+    if (authUser && authUser.role === 'patient') {
+      patient = await prisma.patient.findFirst({
+        where: { OR: [{ email: authUser.email }, { userId: authUser.id }] },
+      });
+    }
+
+    // 2. Email param
+    if (!patient && emailParam && emailParam.toLowerCase() !== 'ravi@healthmemory.demo') {
+      patient = await prisma.patient.findFirst({ where: { email: emailParam } });
+    }
+
+    // 3. Patient ID param
+    if (!patient && patientIdParam) {
+      patient = await prisma.patient.findUnique({ where: { id: patientIdParam } });
+    }
+
+    // 4. Default
+    if (!patient) {
+      patient = await prisma.patient.findFirst({ where: { email: emailParam || 'ravi@healthmemory.demo' } });
+    }
+
     if (!patient) {
       return NextResponse.json({ requests: [] });
     }

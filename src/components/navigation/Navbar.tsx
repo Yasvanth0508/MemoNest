@@ -117,11 +117,11 @@ export function Navbar({
             <Menu size={20} />
           </button>
 
-          <Link href="/" className={styles.brand} aria-label="MemoNest Home">
+          <Link href="/" className={styles.brand} aria-label="KinSphere Home">
             <div className={styles.logoMark}>
               <Activity size={20} strokeWidth={2.4} />
             </div>
-            <span className={styles.brandTitle}>MemoNest</span>
+            <span className={styles.brandTitle}>KinSphere</span>
           </Link>
 
           {/* Desktop Navigation Links */}

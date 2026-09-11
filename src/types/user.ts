@@ -17,4 +17,7 @@ export interface AuthSession {
   user: User;
   token: string;
   expiresAt: string;
+  activePatientEmail?: string;
+  patientId?: string;
+  message?: string;
 }

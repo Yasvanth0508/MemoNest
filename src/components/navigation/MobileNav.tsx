@@ -111,7 +111,7 @@ export function MobileNav({
               <div className={styles.logoMark}>
                 <Activity size={18} strokeWidth={2.4} />
               </div>
-              <span className={styles.brandTitle}>MemoNest</span>
+              <span className={styles.brandTitle}>KinSphere</span>
             </Link>
 
             <button

@@ -23,6 +23,7 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Badge } from "@/components/ui/Badge";
 import { useAuthStore } from "./useAuth";
+import { patientPortalStore } from "@/services/patient-portal.service";
 import styles from "./PatientOnboardingWizard.module.css";
 
 interface PatientOnboardingWizardProps {
@@ -67,18 +68,30 @@ export function PatientOnboardingWizard({
   const [name, setName] = React.useState(initialName);
   const [email, setEmail] = React.useState(initialEmail);
   const [password, setPassword] = React.useState(initialPassword);
-  const [age, setAge] = React.useState("74");
-  const [dateOfBirth, setDateOfBirth] = React.useState("1952-04-12");
-  const [gender, setGender] = React.useState<string>("Male");
-  const [bloodType, setBloodType] = React.useState<string>("B+");
-  const [phone, setPhone] = React.useState("+1-555-0142");
-  const [address, setAddress] = React.useState("742 Evergreen Terrace, Springfield, IL");
+  const [age, setAge] = React.useState("65");
+  const [dateOfBirth, setDateOfBirth] = React.useState("1961-05-14");
+  const [gender, setGender] = React.useState<"Male" | "Female" | "Other">("Male");
+  const [bloodType, setBloodType] = React.useState<string>("O+");
+  const [phone, setPhone] = React.useState("+1-555-0100");
+  const [address, setAddress] = React.useState("");
 
   // Step 2: Emergency Contact & Proxy
-  const [emergencyName, setEmergencyName] = React.useState("Meera Kumar");
-  const [emergencyRel, setEmergencyRel] = React.useState("Daughter / Healthcare Proxy");
+  const [emergencyName, setEmergencyName] = React.useState("Emergency Contact");
+  const [emergencyRel, setEmergencyRel] = React.useState("Family / Healthcare Proxy");
   const [emergencyPhone, setEmergencyPhone] = React.useState("+1-555-0199");
-  const [emergencyEmail, setEmergencyEmail] = React.useState("meera.kumar@demo.email");
+  const [emergencyEmail, setEmergencyEmail] = React.useState("");
+
+  React.useEffect(() => {
+    if (initialName) setName(initialName);
+  }, [initialName]);
+
+  React.useEffect(() => {
+    if (initialEmail) setEmail(initialEmail);
+  }, [initialEmail]);
+
+  React.useEffect(() => {
+    if (initialPassword) setPassword(initialPassword);
+  }, [initialPassword]);
 
   // Step 3: Medical Baseline
   const [selectedConditions, setSelectedConditions] = React.useState<string[]>([
@@ -229,10 +242,46 @@ export function PatientOnboardingWizard({
         try {
           window.localStorage.setItem("health_memory_auth_session", JSON.stringify(data));
           window.localStorage.setItem("active_patient_email", data.activePatientEmail);
+          if (data.patientId) {
+            window.localStorage.setItem("active_patient_id", data.patientId);
+          }
         } catch {
           // ignore
         }
       }
+
+      // Update patient portal store immediately with the entered details
+      patientPortalStore.setPatient({
+        id: data.patientId || "",
+        name: data.user?.name || name.trim(),
+        age: parseInt(age, 10) || 65,
+        dateOfBirth,
+        gender,
+        primaryDoctor,
+        bloodType,
+        address,
+        phone,
+        email: data.activePatientEmail,
+        preferredLanguage: "English",
+        mobilityStatus,
+        activeConditions: selectedConditions,
+        allergies: allergyEntries.map((a, idx) => ({
+          id: `allergy-${Date.now()}-${idx}`,
+          allergen: a.allergen,
+          reaction: a.reaction,
+          severity: a.severity,
+          diagnosedDate: new Date().toISOString().split("T")[0],
+        })),
+        emergencyContact: {
+          name: emergencyName,
+          relationship: emergencyRel,
+          phone: emergencyPhone,
+          email: emergencyEmail,
+        },
+      });
+
+      // Synchronize backend initial timeline and notifications
+      await patientPortalStore.initFromApi();
 
       // Smooth redirect to patient dashboard
       router.push("/patient");
@@ -291,7 +340,7 @@ export function PatientOnboardingWizard({
               <Input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="e.g., Ravi Kumar"
+                placeholder="e.g., Eleanor Vance"
               />
             </div>
 
@@ -301,7 +350,7 @@ export function PatientOnboardingWizard({
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="ravi@healthmemory.demo"
+                placeholder="patient@example.com"
               />
             </div>
 
@@ -337,7 +386,7 @@ export function PatientOnboardingWizard({
                 <select
                   className={styles.selectInput}
                   value={gender}
-                  onChange={(e) => setGender(e.target.value)}
+                  onChange={(e) => setGender(e.target.value as "Male" | "Female" | "Other")}
                 >
                   <option value="Male">Male</option>
                   <option value="Female">Female</option>

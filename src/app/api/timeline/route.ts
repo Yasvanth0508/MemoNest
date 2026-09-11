@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
+import { getAuthUserFromRequest } from '@/lib/auth/jwt';
 
 export async function GET(req: NextRequest) {
   try {
@@ -9,8 +10,34 @@ export async function GET(req: NextRequest) {
     const category = searchParams.get('category');
     const severity = searchParams.get('severity');
 
-    let targetPatientId: string | undefined = patientIdParam || undefined;
+    let targetPatientId: string | undefined = undefined;
 
+    // 1. Authenticated patient session gets their own timeline
+    const authUser = await getAuthUserFromRequest(req);
+    if (authUser && authUser.role === 'patient') {
+      const p = await prisma.patient.findFirst({
+        where: { OR: [{ email: authUser.email }, { userId: authUser.id }] },
+      });
+      if (p) targetPatientId = p.id;
+    }
+
+    // 2. Look up by email if provided and not default demo
+    if (!targetPatientId && email && email.toLowerCase() !== 'ravi@healthmemory.demo') {
+      const p = await prisma.patient.findFirst({ where: { email } });
+      if (p) targetPatientId = p.id;
+    }
+
+    // 3. Check patientIdParam, validating with email if both were provided
+    if (!targetPatientId && patientIdParam) {
+      if (email && email.toLowerCase() !== 'ravi@healthmemory.demo') {
+        const p = await prisma.patient.findFirst({ where: { email } });
+        targetPatientId = p ? p.id : patientIdParam;
+      } else {
+        targetPatientId = patientIdParam;
+      }
+    }
+
+    // 4. Default / Fallback
     if (!targetPatientId) {
       const patient = await prisma.patient.findFirst({
         where: { email: email || 'ravi@healthmemory.demo' },

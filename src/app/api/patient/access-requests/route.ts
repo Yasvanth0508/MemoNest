@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
+import { getAuthUserFromRequest } from '@/lib/auth/jwt';
 
 export async function GET(req: NextRequest) {
   try {
@@ -7,7 +8,32 @@ export async function GET(req: NextRequest) {
     const patientId = searchParams.get('patientId');
     const email = searchParams.get('email');
 
-    let targetPatientId: string | undefined = patientId || undefined;
+    let targetPatientId: string | undefined = undefined;
+
+    // 1. Authenticated patient gets own access requests
+    const authUser = await getAuthUserFromRequest(req);
+    if (authUser && authUser.role === 'patient') {
+      const p = await prisma.patient.findFirst({
+        where: { OR: [{ email: authUser.email }, { userId: authUser.id }] },
+      });
+      if (p) targetPatientId = p.id;
+    }
+
+    // 2. Look up by email if provided
+    if (!targetPatientId && email && email.toLowerCase() !== 'ravi@healthmemory.demo') {
+      const p = await prisma.patient.findFirst({ where: { email } });
+      if (p) targetPatientId = p.id;
+    }
+
+    // 3. Check patientId, validating against email if both provided
+    if (!targetPatientId && patientId) {
+      if (email && email.toLowerCase() !== 'ravi@healthmemory.demo') {
+        const p = await prisma.patient.findFirst({ where: { email } });
+        targetPatientId = p ? p.id : patientId;
+      } else {
+        targetPatientId = patientId;
+      }
+    }
 
     if (!targetPatientId && email) {
       const p = await prisma.patient.findFirst({ where: { email } });

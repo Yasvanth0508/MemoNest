@@ -2,7 +2,7 @@ import { prisma } from '../src/lib/db/prisma';
 import { signToken, verifyToken, comparePassword, hashPassword } from '../src/lib/auth/jwt';
 
 async function runAuthTests() {
-  console.log('🔐 Starting MemoNest Backend Authentication Test Suite...\n');
+  console.log('🔐 Starting KinSphere Backend Authentication Test Suite...\n');
 
   // 1. Verify Seeded Doctor Credentials
   console.log('--- Test 1: Seeded Doctor Login ---');

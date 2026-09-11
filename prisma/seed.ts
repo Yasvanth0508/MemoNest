@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs';
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log('Seeding MemoNest database...');
+  console.log('Seeding KinSphere database...');
 
   // 1. Clean existing records
   await prisma.recordChunk.deleteMany();
@@ -813,7 +813,7 @@ async function main() {
     ],
   });
 
-  console.log('✅ MemoNest database successfully seeded with complete clinical baseline dataset!');
+  console.log('✅ KinSphere database successfully seeded with complete clinical baseline dataset!');
 }
 
 main()

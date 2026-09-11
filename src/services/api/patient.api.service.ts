@@ -4,13 +4,16 @@ export const patientApiService = {
   async getPatient(patientId?: string): Promise<Patient> {
     try {
       let url = '/api/patient';
-      if (patientId) {
-        url = `/api/patient?id=${encodeURIComponent(patientId)}`;
-      } else if (typeof window !== 'undefined') {
-        const savedEmail = window.localStorage.getItem('active_patient_email');
-        if (savedEmail) {
-          url = `/api/patient?email=${encodeURIComponent(savedEmail)}`;
-        }
+      const savedEmail = typeof window !== 'undefined' ? window.localStorage.getItem('active_patient_email') : null;
+      const savedId = typeof window !== 'undefined' ? window.localStorage.getItem('active_patient_id') : null;
+      const targetId = patientId || savedId;
+
+      if (savedEmail && savedEmail.toLowerCase() !== 'ravi@healthmemory.demo') {
+        url = `/api/patient?email=${encodeURIComponent(savedEmail)}${targetId && targetId !== 'patient-001' ? `&id=${encodeURIComponent(targetId)}` : ''}`;
+      } else if (targetId) {
+        url = `/api/patient?id=${encodeURIComponent(targetId)}`;
+      } else if (savedEmail) {
+        url = `/api/patient?email=${encodeURIComponent(savedEmail)}`;
       }
 
       const res = await fetch(url);

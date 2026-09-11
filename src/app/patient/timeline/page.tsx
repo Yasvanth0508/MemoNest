@@ -391,7 +391,7 @@ export default function HealthTimelinePage() {
               </div>
 
               <p style={{ fontSize: "14px", color: "#64748B", margin: "0 0 24px 0" }}>
-                This record was extracted and verified from the primary medical document stored in your MemoNest Reports repository.
+                This record was extracted and verified from the primary medical document stored in your KinSphere Reports repository.
               </p>
 
               <div style={{ display: "flex", justifyContent: "flex-end", gap: "12px" }}>

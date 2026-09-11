@@ -3,7 +3,8 @@
 import * as React from "react";
 import { create } from "zustand";
 import { User, UserRole, AuthSession } from "@/types";
-import { authService } from "@/services";
+import { authService, patientService } from "@/services";
+import { patientPortalStore } from "@/services/patient-portal.service";
 
 export const AUTH_STORAGE_KEY = "health_memory_auth_session";
 export const PATIENT_STORAGE_KEY = "active_patient_email";
@@ -57,6 +58,9 @@ export const useAuthStore = create<AuthState>((set) => ({
         try {
           window.localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(session));
           window.localStorage.setItem(PATIENT_STORAGE_KEY, resolvedPatient);
+          if (session.patientId) {
+            window.localStorage.setItem("active_patient_id", session.patientId);
+          }
         } catch (storageError) {
           console.warn("Failed to persist session to localStorage:", storageError);
         }
@@ -68,6 +72,9 @@ export const useAuthStore = create<AuthState>((set) => ({
         isAuthenticated: true,
         isLoading: false,
       });
+      if (session.user.role === "patient") {
+        patientPortalStore.initFromApi().catch(() => {});
+      }
       return session;
     } catch (error) {
       set({ isLoading: false });
@@ -84,6 +91,9 @@ export const useAuthStore = create<AuthState>((set) => ({
         try {
           window.localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(session));
           window.localStorage.setItem(PATIENT_STORAGE_KEY, resolvedPatient);
+          if (session.patientId) {
+            window.localStorage.setItem("active_patient_id", session.patientId);
+          }
         } catch (storageError) {
           console.warn("Failed to persist session to localStorage:", storageError);
         }
@@ -95,6 +105,9 @@ export const useAuthStore = create<AuthState>((set) => ({
         isAuthenticated: true,
         isLoading: false,
       });
+      if (session.user.role === "patient") {
+        patientPortalStore.initFromApi().catch(() => {});
+      }
       return session;
     } catch (error) {
       set({ isLoading: false });
@@ -109,10 +122,13 @@ export const useAuthStore = create<AuthState>((set) => ({
       if (typeof window !== "undefined") {
         try {
           window.localStorage.removeItem(AUTH_STORAGE_KEY);
+          window.localStorage.removeItem(PATIENT_STORAGE_KEY);
+          window.localStorage.removeItem("active_patient_id");
         } catch (storageError) {
           console.warn("Failed to remove session from localStorage:", storageError);
         }
       }
+      patientPortalStore.reset();
       set({
         user: null,
         role: null,

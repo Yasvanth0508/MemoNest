@@ -573,10 +573,10 @@ export interface CaregiverContextType {
 
 const CaregiverContext = React.createContext<CaregiverContextType | null>(null);
 
-const STORAGE_KEY_OBS = "memonest_caregiver_obs_v2";
-const STORAGE_KEY_PATIENT = "memonest_caregiver_active_patient_v2";
-const STORAGE_KEY_REL = "memonest_caregiver_relationship_v2";
-const STORAGE_KEY_NOTES = "memonest_caregiver_notes_v2";
+const STORAGE_KEY_OBS = "kinsphere_caregiver_obs_v2";
+const STORAGE_KEY_PATIENT = "kinsphere_caregiver_active_patient_v2";
+const STORAGE_KEY_REL = "kinsphere_caregiver_relationship_v2";
+const STORAGE_KEY_NOTES = "kinsphere_caregiver_notes_v2";
 
 export function formatTimeDeterministic(isoString: string): string {
   try {

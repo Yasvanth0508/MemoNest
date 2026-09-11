@@ -58,16 +58,16 @@ export function EmergencySosModal({ isOpen, onClose }: EmergencySosModalProps) {
   if (!isOpen) return null;
 
   const patient = {
-    name: sosData?.name || storePatient.name || "Ravi Kumar",
-    age: sosData?.age ?? storePatient.age ?? 74,
-    dateOfBirth: sosData?.dateOfBirth || storePatient.dateOfBirth || "1952-04-12",
-    gender: sosData?.gender || storePatient.gender || "Male",
-    bloodType: sosData?.bloodType || storePatient.bloodType || "B+",
-    mobilityStatus: sosData?.mobilityStatus || storePatient.mobilityStatus || "Walker required",
+    name: sosData?.name || storePatient.name || "Patient",
+    age: sosData?.age ?? storePatient.age ?? 65,
+    dateOfBirth: sosData?.dateOfBirth || storePatient.dateOfBirth || "1960-01-01",
+    gender: sosData?.gender || storePatient.gender || "Other",
+    bloodType: sosData?.bloodType || storePatient.bloodType || "O+",
+    mobilityStatus: sosData?.mobilityStatus || storePatient.mobilityStatus || "Independent",
     emergencyContact: sosData?.emergencyContact || storePatient.emergencyContact || {
-      name: "Meera Kumar",
-      relationship: "Daughter / Legal Healthcare Proxy",
-      phone: "+1-555-0199",
+      name: "Emergency Contact",
+      relationship: "Family / Legal Proxy",
+      phone: "911",
     },
     allergies: sosData?.allergies || storePatient.allergies || [],
     activeMedications: sosData?.activeMedications || [

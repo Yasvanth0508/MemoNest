@@ -77,8 +77,13 @@ export function PatientPortalShell({
   };
 
   const initials = React.useMemo(() => {
-    const parts = (patient.name || "Ravi Kumar").split(" ");
-    return parts.length >= 2 ? `${parts[0][0]}${parts[1][0]}` : "RK";
+    const trimmed = (patient.name || "").trim();
+    if (!trimmed || trimmed === "Loading...") return "PT";
+    const parts = trimmed.split(/\s+/);
+    if (parts.length >= 2 && parts[0] && parts[1]) {
+      return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
+    }
+    return trimmed.substring(0, 2).toUpperCase();
   }, [patient.name]);
 
   return (
@@ -91,7 +96,7 @@ export function PatientPortalShell({
               <Activity size={24} strokeWidth={2.5} />
             </div>
             <div>
-              <span className={styles.brandName}>MemoNest</span>
+              <span className={styles.brandName}>KinSphere</span>
               <span className={styles.portalBadge}>Health Memory</span>
             </div>
           </Link>

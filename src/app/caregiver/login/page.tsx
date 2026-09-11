@@ -38,7 +38,7 @@ export default function CaregiverLoginPage() {
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
             <Activity size={18} style={{ color: "var(--color-secondary)" }} />
             <span style={{ fontWeight: 800, color: "var(--color-primary)", fontSize: 16 }}>
-              MemoNest Caregiver
+              KinSphere Caregiver
             </span>
           </div>
         </header>

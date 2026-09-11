@@ -88,7 +88,7 @@ export default function MyProfilePage() {
     }, 6000);
   };
 
-  const speechSummary = `You are viewing your health profile for ${patient.name}. Your primary physician is Dr. Rajesh Sharma, and your emergency contact is your daughter Priya Kumar. Critical clinical items like blood type B-positive and your Penicillin allergy are protected and require a doctor verification request to modify.`;
+  const speechSummary = `You are viewing your health profile for ${patient.name || "Patient"}. Your primary physician is ${patient.primaryDoctor || "your assigned doctor"}, and your emergency contact is ${patient.emergencyContact?.name || "your emergency contact"}. Critical clinical items like blood type and allergies are protected and require a doctor verification request to modify.`;
 
   return (
     <PatientPortalShell pageSpeechSummary={speechSummary}>

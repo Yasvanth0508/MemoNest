@@ -5,7 +5,7 @@ import { createRecordChunk } from '../src/lib/ai/chunking';
 import { retrievePatientChunks } from '../src/lib/ai/retrieval';
 
 async function runVerification() {
-  console.log('🚀 Starting MemoNest End-to-End Backend Verification...\n');
+  console.log('🚀 Starting KinSphere End-to-End Backend Verification...\n');
 
   // 1. Verify Database Baseline & Seeded Patient
   console.log('--- Step 1: Verifying Database Baseline ---');

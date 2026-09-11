@@ -8,11 +8,18 @@ export async function GET(req: NextRequest) {
     const idParam = searchParams.get('id') || searchParams.get('patientId');
     const emailParam = searchParams.get('email');
 
-    let patient = null;
+    let patient: any = null;
+    const authUser = await getAuthUserFromRequest(req);
 
-    if (idParam) {
-      patient = await prisma.patient.findUnique({
-        where: { id: idParam },
+    // 1. Authenticated patient session ALWAYS gets their own patient record
+    if (authUser && authUser.role === 'patient') {
+      patient = await prisma.patient.findFirst({
+        where: {
+          OR: [
+            { email: authUser.email },
+            { userId: authUser.id },
+          ],
+        },
         include: {
           conditions: true,
           allergies: true,
@@ -23,21 +30,54 @@ export async function GET(req: NextRequest) {
       });
     }
 
-    if (!patient) {
-      let patientEmail = emailParam;
+    // 2. If emailParam is provided (and not demo), lookup by email
+    if (!patient && emailParam && emailParam.toLowerCase() !== 'ravi@healthmemory.demo') {
+      patient = await prisma.patient.findFirst({
+        where: { email: emailParam },
+        include: {
+          conditions: true,
+          allergies: true,
+          medications: {
+            where: { status: 'active' },
+          },
+        },
+      });
+    }
 
-      if (!patientEmail) {
-        const user = await getAuthUserFromRequest(req);
-        if (user && user.role === 'patient') {
-          patientEmail = user.email;
+    // 3. If idParam provided (and not resolved yet)
+    if (!patient && idParam) {
+      patient = await prisma.patient.findUnique({
+        where: { id: idParam },
+        include: {
+          conditions: true,
+          allergies: true,
+          medications: {
+            where: { status: 'active' },
+          },
+        },
+      });
+
+      // Guard: if idParam found a patient whose email does NOT match emailParam, prefer emailParam
+      if (patient && emailParam && patient.email && patient.email.toLowerCase() !== emailParam.toLowerCase()) {
+        const correctPatient = await prisma.patient.findFirst({
+          where: { email: emailParam },
+          include: {
+            conditions: true,
+            allergies: true,
+            medications: {
+              where: { status: 'active' },
+            },
+          },
+        });
+        if (correctPatient) {
+          patient = correctPatient;
         }
       }
+    }
 
-      // Default to seeded demo patient if none specified
-      if (!patientEmail) {
-        patientEmail = 'ravi@healthmemory.demo';
-      }
-
+    // 4. Default to emailParam or demo patient
+    if (!patient) {
+      const patientEmail = emailParam || 'ravi@healthmemory.demo';
       patient = await prisma.patient.findFirst({
         where: { email: patientEmail },
         include: {
