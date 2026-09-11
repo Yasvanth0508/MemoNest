@@ -10,7 +10,7 @@
 .sidebar {
   width: 280px;
   background: #FFFFFF;
-  border-right: 1.5px solid #DDE2E1;
+  border-right: 1.5px solid #CFE6F7;
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
@@ -31,14 +31,14 @@
   align-items: center;
   gap: 12px;
   text-decoration: none;
-  color: #122544;
+  color: #1D70C9;
 }
 
 .brandLogo {
   width: 44px;
   height: 44px;
   border-radius: var(--radius-sm);
-  background: linear-gradient(135deg, #122544 0%, #0F766E 100%);
+  background: linear-gradient(135deg, #1D70C9 0%, #0F766E 100%);
   color: #FFFFFF;
   display: flex;
   align-items: center;
@@ -78,7 +78,7 @@
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: #122544;
+  background: #1D70C9;
   color: #FFFFFF;
   display: flex;
   align-items: center;
@@ -95,7 +95,7 @@
 .patientCardName {
   font-size: 16px;
   font-weight: 700;
-  color: #122544;
+  color: #1D70C9;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -145,7 +145,7 @@
 }
 
 .navItemActive {
-  background: #EAF5F4;
+  background: #E8F5FF;
   color: #0D9488;
   font-weight: 700;
   box-shadow: inset 4px 0 0 #0D9488;
@@ -216,7 +216,7 @@
 /* Top App Bar */
 .topAppBar {
   background: #FFFFFF;
-  border-bottom: 1.5px solid #DDE2E1;
+  border-bottom: 1.5px solid #CFE6F7;
   padding: 14px 28px;
   display: flex;
   align-items: center;

@@ -30,7 +30,7 @@
   margin: 0;
   font-size: 22px;
   font-weight: 800;
-  color: var(--color-primary, #122544);
+  color: var(--color-primary, #1D70C9);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -46,7 +46,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: var(--color-primary, #122544);
+  background: var(--color-primary, #1D70C9);
   color: #ffffff;
   padding: 10px 20px;
   border-radius: 10px;
@@ -104,7 +104,7 @@
 .uploadMainPrompt {
   font-size: 16px;
   font-weight: 700;
-  color: var(--color-primary, #122544);
+  color: var(--color-primary, #1D70C9);
   margin: 0;
 }
 
@@ -131,7 +131,7 @@
   border: 1px solid var(--color-border, #dde2e1);
   font-size: 12px;
   font-weight: 600;
-  color: var(--color-primary, #122544);
+  color: var(--color-primary, #1D70C9);
 }
 
 /* Review & Edit Modal or Card */
@@ -159,7 +159,7 @@
   margin: 0;
   font-size: 18px;
   font-weight: 800;
-  color: var(--color-primary, #122544);
+  color: var(--color-primary, #1D70C9);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -170,7 +170,7 @@
   align-items: center;
   gap: 6px;
   background: #eaf5f4;
-  color: #122544;
+  color: #1D70C9;
   padding: 4px 10px;
   border-radius: 6px;
   font-size: 12px;
@@ -207,7 +207,7 @@
   border: 1px solid var(--color-border, #dde2e1);
   font-size: 13px;
   background: #ffffff;
-  color: var(--color-primary, #122544);
+  color: var(--color-primary, #1D70C9);
   font-family: inherit;
 }
 
@@ -291,7 +291,7 @@
 
 .docTitleCell {
   font-weight: 700;
-  color: var(--color-primary, #122544);
+  color: var(--color-primary, #1D70C9);
   display: flex;
   align-items: center;
   gap: 8px;

@@ -49,11 +49,11 @@
 }
 
 .tabBtn:hover {
-  color: var(--color-primary, #122544);
+  color: var(--color-primary, #1D70C9);
 }
 
 .tabBtnActive {
-  color: var(--color-primary, #122544);
+  color: var(--color-primary, #1D70C9);
   font-weight: 800;
   border-bottom-color: var(--color-secondary, #67b8ba);
 }
@@ -80,7 +80,7 @@
   padding: 6px 12px;
   border-radius: 6px;
   background: #eaf5f4;
-  color: var(--color-primary, #122544);
+  color: var(--color-primary, #1D70C9);
   border: 1px solid #c2e2e0;
   font-size: 12px;
   font-weight: 700;

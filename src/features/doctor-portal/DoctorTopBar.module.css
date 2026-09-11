@@ -27,7 +27,7 @@
   border-radius: 8px;
   border: 1px solid var(--color-border, #dde2e1);
   background: #fbfbf9;
-  color: var(--color-primary, #122544);
+  color: var(--color-primary, #1D70C9);
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
@@ -42,7 +42,7 @@
 .homeBtnActive {
   background: #eaf5f4;
   border-color: var(--color-secondary, #67b8ba);
-  color: #122544;
+  color: #1D70C9;
 }
 
 .patientSwitcher {
@@ -70,7 +70,7 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: var(--color-primary, #122544);
+  background: var(--color-primary, #1D70C9);
   color: #ffffff;
   display: flex;
   align-items: center;
@@ -94,7 +94,7 @@
 .patientName {
   font-size: 14px;
   font-weight: 700;
-  color: var(--color-primary, #122544);
+  color: var(--color-primary, #1D70C9);
 }
 
 .patientSub {
@@ -245,7 +245,7 @@
   height: 32px;
   border-radius: 50%;
   background: var(--color-secondary, #67b8ba);
-  color: #122544;
+  color: #1D70C9;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -261,7 +261,7 @@
 .docName {
   font-size: 13px;
   font-weight: 700;
-  color: var(--color-primary, #122544);
+  color: var(--color-primary, #1D70C9);
 }
 
 .docTitle {

@@ -6,7 +6,7 @@
   right: 0;
   height: 72px;
   background: #FFFFFF;
-  border-top: 1.5px solid #DDE2E1;
+  border-top: 1.5px solid #CFE6F7;
   box-shadow: 0 -4px 16px rgba(18, 37, 68, 0.08);
   z-index: 100;
   padding: 0 8px;
@@ -41,12 +41,12 @@
 }
 
 .navItemActive {
-  color: #122544;
+  color: #1D70C9;
   font-weight: 800;
 }
 
 .navItemActive .iconWrapper {
-  background: #EAF5F4;
+  background: #E8F5FF;
   color: #0D9488;
 }
 

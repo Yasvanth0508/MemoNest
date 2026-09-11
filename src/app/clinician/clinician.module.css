@@ -6,7 +6,7 @@
 }
 
 .workspaceHero {
-  background: linear-gradient(135deg, var(--color-primary) 0%, #1D3A68 100%);
+  background: linear-gradient(135deg, var(--color-primary) 0%, #4E9FDE 100%);
   color: #FFFFFF;
   border-radius: var(--radius-lg);
   padding: var(--space-6);

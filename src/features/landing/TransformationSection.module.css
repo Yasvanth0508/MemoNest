@@ -202,7 +202,7 @@
 /* Transformation Summary Banner */
 .banner {
   margin-top: var(--space-10);
-  background: linear-gradient(135deg, var(--color-primary) 0%, #1e3a66 100%);
+  background: linear-gradient(135deg, var(--color-primary) 0%, #4E9FDE 100%);
   color: #ffffff;
   border-radius: var(--radius-lg);
   padding: var(--space-8);

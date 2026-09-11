@@ -233,7 +233,7 @@
 .meaningTitle {
   font-size: var(--font-size-xl);
   font-family: var(--font-display);
-  color: #124e50;
+  color: #236FAE;
   margin: 0;
 }
 
@@ -264,7 +264,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: #1a6b6d;
+  color: #237CC1;
 }
 
 .meaningText {

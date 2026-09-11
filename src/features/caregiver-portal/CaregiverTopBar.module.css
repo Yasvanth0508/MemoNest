@@ -45,7 +45,7 @@
 
 .patientSelectButton:hover {
   background: #dff0ee;
-  border-color: #4a9e9f;
+  border-color: #7EC8F5;
   transform: translateY(-1px);
 }
 
@@ -219,7 +219,7 @@
   font-size: 12px;
   font-weight: 600;
   background: #edf7f6;
-  color: #1a6b6d;
+  color: #237CC1;
   border: 1px solid #bce2e0;
 }
 

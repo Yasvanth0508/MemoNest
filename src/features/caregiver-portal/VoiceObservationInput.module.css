@@ -74,7 +74,7 @@
 }
 
 .micButton:hover {
-  background: #1d355d;
+  background: #3B8ED0;
   transform: scale(1.05);
 }
 
@@ -148,7 +148,7 @@
 .presetButton {
   background: white;
   border: 1px solid #c8dedc;
-  color: #1a6b6d;
+  color: #237CC1;
   border-radius: var(--radius-pill);
   padding: 6px 12px;
   font-size: 12px;
@@ -162,7 +162,7 @@
 
 .presetButton:hover {
   background: #e6f6f5;
-  border-color: #8ed0cc;
+  border-color: #B7E3FF;
 }
 
 /* 2. Transcription Box */
@@ -481,7 +481,7 @@
 }
 
 .submitButton:hover {
-  background: #233e66;
+  background: #4E9FDE;
   transform: translateY(-1px);
 }
 

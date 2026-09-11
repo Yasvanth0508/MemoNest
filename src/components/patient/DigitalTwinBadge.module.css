@@ -72,7 +72,7 @@
   width: 100%;
   padding: 28px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-  border: 1px solid #DDE2E1;
+  border: 1px solid #CFE6F7;
 }
 
 .modalHeader {
@@ -85,7 +85,7 @@
 .modalTitle {
   font-size: 22px;
   font-weight: 700;
-  color: #122544;
+  color: #1D70C9;
   margin: 0;
 }
 
@@ -134,7 +134,7 @@
 
 .doneButton {
   width: 100%;
-  background: #122544;
+  background: #1D70C9;
   color: #FFFFFF;
   border: none;
   border-radius: var(--radius-md);

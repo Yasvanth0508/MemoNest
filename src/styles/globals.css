@@ -1,20 +1,21 @@
 :root {
-  --color-primary: #122544;
-  --color-secondary: #67B8BA;
+  /* Light blue healthcare palette */
+  --color-primary: #1D70C9;
+  --color-secondary: #9BD8FF;
 
-  --color-background: #F6F5F1;
+  --color-background: #F7FBFF;
   --color-surface: #FFFFFF;
-  --color-surface-accent: #EAF5F4;
+  --color-surface-accent: #E8F5FF;
 
-  --color-text-primary: #122544;
-  --color-text-secondary: #68717C;
+  --color-text-primary: #183B5B;
+  --color-text-secondary: #5C7185;
 
-  --color-border: #DDE2E1;
+  --color-border: #CFE6F7;
 
   --color-success: #4E8B72;
   --color-warning: #B58A43;
   --color-danger: #A85D58;
-  --color-info: #5F8FA0;
+  --color-info: #3B9FE8;
 
   --font-display: "Playfair Display", serif;
   --font-body: "Inter", sans-serif;
@@ -46,8 +47,8 @@
   --radius-lg: 24px;
   --radius-pill: 999px;
 
-  --shadow-card: 0 10px 30px rgba(18, 37, 68, 0.08);
-  --shadow-floating: 0 20px 50px rgba(18, 37, 68, 0.12);
+  --shadow-card: 0 10px 30px rgba(29, 112, 201, 0.10);
+  --shadow-floating: 0 20px 50px rgba(29, 112, 201, 0.14);
 
   --container-width: 1280px;
 

@@ -33,7 +33,7 @@
   height: 56px;
   border-radius: 50%;
   background: #e6f6f5;
-  color: #1a6b6d;
+  color: #237CC1;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -118,8 +118,8 @@
 
 .relOptionActive {
   background: #e6f6f5;
-  border-color: #4a9e9f;
-  color: #1a6b6d;
+  border-color: #7EC8F5;
+  color: #237CC1;
   font-weight: 700;
   box-shadow: 0 0 0 2px rgba(103, 184, 186, 0.25);
 }
@@ -149,14 +149,14 @@
 .permissionTitle {
   font-size: 13px;
   font-weight: 700;
-  color: #124e50;
+  color: #236FAE;
   display: flex;
   align-items: center;
   gap: 6px;
 }
 
 .permissionBadge {
-  background: #1a6b6d;
+  background: #237CC1;
   color: white;
   font-size: 12px;
   font-weight: 700;
@@ -213,6 +213,6 @@
 }
 
 .loginSubmitButton:hover {
-  background: #233e66;
+  background: #4E9FDE;
   transform: translateY(-1px);
 }

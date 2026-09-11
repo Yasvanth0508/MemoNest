@@ -6,7 +6,7 @@
 
 .pageHeader {
   background: #FFFFFF;
-  border: 1.5px solid #DDE2E1;
+  border: 1.5px solid #CFE6F7;
   border-radius: var(--radius-lg);
   padding: 28px 32px;
   box-shadow: var(--shadow-card);
@@ -20,7 +20,7 @@
   font-family: var(--font-display);
   font-size: 32px;
   font-weight: 700;
-  color: #122544;
+  color: #1D70C9;
   margin: 0 0 8px 0;
 }
 
@@ -38,7 +38,7 @@
 
 .card {
   background: #FFFFFF;
-  border: 1.5px solid #DDE2E1;
+  border: 1.5px solid #CFE6F7;
   border-radius: var(--radius-lg);
   padding: 28px;
   box-shadow: var(--shadow-card);
@@ -63,7 +63,7 @@
   width: 44px;
   height: 44px;
   border-radius: var(--radius-md);
-  background: #EAF5F4;
+  background: #E8F5FF;
   color: #0D9488;
   display: flex;
   align-items: center;
@@ -79,7 +79,7 @@
 .cardTitle {
   font-size: 20px;
   font-weight: 800;
-  color: #122544;
+  color: #1D70C9;
   margin: 0;
 }
 
@@ -209,7 +209,7 @@
 }
 
 .docViewBtn:hover {
-  background: #EAF5F4;
+  background: #E8F5FF;
 }
 
 /* Request Change Modal */
@@ -232,7 +232,7 @@
   width: 100%;
   padding: 28px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-  border: 1.5px solid #DDE2E1;
+  border: 1.5px solid #CFE6F7;
 }
 
 .modalHeader {
@@ -245,7 +245,7 @@
 .modalTitle {
   font-size: 22px;
   font-weight: 800;
-  color: #122544;
+  color: #1D70C9;
   margin: 0;
 }
 
@@ -308,7 +308,7 @@
 }
 
 .submitBtn {
-  background: #122544;
+  background: #1D70C9;
   color: #FFFFFF;
   border: none;
   border-radius: var(--radius-pill);

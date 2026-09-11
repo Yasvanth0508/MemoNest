@@ -30,7 +30,7 @@
   margin: 0;
   font-size: 22px;
   font-weight: 800;
-  color: var(--color-primary, #122544);
+  color: var(--color-primary, #1D70C9);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -59,7 +59,7 @@
   background: none;
   font-size: 13px;
   font-weight: 700;
-  color: var(--color-primary, #122544);
+  color: var(--color-primary, #1D70C9);
   cursor: pointer;
   transition: all 0.15s ease;
 }
@@ -69,7 +69,7 @@
 }
 
 .snapshotBtnActive {
-  background: var(--color-primary, #122544);
+  background: var(--color-primary, #1D70C9);
   color: #ffffff;
 }
 
@@ -133,7 +133,7 @@
 .confScore {
   font-size: 26px;
   font-weight: 800;
-  color: var(--color-primary, #122544);
+  color: var(--color-primary, #1D70C9);
 }
 
 .confLabel {
@@ -168,7 +168,7 @@
   margin: 0;
   font-size: 16px;
   font-weight: 800;
-  color: var(--color-primary, #122544);
+  color: var(--color-primary, #1D70C9);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -247,7 +247,7 @@
 
 .modelBadgeGenerated {
   background: #eaf5f4;
-  color: #122544;
+  color: #1D70C9;
   border: 1px solid #c2e2e0;
   font-size: 11px;
   font-weight: 700;

@@ -145,7 +145,7 @@
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: #1a6b6d;
+  color: #237CC1;
   margin-bottom: 2px;
   display: block;
 }
@@ -171,7 +171,7 @@
   justify-content: center;
   gap: 6px;
   background: var(--color-surface-accent);
-  color: #124e50;
+  color: #236FAE;
   border: 1px solid #bce2e0;
   border-radius: var(--radius-pill);
   padding: 8px 14px;
@@ -408,7 +408,7 @@
   height: 38px;
   border-radius: 50%;
   background: #e6f6f5;
-  color: #1a6b6d;
+  color: #237CC1;
   display: flex;
   align-items: center;
   justify-content: center;

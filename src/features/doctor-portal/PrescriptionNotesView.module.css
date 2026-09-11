@@ -30,7 +30,7 @@
   margin: 0;
   font-size: 22px;
   font-weight: 800;
-  color: var(--color-primary, #122544);
+  color: var(--color-primary, #1D70C9);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -58,7 +58,7 @@
   background: none;
   font-size: 13px;
   font-weight: 700;
-  color: var(--color-primary, #122544);
+  color: var(--color-primary, #1D70C9);
   cursor: pointer;
   transition: all 0.15s ease;
 }
@@ -68,7 +68,7 @@
 }
 
 .toggleBtnActive {
-  background: var(--color-primary, #122544);
+  background: var(--color-primary, #1D70C9);
   color: #ffffff;
 }
 
@@ -115,7 +115,7 @@
   border-radius: 8px;
   border: 1px solid var(--color-border, #dde2e1);
   font-size: 14px;
-  color: var(--color-primary, #122544);
+  color: var(--color-primary, #1D70C9);
   background: #ffffff;
   font-family: inherit;
 }
@@ -191,7 +191,7 @@
   padding: 4px 10px;
   border-radius: 6px;
   font-size: 12px;
-  color: var(--color-primary, #122544);
+  color: var(--color-primary, #1D70C9);
   font-weight: 600;
 }
 
@@ -207,7 +207,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: var(--color-primary, #122544);
+  background: var(--color-primary, #1D70C9);
   color: #ffffff;
   padding: 10px 24px;
   border-radius: 10px;

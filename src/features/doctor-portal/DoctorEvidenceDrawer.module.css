@@ -52,7 +52,7 @@
   margin: 0;
   font-size: 18px;
   font-weight: 700;
-  color: var(--color-primary, #122544);
+  color: var(--color-primary, #1D70C9);
 }
 
 .drawerSubtitle {
@@ -76,7 +76,7 @@
 
 .closeButton:hover {
   background: #eef2f1;
-  color: var(--color-primary, #122544);
+  color: var(--color-primary, #1D70C9);
 }
 
 .drawerBody {
@@ -105,7 +105,7 @@
   font-style: italic;
   font-size: 14px;
   line-height: 1.6;
-  color: var(--color-primary, #122544);
+  color: var(--color-primary, #1D70C9);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 
@@ -127,7 +127,7 @@
 
 .metaKey {
   font-weight: 600;
-  color: var(--color-primary, #122544);
+  color: var(--color-primary, #1D70C9);
 }
 
 .detailsSection {
@@ -169,7 +169,7 @@
 .gridItemValue {
   font-size: 13px;
   font-weight: 600;
-  color: var(--color-primary, #122544);
+  color: var(--color-primary, #1D70C9);
 }
 
 .confidenceBadge {
@@ -205,7 +205,7 @@
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  color: var(--color-primary, #122544);
+  color: var(--color-primary, #1D70C9);
   transition: all 0.15s ease;
 }
 

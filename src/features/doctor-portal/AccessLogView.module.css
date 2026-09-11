@@ -30,7 +30,7 @@
   margin: 0;
   font-size: 22px;
   font-weight: 800;
-  color: var(--color-primary, #122544);
+  color: var(--color-primary, #1D70C9);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -48,7 +48,7 @@
   gap: 8px;
   background: #ffffff;
   border: 1px solid var(--color-border, #dde2e1);
-  color: var(--color-primary, #122544);
+  color: var(--color-primary, #1D70C9);
   padding: 10px 18px;
   border-radius: 10px;
   font-size: 13px;
@@ -71,7 +71,7 @@
   align-items: center;
   gap: 12px;
   font-size: 13px;
-  color: var(--color-primary, #122544);
+  color: var(--color-primary, #1D70C9);
 }
 
 .logTableCard {
@@ -106,13 +106,13 @@
 
 .timeCell {
   font-weight: 700;
-  color: var(--color-primary, #122544);
+  color: var(--color-primary, #1D70C9);
   white-space: nowrap;
 }
 
 .actionCell {
   font-weight: 700;
-  color: var(--color-primary, #122544);
+  color: var(--color-primary, #1D70C9);
 }
 
 .detailsCell {

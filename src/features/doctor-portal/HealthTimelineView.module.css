@@ -30,7 +30,7 @@
   margin: 0;
   font-size: 22px;
   font-weight: 800;
-  color: var(--color-primary, #122544);
+  color: var(--color-primary, #1D70C9);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -71,7 +71,7 @@
   background: none;
   font-size: 13px;
   width: 100%;
-  color: var(--color-primary, #122544);
+  color: var(--color-primary, #1D70C9);
   outline: none;
 }
 
@@ -89,7 +89,7 @@
   font-size: 12px;
   font-weight: 600;
   background: #ffffff;
-  color: var(--color-primary, #122544);
+  color: var(--color-primary, #1D70C9);
 }
 
 .timelineStream {
@@ -182,7 +182,7 @@
   margin: 0;
   font-size: 15px;
   font-weight: 800;
-  color: var(--color-primary, #122544);
+  color: var(--color-primary, #1D70C9);
 }
 
 .badgesRow {
@@ -235,7 +235,7 @@
   border-radius: 6px;
   font-size: 11px;
   font-weight: 600;
-  color: var(--color-primary, #122544);
+  color: var(--color-primary, #1D70C9);
   cursor: pointer;
   transition: all 0.15s ease;
 }

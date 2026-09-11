@@ -59,7 +59,7 @@
 
 .iconRoutine {
   background: #e6f6f5;
-  color: #1a6b6d;
+  color: #237CC1;
 }
 
 .iconUrgent {
@@ -162,5 +162,5 @@
 }
 
 .dismissButton:hover {
-  background: #1e3a66;
+  background: #4E9FDE;
 }

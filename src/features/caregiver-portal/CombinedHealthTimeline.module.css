@@ -148,7 +148,7 @@
 
 .nodeCaregiver {
   border-color: var(--color-secondary);
-  color: #1a6b6d;
+  color: #237CC1;
   background: #f0f8f8;
 }
 
@@ -205,7 +205,7 @@
   align-items: center;
   gap: 4px;
   background: #e6f6f5;
-  color: #1a6b6d;
+  color: #237CC1;
   font-weight: 700;
   padding: 2px 8px;
   border-radius: var(--radius-pill);

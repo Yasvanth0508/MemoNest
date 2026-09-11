@@ -30,7 +30,7 @@
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  background: var(--color-primary, #122544);
+  background: var(--color-primary, #1D70C9);
   color: #ffffff;
   display: flex;
   align-items: center;
@@ -49,7 +49,7 @@
   margin: 0;
   font-size: 22px;
   font-weight: 800;
-  color: var(--color-primary, #122544);
+  color: var(--color-primary, #1D70C9);
 }
 
 .demographicDetails {
@@ -80,7 +80,7 @@
   background: #fbfbf9;
   font-size: 13px;
   font-weight: 600;
-  color: var(--color-primary, #122544);
+  color: var(--color-primary, #1D70C9);
   cursor: pointer;
   transition: all 0.15s ease;
 }
@@ -118,7 +118,7 @@
   margin: 0;
   font-size: 16px;
   font-weight: 700;
-  color: var(--color-primary, #122544);
+  color: var(--color-primary, #1D70C9);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -192,7 +192,7 @@
 
 .medNameCell {
   font-weight: 700;
-  color: var(--color-primary, #122544);
+  color: var(--color-primary, #1D70C9);
 }
 
 .recentBadge {
@@ -220,7 +220,7 @@
   padding: 8px 12px;
   font-size: 13px;
   font-weight: 600;
-  color: var(--color-primary, #122544);
+  color: var(--color-primary, #1D70C9);
   display: flex;
   align-items: center;
   gap: 6px;
@@ -254,7 +254,7 @@
 .memberName {
   font-size: 14px;
   font-weight: 700;
-  color: var(--color-primary, #122544);
+  color: var(--color-primary, #1D70C9);
 }
 
 .memberOrg {
@@ -264,7 +264,7 @@
 
 .memberContact {
   font-size: 12px;
-  color: var(--color-primary, #122544);
+  color: var(--color-primary, #1D70C9);
   font-weight: 600;
 }
 

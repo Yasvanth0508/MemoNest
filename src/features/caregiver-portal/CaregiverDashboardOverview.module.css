@@ -6,7 +6,7 @@
 
 /* 1. Hero Primary Action: Log an Observation */
 .heroActionCard {
-  background: linear-gradient(135deg, #122544 0%, #1e3a66 100%);
+  background: linear-gradient(135deg, #1D70C9 0%, #4E9FDE 100%);
   color: white;
   border-radius: var(--radius-lg);
   padding: var(--space-6) var(--space-8);
@@ -97,7 +97,7 @@
 }
 
 .giantVoiceButton:hover {
-  background: #7bd4d6;
+  background: #B7E3FF;
   transform: translateY(-2px);
   box-shadow: 0 8px 26px rgba(103, 184, 186, 0.6);
 }
@@ -276,7 +276,7 @@
 .logThisSmallBtn {
   background: var(--color-surface-accent);
   border: 1px solid #bce2e0;
-  color: #1a6b6d;
+  color: #237CC1;
   font-size: 12px;
   font-weight: 700;
   border-radius: var(--radius-pill);
